@@ -92,5 +92,27 @@ public enum DirectoryType: RawRepresentable, Codable, Sendable, Hashable {
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DirectoryType] = [.azureSCIMV20, .bamboohr, .breatheHr, .cezanneHr, .cyberarkSCIMV20, .fourthHr, .genericSCIMV20, .gsuiteDirectory, .hibob, .sailpointSCIMV20, .jumpCloudSCIMV20, .oktaSCIMV20, .oneloginSCIMV20, .peopleHr, .personio, .pingfederateSCIMV20, .ripplingSCIMV20, .s3, .sftp, .sftpWorkday, .workday]
+    public static let allKnownCases: [DirectoryType] = [
+        .azureSCIMV20,
+        .bamboohr,
+        .breatheHr,
+        .cezanneHr,
+        .cyberarkSCIMV20,
+        .fourthHr,
+        .genericSCIMV20,
+        .gsuiteDirectory,
+        .hibob,
+        .sailpointSCIMV20,
+        .jumpCloudSCIMV20,
+        .oktaSCIMV20,
+        .oneloginSCIMV20,
+        .peopleHr,
+        .personio,
+        .pingfederateSCIMV20,
+        .ripplingSCIMV20,
+        .s3,
+        .sftp,
+        .sftpWorkday,
+        .workday,
+    ]
 }

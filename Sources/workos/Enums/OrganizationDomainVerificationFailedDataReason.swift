@@ -3,7 +3,9 @@
 import Foundation
 
 /// Enumeration of valid OrganizationDomainVerificationFailedDataReason values.
-public enum OrganizationDomainVerificationFailedDataReason: RawRepresentable, Codable, Sendable, Hashable {
+public enum OrganizationDomainVerificationFailedDataReason: RawRepresentable, Codable, Sendable,
+    Hashable
+{
     case domainVerificationPeriodExpired
     case domainVerifiedByOtherOrganization
     /// A value not known at SDK generation time.
@@ -35,5 +37,8 @@ public enum OrganizationDomainVerificationFailedDataReason: RawRepresentable, Co
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [OrganizationDomainVerificationFailedDataReason] = [.domainVerificationPeriodExpired, .domainVerifiedByOtherOrganization]
+    public static let allKnownCases: [OrganizationDomainVerificationFailedDataReason] = [
+        .domainVerificationPeriodExpired,
+        .domainVerifiedByOtherOrganization,
+    ]
 }

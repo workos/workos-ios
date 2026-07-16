@@ -6,12 +6,8 @@ import Foundation
 public struct Events: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// List events
-    /// 
+    ///
     /// List events for the current environment.
     public func list(
         before: String? = nil,

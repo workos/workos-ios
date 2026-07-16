@@ -53,5 +53,14 @@ public enum RadarStandaloneAssessRequestAuthMethod: RawRepresentable, Codable, S
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [RadarStandaloneAssessRequestAuthMethod] = [.password, .passkey, .authenticator, .smsOtp, .emailOtp, .social, .sso, .other]
+    public static let allKnownCases: [RadarStandaloneAssessRequestAuthMethod] = [
+        .password,
+        .passkey,
+        .authenticator,
+        .smsOtp,
+        .emailOtp,
+        .social,
+        .sso,
+        .other,
+    ]
 }

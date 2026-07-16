@@ -102,14 +102,17 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
     public init(rawValue: String) {
         switch rawValue {
         case "agent.registration.created": self = .agentRegistrationCreated
-        case "agent.registration.claim.attempt.created": self = .agentRegistrationClaimAttemptCreated
+        case "agent.registration.claim.attempt.created":
+            self = .agentRegistrationClaimAttemptCreated
         case "agent.registration.claim.completed": self = .agentRegistrationClaimCompleted
         case "agent.registration.credential.issued": self = .agentRegistrationCredentialIssued
         case "agent.registration.deleted": self = .agentRegistrationDeleted
         case "agent.registration.expired": self = .agentRegistrationExpired
-        case "agent.registration.organization.switched": self = .agentRegistrationOrganizationSwitched
+        case "agent.registration.organization.switched":
+            self = .agentRegistrationOrganizationSwitched
         case "agent.registration.revoked": self = .agentRegistrationRevoked
-        case "authentication.email_verification_succeeded": self = .authenticationEmailVerificationSucceeded
+        case "authentication.email_verification_succeeded":
+            self = .authenticationEmailVerificationSucceeded
         case "authentication.magic_auth_failed": self = .authenticationMagicAuthFailed
         case "authentication.magic_auth_succeeded": self = .authenticationMagicAuthSucceeded
         case "authentication.mfa_succeeded": self = .authenticationMfaSucceeded
@@ -125,13 +128,15 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case "authentication.sso_timed_out": self = .authenticationSSOTimedOut
         case "radar.challenge_created": self = .radarChallengeCreated
         case "authentication.radar_risk_detected": self = .authenticationRadarRiskDetected
-        case "authentication.reauthentication_succeeded": self = .authenticationReauthenticationSucceeded
+        case "authentication.reauthentication_succeeded":
+            self = .authenticationReauthenticationSucceeded
         case "api_key.created": self = .apiKeyCreated
         case "api_key.revoked": self = .apiKeyRevoked
         case "api_key.updated": self = .apiKeyUpdated
         case "connection.activated": self = .connectionActivated
         case "connection.deactivated": self = .connectionDeactivated
-        case "connection.saml_certificate_renewal_required": self = .connectionSAMLCertificateRenewalRequired
+        case "connection.saml_certificate_renewal_required":
+            self = .connectionSAMLCertificateRenewalRequired
         case "connection.saml_certificate_renewed": self = .connectionSAMLCertificateRenewed
         case "connection.deleted": self = .connectionDeleted
         case "dsync.activated": self = .dsyncActivated
@@ -185,9 +190,11 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case "permission.deleted": self = .permissionDeleted
         case "permission.updated": self = .permissionUpdated
         case "pipes.connected_account.connected": self = .pipesConnectedAccountConnected
-        case "pipes.connected_account.connection_failed": self = .pipesConnectedAccountConnectionFailed
+        case "pipes.connected_account.connection_failed":
+            self = .pipesConnectedAccountConnectionFailed
         case "pipes.connected_account.disconnected": self = .pipesConnectedAccountDisconnected
-        case "pipes.connected_account.reauthorization_needed": self = .pipesConnectedAccountReauthorizationNeeded
+        case "pipes.connected_account.reauthorization_needed":
+            self = .pipesConnectedAccountReauthorizationNeeded
         case "session.created": self = .sessionCreated
         case "session.revoked": self = .sessionRevoked
         case "waitlist_user.approved": self = .waitlistUserApproved
@@ -200,14 +207,17 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
     public var rawValue: String {
         switch self {
         case .agentRegistrationCreated: return "agent.registration.created"
-        case .agentRegistrationClaimAttemptCreated: return "agent.registration.claim.attempt.created"
+        case .agentRegistrationClaimAttemptCreated:
+            return "agent.registration.claim.attempt.created"
         case .agentRegistrationClaimCompleted: return "agent.registration.claim.completed"
         case .agentRegistrationCredentialIssued: return "agent.registration.credential.issued"
         case .agentRegistrationDeleted: return "agent.registration.deleted"
         case .agentRegistrationExpired: return "agent.registration.expired"
-        case .agentRegistrationOrganizationSwitched: return "agent.registration.organization.switched"
+        case .agentRegistrationOrganizationSwitched:
+            return "agent.registration.organization.switched"
         case .agentRegistrationRevoked: return "agent.registration.revoked"
-        case .authenticationEmailVerificationSucceeded: return "authentication.email_verification_succeeded"
+        case .authenticationEmailVerificationSucceeded:
+            return "authentication.email_verification_succeeded"
         case .authenticationMagicAuthFailed: return "authentication.magic_auth_failed"
         case .authenticationMagicAuthSucceeded: return "authentication.magic_auth_succeeded"
         case .authenticationMfaSucceeded: return "authentication.mfa_succeeded"
@@ -223,13 +233,15 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case .authenticationSSOTimedOut: return "authentication.sso_timed_out"
         case .radarChallengeCreated: return "radar.challenge_created"
         case .authenticationRadarRiskDetected: return "authentication.radar_risk_detected"
-        case .authenticationReauthenticationSucceeded: return "authentication.reauthentication_succeeded"
+        case .authenticationReauthenticationSucceeded:
+            return "authentication.reauthentication_succeeded"
         case .apiKeyCreated: return "api_key.created"
         case .apiKeyRevoked: return "api_key.revoked"
         case .apiKeyUpdated: return "api_key.updated"
         case .connectionActivated: return "connection.activated"
         case .connectionDeactivated: return "connection.deactivated"
-        case .connectionSAMLCertificateRenewalRequired: return "connection.saml_certificate_renewal_required"
+        case .connectionSAMLCertificateRenewalRequired:
+            return "connection.saml_certificate_renewal_required"
         case .connectionSAMLCertificateRenewed: return "connection.saml_certificate_renewed"
         case .connectionDeleted: return "connection.deleted"
         case .dsyncActivated: return "dsync.activated"
@@ -283,9 +295,11 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case .permissionDeleted: return "permission.deleted"
         case .permissionUpdated: return "permission.updated"
         case .pipesConnectedAccountConnected: return "pipes.connected_account.connected"
-        case .pipesConnectedAccountConnectionFailed: return "pipes.connected_account.connection_failed"
+        case .pipesConnectedAccountConnectionFailed:
+            return "pipes.connected_account.connection_failed"
         case .pipesConnectedAccountDisconnected: return "pipes.connected_account.disconnected"
-        case .pipesConnectedAccountReauthorizationNeeded: return "pipes.connected_account.reauthorization_needed"
+        case .pipesConnectedAccountReauthorizationNeeded:
+            return "pipes.connected_account.reauthorization_needed"
         case .sessionCreated: return "session.created"
         case .sessionRevoked: return "session.revoked"
         case .waitlistUserApproved: return "waitlist_user.approved"
@@ -305,5 +319,98 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [CreateWebhookEndpointEvents] = [.agentRegistrationCreated, .agentRegistrationClaimAttemptCreated, .agentRegistrationClaimCompleted, .agentRegistrationCredentialIssued, .agentRegistrationDeleted, .agentRegistrationExpired, .agentRegistrationOrganizationSwitched, .agentRegistrationRevoked, .authenticationEmailVerificationSucceeded, .authenticationMagicAuthFailed, .authenticationMagicAuthSucceeded, .authenticationMfaSucceeded, .authenticationOAuthFailed, .authenticationOAuthSucceeded, .authenticationPasswordFailed, .authenticationPasswordSucceeded, .authenticationPasskeyFailed, .authenticationPasskeySucceeded, .authenticationSSOFailed, .authenticationSSOStarted, .authenticationSSOSucceeded, .authenticationSSOTimedOut, .radarChallengeCreated, .authenticationRadarRiskDetected, .authenticationReauthenticationSucceeded, .apiKeyCreated, .apiKeyRevoked, .apiKeyUpdated, .connectionActivated, .connectionDeactivated, .connectionSAMLCertificateRenewalRequired, .connectionSAMLCertificateRenewed, .connectionDeleted, .dsyncActivated, .dsyncDeleted, .dsyncGroupCreated, .dsyncGroupDeleted, .dsyncGroupUpdated, .dsyncGroupUserAdded, .dsyncGroupUserRemoved, .dsyncUserCreated, .dsyncUserDeleted, .dsyncUserUpdated, .emailVerificationCreated, .groupCreated, .groupDeleted, .groupMemberAdded, .groupMemberRemoved, .groupUpdated, .flagCreated, .flagDeleted, .flagUpdated, .flagRuleUpdated, .invitationAccepted, .invitationCreated, .invitationResent, .invitationRevoked, .magicAuthCreated, .organizationCreated, .organizationDeleted, .organizationUpdated, .organizationDomainCreated, .organizationDomainDeleted, .organizationDomainUpdated, .organizationDomainVerified, .organizationDomainVerificationFailed, .passwordResetCreated, .passwordResetSucceeded, .userCreated, .userUpdated, .userDeleted, .organizationMembershipCreated, .organizationMembershipDeleted, .organizationMembershipUpdated, .roleCreated, .roleDeleted, .roleUpdated, .organizationRoleCreated, .organizationRoleDeleted, .organizationRoleUpdated, .permissionCreated, .permissionDeleted, .permissionUpdated, .pipesConnectedAccountConnected, .pipesConnectedAccountConnectionFailed, .pipesConnectedAccountDisconnected, .pipesConnectedAccountReauthorizationNeeded, .sessionCreated, .sessionRevoked, .waitlistUserApproved, .waitlistUserCreated, .waitlistUserDenied]
+    public static let allKnownCases: [CreateWebhookEndpointEvents] = [
+        .agentRegistrationCreated,
+        .agentRegistrationClaimAttemptCreated,
+        .agentRegistrationClaimCompleted,
+        .agentRegistrationCredentialIssued,
+        .agentRegistrationDeleted,
+        .agentRegistrationExpired,
+        .agentRegistrationOrganizationSwitched,
+        .agentRegistrationRevoked,
+        .authenticationEmailVerificationSucceeded,
+        .authenticationMagicAuthFailed,
+        .authenticationMagicAuthSucceeded,
+        .authenticationMfaSucceeded,
+        .authenticationOAuthFailed,
+        .authenticationOAuthSucceeded,
+        .authenticationPasswordFailed,
+        .authenticationPasswordSucceeded,
+        .authenticationPasskeyFailed,
+        .authenticationPasskeySucceeded,
+        .authenticationSSOFailed,
+        .authenticationSSOStarted,
+        .authenticationSSOSucceeded,
+        .authenticationSSOTimedOut,
+        .radarChallengeCreated,
+        .authenticationRadarRiskDetected,
+        .authenticationReauthenticationSucceeded,
+        .apiKeyCreated,
+        .apiKeyRevoked,
+        .apiKeyUpdated,
+        .connectionActivated,
+        .connectionDeactivated,
+        .connectionSAMLCertificateRenewalRequired,
+        .connectionSAMLCertificateRenewed,
+        .connectionDeleted,
+        .dsyncActivated,
+        .dsyncDeleted,
+        .dsyncGroupCreated,
+        .dsyncGroupDeleted,
+        .dsyncGroupUpdated,
+        .dsyncGroupUserAdded,
+        .dsyncGroupUserRemoved,
+        .dsyncUserCreated,
+        .dsyncUserDeleted,
+        .dsyncUserUpdated,
+        .emailVerificationCreated,
+        .groupCreated,
+        .groupDeleted,
+        .groupMemberAdded,
+        .groupMemberRemoved,
+        .groupUpdated,
+        .flagCreated,
+        .flagDeleted,
+        .flagUpdated,
+        .flagRuleUpdated,
+        .invitationAccepted,
+        .invitationCreated,
+        .invitationResent,
+        .invitationRevoked,
+        .magicAuthCreated,
+        .organizationCreated,
+        .organizationDeleted,
+        .organizationUpdated,
+        .organizationDomainCreated,
+        .organizationDomainDeleted,
+        .organizationDomainUpdated,
+        .organizationDomainVerified,
+        .organizationDomainVerificationFailed,
+        .passwordResetCreated,
+        .passwordResetSucceeded,
+        .userCreated,
+        .userUpdated,
+        .userDeleted,
+        .organizationMembershipCreated,
+        .organizationMembershipDeleted,
+        .organizationMembershipUpdated,
+        .roleCreated,
+        .roleDeleted,
+        .roleUpdated,
+        .organizationRoleCreated,
+        .organizationRoleDeleted,
+        .organizationRoleUpdated,
+        .permissionCreated,
+        .permissionDeleted,
+        .permissionUpdated,
+        .pipesConnectedAccountConnected,
+        .pipesConnectedAccountConnectionFailed,
+        .pipesConnectedAccountDisconnected,
+        .pipesConnectedAccountReauthorizationNeeded,
+        .sessionCreated,
+        .sessionRevoked,
+        .waitlistUserApproved,
+        .waitlistUserCreated,
+        .waitlistUserDenied,
+    ]
 }

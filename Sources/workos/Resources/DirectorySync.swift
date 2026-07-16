@@ -6,12 +6,8 @@ import Foundation
 public struct DirectorySync: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// List Directories
-    /// 
+    ///
     /// Get a list of all of your existing directories matching the criteria specified.
     public func list(
         before: String? = nil,
@@ -57,7 +53,7 @@ public struct DirectorySync: Sendable {
     }
 
     /// Get a Directory
-    /// 
+    ///
     /// Get the details of an existing directory.
     public func get(
         id: String,
@@ -75,7 +71,7 @@ public struct DirectorySync: Sendable {
     }
 
     /// Delete a Directory
-    /// 
+    ///
     /// Permanently deletes an existing directory. It cannot be undone.
     public func delete(
         id: String,
@@ -92,7 +88,7 @@ public struct DirectorySync: Sendable {
     }
 
     /// List Directory Groups
-    /// 
+    ///
     /// Get a list of all of existing directory groups matching the criteria specified.
     public func listGroups(
         before: String? = nil,
@@ -134,7 +130,7 @@ public struct DirectorySync: Sendable {
     }
 
     /// Get a Directory Group
-    /// 
+    ///
     /// Get the details of an existing Directory Group.
     public func getGroup(
         id: String,
@@ -152,7 +148,7 @@ public struct DirectorySync: Sendable {
     }
 
     /// List Directory Users
-    /// 
+    ///
     /// Get a list of all of existing Directory Users matching the criteria specified.
     public func listUsers(
         before: String? = nil,
@@ -202,7 +198,7 @@ public struct DirectorySync: Sendable {
     }
 
     /// Get a Directory User
-    /// 
+    ///
     /// Get the details of an existing Directory User.
     public func getUser(
         id: String,

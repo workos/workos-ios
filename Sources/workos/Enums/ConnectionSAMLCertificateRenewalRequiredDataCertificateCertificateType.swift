@@ -3,7 +3,9 @@
 import Foundation
 
 /// Enumeration of valid ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType values.
-public enum ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType: RawRepresentable, Codable, Sendable, Hashable {
+public enum ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType:
+    RawRepresentable, Codable, Sendable, Hashable
+{
     case responseSigning
     case requestSigning
     case responseEncryption
@@ -38,5 +40,10 @@ public enum ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateTy
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType] = [.responseSigning, .requestSigning, .responseEncryption]
+    public static let allKnownCases:
+        [ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType] = [
+            .responseSigning,
+            .requestSigning,
+            .responseEncryption,
+        ]
 }

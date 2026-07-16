@@ -41,5 +41,10 @@ public enum AuthenticationFactorEnrolledType: RawRepresentable, Codable, Sendabl
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [AuthenticationFactorEnrolledType] = [.genericOtp, .sms, .totp, .webauthn]
+    public static let allKnownCases: [AuthenticationFactorEnrolledType] = [
+        .genericOtp,
+        .sms,
+        .totp,
+        .webauthn,
+    ]
 }

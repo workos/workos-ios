@@ -35,5 +35,8 @@ public enum DataIntegrationCredentialsResponseError: RawRepresentable, Codable, 
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DataIntegrationCredentialsResponseError] = [.notInstalled, .needsReauthorization]
+    public static let allKnownCases: [DataIntegrationCredentialsResponseError] = [
+        .notInstalled,
+        .needsReauthorization,
+    ]
 }

@@ -41,5 +41,10 @@ public enum FlagRuleUpdatedContextActorSource: RawRepresentable, Codable, Sendab
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [FlagRuleUpdatedContextActorSource] = [.api, .dashboard, .adminPortal, .system]
+    public static let allKnownCases: [FlagRuleUpdatedContextActorSource] = [
+        .api,
+        .dashboard,
+        .adminPortal,
+        .system,
+    ]
 }

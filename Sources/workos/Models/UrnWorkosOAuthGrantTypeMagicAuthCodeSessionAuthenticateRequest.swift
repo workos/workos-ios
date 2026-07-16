@@ -2,7 +2,9 @@
 
 import Foundation
 
-public struct UrnWorkosOAuthGrantTypeMagicAuthCodeSessionAuthenticateRequest: Codable, Sendable, Equatable {
+public struct UrnWorkosOAuthGrantTypeMagicAuthCodeSessionAuthenticateRequest: Codable, Sendable,
+    Equatable
+{
     /// The client ID of the application.
     public let clientId: String
     /// The client secret of the application.

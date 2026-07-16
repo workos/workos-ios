@@ -6,12 +6,8 @@ import Foundation
 public struct Widgets: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// Generate a widget token
-    /// 
+    ///
     /// Generate a widget token for a user, optionally scoped to an organization. When an organization is specified, org-scoped widgets are enabled; omitting it issues a user-only token for widgets like `UserProfile` and `UserSecurity`.
     public func createToken(
         organizationId: String? = nil,

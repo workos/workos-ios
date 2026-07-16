@@ -41,5 +41,10 @@ public enum FlagDeletedContextActorSource: RawRepresentable, Codable, Sendable, 
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [FlagDeletedContextActorSource] = [.api, .dashboard, .adminPortal, .system]
+    public static let allKnownCases: [FlagDeletedContextActorSource] = [
+        .api,
+        .dashboard,
+        .adminPortal,
+        .system,
+    ]
 }

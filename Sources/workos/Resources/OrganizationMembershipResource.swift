@@ -6,12 +6,8 @@ import Foundation
 public struct OrganizationMembershipResource: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// List organization memberships
-    /// 
+    ///
     /// Get a list of all organization memberships matching the criteria specified. At least one of `user_id` or `organization_id` must be provided. By default only active memberships are returned. Use the `statuses` parameter to filter by other statuses.
     public func list(
         before: String? = nil,
@@ -59,9 +55,9 @@ public struct OrganizationMembershipResource: Sendable {
     }
 
     /// Create an organization membership
-    /// 
+    ///
     /// Creates a new `active` organization membership for the given organization and user.
-    /// 
+    ///
     /// Calling this API with an organization and user that match an `inactive` organization membership will activate the membership with the specified role(s).
     public func create(
         userId: String,
@@ -87,7 +83,7 @@ public struct OrganizationMembershipResource: Sendable {
     }
 
     /// Get an organization membership
-    /// 
+    ///
     /// Get the details of an existing organization membership.
     public func get(
         id: String,
@@ -105,7 +101,7 @@ public struct OrganizationMembershipResource: Sendable {
     }
 
     /// Update an organization membership
-    /// 
+    ///
     /// Update the details of an existing organization membership.
     public func update(
         id: String,
@@ -128,7 +124,7 @@ public struct OrganizationMembershipResource: Sendable {
     }
 
     /// Delete an organization membership
-    /// 
+    ///
     /// Permanently deletes an existing organization membership. It cannot be undone.
     public func delete(
         id: String,
@@ -145,12 +141,12 @@ public struct OrganizationMembershipResource: Sendable {
     }
 
     /// Deactivate an organization membership
-    /// 
+    ///
     /// Deactivates an `active` organization membership. Emits an [organization_membership.updated](https://workos.com/docs/events/organization-membership) event upon successful deactivation.
-    /// 
+    ///
     /// - Deactivating an `inactive` membership is a no-op and does not emit an event.
     /// - Deactivating a `pending` membership returns an error. This membership should be [deleted](https://workos.com/docs/reference/authkit/organization-membership/delete) instead.
-    /// 
+    ///
     /// See the [membership management documentation](https://workos.com/docs/authkit/users-organizations/organizations/membership-management) for additional details.
     public func deactivate(
         id: String,
@@ -168,12 +164,12 @@ public struct OrganizationMembershipResource: Sendable {
     }
 
     /// Reactivate an organization membership
-    /// 
+    ///
     /// Reactivates an `inactive` organization membership, retaining the pre-existing role(s). Emits an [organization_membership.updated](https://workos.com/docs/events/organization-membership) event upon successful reactivation.
-    /// 
+    ///
     /// - Reactivating an `active` membership is a no-op and does not emit an event.
     /// - Reactivating a `pending` membership returns an error. The user needs to [accept the invitation](https://workos.com/docs/authkit/invitations) instead.
-    /// 
+    ///
     /// See the [membership management documentation](https://workos.com/docs/authkit/users-organizations/organizations/membership-management) for additional details.
     public func reactivate(
         id: String,
@@ -191,7 +187,7 @@ public struct OrganizationMembershipResource: Sendable {
     }
 
     /// List groups
-    /// 
+    ///
     /// Get a list of groups that an organization membership belongs to.
     public func listOrganizationMembershipGroups(
         omId: String,

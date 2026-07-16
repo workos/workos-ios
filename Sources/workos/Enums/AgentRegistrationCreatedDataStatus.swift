@@ -41,5 +41,10 @@ public enum AgentRegistrationCreatedDataStatus: RawRepresentable, Codable, Senda
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [AgentRegistrationCreatedDataStatus] = [.unverified, .verified, .expired, .revoked]
+    public static let allKnownCases: [AgentRegistrationCreatedDataStatus] = [
+        .unverified,
+        .verified,
+        .expired,
+        .revoked,
+    ]
 }

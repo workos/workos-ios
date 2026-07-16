@@ -3,7 +3,9 @@
 import Foundation
 
 /// Enumeration of valid FlagRuleUpdatedContextPreviousAttributeContextAccessType values.
-public enum FlagRuleUpdatedContextPreviousAttributeContextAccessType: RawRepresentable, Codable, Sendable, Hashable {
+public enum FlagRuleUpdatedContextPreviousAttributeContextAccessType: RawRepresentable, Codable,
+    Sendable, Hashable
+{
     case none
     case some
     case all
@@ -38,5 +40,9 @@ public enum FlagRuleUpdatedContextPreviousAttributeContextAccessType: RawReprese
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [FlagRuleUpdatedContextPreviousAttributeContextAccessType] = [.none, .some, .all]
+    public static let allKnownCases: [FlagRuleUpdatedContextPreviousAttributeContextAccessType] = [
+        .none,
+        .some,
+        .all,
+    ]
 }

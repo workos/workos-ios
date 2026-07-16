@@ -38,5 +38,9 @@ public enum DirectoryUserWithGroupsState: RawRepresentable, Codable, Sendable, H
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DirectoryUserWithGroupsState] = [.active, .suspended, .inactive]
+    public static let allKnownCases: [DirectoryUserWithGroupsState] = [
+        .active,
+        .suspended,
+        .inactive,
+    ]
 }

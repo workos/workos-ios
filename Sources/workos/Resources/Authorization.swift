@@ -6,12 +6,8 @@ import Foundation
 public struct Authorization: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// List role assignments for a group
-    /// 
+    ///
     /// List all role assignments granted to a group. Each assignment represents a role granted to the group on a resource.
     public func listGroupRoleAssignments(
         groupId: String,
@@ -46,7 +42,7 @@ public struct Authorization: Sendable {
     }
 
     /// Assign a role to a group
-    /// 
+    ///
     /// Assign a role to a group on a specific resource.
     public func createGroupRoleAssignment(
         groupId: String,
@@ -73,7 +69,7 @@ public struct Authorization: Sendable {
     }
 
     /// Replace all role assignments for a group
-    /// 
+    ///
     /// Replace all role assignments for a group with the provided list. Existing assignments not in the list will be removed.
     public func updateGroupRoleAssignments(
         groupId: String,
@@ -94,7 +90,7 @@ public struct Authorization: Sendable {
     }
 
     /// Remove group role assignments by criteria
-    /// 
+    ///
     /// Remove role assignments from a group that match the provided criteria. Returns 404 when no matching active assignment is found.
     public func deleteGroupRoleAssignments(
         groupId: String,
@@ -120,14 +116,15 @@ public struct Authorization: Sendable {
     }
 
     /// Get a group role assignment
-    /// 
+    ///
     /// Get a specific role assignment for a group by its ID.
     public func getGroupRoleAssignment(
         groupId: String,
         roleAssignmentId: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> GroupRoleAssignment {
-        let path = "authorization/groups/\(PathEncoding.segment(groupId))/role_assignments/\(PathEncoding.segment(roleAssignmentId))"
+        let path =
+            "authorization/groups/\(PathEncoding.segment(groupId))/role_assignments/\(PathEncoding.segment(roleAssignmentId))"
         return try await transport.request(
             method: "GET",
             path: path,
@@ -139,14 +136,15 @@ public struct Authorization: Sendable {
     }
 
     /// Remove a group role assignment
-    /// 
+    ///
     /// Remove a specific role assignment from a group by its ID.
     public func deleteGroupRoleAssignment(
         groupId: String,
         roleAssignmentId: String,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "authorization/groups/\(PathEncoding.segment(groupId))/role_assignments/\(PathEncoding.segment(roleAssignmentId))"
+        let path =
+            "authorization/groups/\(PathEncoding.segment(groupId))/role_assignments/\(PathEncoding.segment(roleAssignmentId))"
         try await transport.requestVoid(
             method: "DELETE",
             path: path,
@@ -157,7 +155,7 @@ public struct Authorization: Sendable {
     }
 
     /// Check authorization
-    /// 
+    ///
     /// Check if an organization membership has a specific permission on a resource. Supports identification by resource_id OR by resource_external_id + resource_type_slug.
     public func check(
         organizationMembershipId: String,
@@ -167,7 +165,8 @@ public struct Authorization: Sendable {
         resourceTypeSlug: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> AuthorizationCheck {
-        let path = "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/check"
+        let path =
+            "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/check"
         var body = EncodableBody()
         body.set("permission_slug", permissionSlug)
         body.set("resource_id", resourceId)
@@ -184,9 +183,9 @@ public struct Authorization: Sendable {
     }
 
     /// List resources for organization membership
-    /// 
+    ///
     /// Returns all child resources of a parent resource where the organization membership has a specific permission. This is useful for resource discovery—answering "What projects can this user access in this workspace?"
-    /// 
+    ///
     /// You must provide either `parent_resource_id` or both `parent_resource_external_id` and `parent_resource_type_slug` to identify the parent resource.
     public func listResourcesForMembership(
         organizationMembershipId: String,
@@ -200,7 +199,8 @@ public struct Authorization: Sendable {
         parentResourceExternalId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<AuthorizationResource> {
-        let path = "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/resources"
+        let path =
+            "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/resources"
         var query: [URLQueryItem] = []
         if let before {
             query.append(URLQueryItem(name: "before", value: before))
@@ -219,10 +219,12 @@ public struct Authorization: Sendable {
             query.append(URLQueryItem(name: "parent_resource_id", value: parentResourceId))
         }
         if let parentResourceTypeSlug {
-            query.append(URLQueryItem(name: "parent_resource_type_slug", value: parentResourceTypeSlug))
+            query.append(
+                URLQueryItem(name: "parent_resource_type_slug", value: parentResourceTypeSlug))
         }
         if let parentResourceExternalId {
-            query.append(URLQueryItem(name: "parent_resource_external_id", value: parentResourceExternalId))
+            query.append(
+                URLQueryItem(name: "parent_resource_external_id", value: parentResourceExternalId))
         }
         return try await transport.request(
             method: "GET",
@@ -235,7 +237,7 @@ public struct Authorization: Sendable {
     }
 
     /// List effective permissions for an organization membership on a resource
-    /// 
+    ///
     /// Returns all permissions the organization membership effectively has on a resource, including permissions inherited through roles assigned to ancestor resources.
     public func listEffectivePermissions(
         organizationMembershipId: String,
@@ -246,7 +248,8 @@ public struct Authorization: Sendable {
         order: PaginationOrder? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<AuthorizationPermission> {
-        let path = "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/resources/\(PathEncoding.segment(resourceId))/permissions"
+        let path =
+            "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/resources/\(PathEncoding.segment(resourceId))/permissions"
         var query: [URLQueryItem] = []
         if let before {
             query.append(URLQueryItem(name: "before", value: before))
@@ -271,7 +274,7 @@ public struct Authorization: Sendable {
     }
 
     /// List effective permissions for an organization membership on a resource by external ID
-    /// 
+    ///
     /// Returns all permissions the organization membership effectively has on a resource identified by its external ID, including permissions inherited through roles assigned to ancestor resources.
     public func listEffectivePermissionsByExternalId(
         organizationMembershipId: String,
@@ -283,7 +286,8 @@ public struct Authorization: Sendable {
         order: PaginationOrder? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<AuthorizationPermission> {
-        let path = "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/resources/\(PathEncoding.segment(resourceTypeSlug))/\(PathEncoding.segment(externalId))/permissions"
+        let path =
+            "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/resources/\(PathEncoding.segment(resourceTypeSlug))/\(PathEncoding.segment(externalId))/permissions"
         var query: [URLQueryItem] = []
         if let before {
             query.append(URLQueryItem(name: "before", value: before))
@@ -308,7 +312,7 @@ public struct Authorization: Sendable {
     }
 
     /// List role assignments
-    /// 
+    ///
     /// List all role assignments for an organization membership. This returns all roles that have been assigned to the user on resources, including organization-level and sub-resource roles.
     public func listRoleAssignments(
         organizationMembershipId: String,
@@ -321,7 +325,8 @@ public struct Authorization: Sendable {
         resourceTypeSlug: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<UserRoleAssignment> {
-        let path = "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/role_assignments"
+        let path =
+            "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/role_assignments"
         var query: [URLQueryItem] = []
         if let before {
             query.append(URLQueryItem(name: "before", value: before))
@@ -355,7 +360,7 @@ public struct Authorization: Sendable {
     }
 
     /// Assign a role
-    /// 
+    ///
     /// Assign a role to an organization membership on a specific resource.
     public func assignRole(
         organizationMembershipId: String,
@@ -365,7 +370,8 @@ public struct Authorization: Sendable {
         resourceTypeSlug: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> UserRoleAssignment {
-        let path = "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/role_assignments"
+        let path =
+            "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/role_assignments"
         var body = EncodableBody()
         body.set("role_slug", roleSlug)
         body.set("resource_id", resourceId)
@@ -382,7 +388,7 @@ public struct Authorization: Sendable {
     }
 
     /// Remove a role assignment
-    /// 
+    ///
     /// Remove a role assignment by role slug and resource.
     public func removeRole(
         organizationMembershipId: String,
@@ -392,7 +398,8 @@ public struct Authorization: Sendable {
         resourceTypeSlug: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/role_assignments"
+        let path =
+            "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/role_assignments"
         var body = EncodableBody()
         body.set("role_slug", roleSlug)
         body.set("resource_id", resourceId)
@@ -408,14 +415,15 @@ public struct Authorization: Sendable {
     }
 
     /// Remove a role assignment by ID
-    /// 
+    ///
     /// Remove a role assignment using its ID.
     public func removeRoleAssignment(
         organizationMembershipId: String,
         roleAssignmentId: String,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/role_assignments/\(PathEncoding.segment(roleAssignmentId))"
+        let path =
+            "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/role_assignments/\(PathEncoding.segment(roleAssignmentId))"
         try await transport.requestVoid(
             method: "DELETE",
             path: path,
@@ -426,7 +434,7 @@ public struct Authorization: Sendable {
     }
 
     /// List custom roles
-    /// 
+    ///
     /// Get a list of all roles that apply to an organization. This includes both environment roles and custom roles, returned in priority order.
     public func listOrganizationRoles(
         organizationId: String,
@@ -444,7 +452,7 @@ public struct Authorization: Sendable {
     }
 
     /// Create a custom role
-    /// 
+    ///
     /// Create a new custom role for this organization.
     public func createOrganizationRole(
         organizationId: String,
@@ -471,14 +479,15 @@ public struct Authorization: Sendable {
     }
 
     /// Get a custom role
-    /// 
+    ///
     /// Retrieve a role that applies to an organization by its slug. This can return either an environment role or a custom role.
     public func getOrganizationRole(
         organizationId: String,
         slug: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> Role {
-        let path = "authorization/organizations/\(PathEncoding.segment(organizationId))/roles/\(PathEncoding.segment(slug))"
+        let path =
+            "authorization/organizations/\(PathEncoding.segment(organizationId))/roles/\(PathEncoding.segment(slug))"
         return try await transport.request(
             method: "GET",
             path: path,
@@ -490,7 +499,7 @@ public struct Authorization: Sendable {
     }
 
     /// Update a custom role
-    /// 
+    ///
     /// Update an existing custom role. Only the fields provided in the request body will be updated.
     public func updateOrganizationRole(
         organizationId: String,
@@ -499,7 +508,8 @@ public struct Authorization: Sendable {
         description: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Role {
-        let path = "authorization/organizations/\(PathEncoding.segment(organizationId))/roles/\(PathEncoding.segment(slug))"
+        let path =
+            "authorization/organizations/\(PathEncoding.segment(organizationId))/roles/\(PathEncoding.segment(slug))"
         var body = EncodableBody()
         body.set("name", name)
         body.set("description", description)
@@ -514,14 +524,15 @@ public struct Authorization: Sendable {
     }
 
     /// Delete a custom role
-    /// 
+    ///
     /// Delete an existing custom role.
     public func deleteOrganizationRole(
         organizationId: String,
         slug: String,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "authorization/organizations/\(PathEncoding.segment(organizationId))/roles/\(PathEncoding.segment(slug))"
+        let path =
+            "authorization/organizations/\(PathEncoding.segment(organizationId))/roles/\(PathEncoding.segment(slug))"
         try await transport.requestVoid(
             method: "DELETE",
             path: path,
@@ -532,7 +543,7 @@ public struct Authorization: Sendable {
     }
 
     /// Add a permission to a custom role
-    /// 
+    ///
     /// Add a single permission to a custom role. If the permission is already assigned to the role, this operation has no effect.
     public func addOrganizationRolePermission(
         organizationId: String,
@@ -540,7 +551,8 @@ public struct Authorization: Sendable {
         slug2: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> Role {
-        let path = "authorization/organizations/\(PathEncoding.segment(organizationId))/roles/\(PathEncoding.segment(slug))/permissions"
+        let path =
+            "authorization/organizations/\(PathEncoding.segment(organizationId))/roles/\(PathEncoding.segment(slug))/permissions"
         var body = EncodableBody()
         body.set("slug", slug2)
         return try await transport.request(
@@ -554,7 +566,7 @@ public struct Authorization: Sendable {
     }
 
     /// Set permissions for a custom role
-    /// 
+    ///
     /// Replace all permissions on a custom role with the provided list.
     public func setOrganizationRolePermissions(
         organizationId: String,
@@ -562,7 +574,8 @@ public struct Authorization: Sendable {
         permissions: [String],
         requestOptions: RequestOptions? = nil
     ) async throws -> Role {
-        let path = "authorization/organizations/\(PathEncoding.segment(organizationId))/roles/\(PathEncoding.segment(slug))/permissions"
+        let path =
+            "authorization/organizations/\(PathEncoding.segment(organizationId))/roles/\(PathEncoding.segment(slug))/permissions"
         var body = EncodableBody()
         body.set("permissions", permissions)
         return try await transport.request(
@@ -576,7 +589,7 @@ public struct Authorization: Sendable {
     }
 
     /// Remove a permission from a custom role
-    /// 
+    ///
     /// Remove a single permission from a custom role by its slug.
     public func removeOrganizationRolePermission(
         organizationId: String,
@@ -584,7 +597,8 @@ public struct Authorization: Sendable {
         permissionSlug: String,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "authorization/organizations/\(PathEncoding.segment(organizationId))/roles/\(PathEncoding.segment(slug))/permissions/\(PathEncoding.segment(permissionSlug))"
+        let path =
+            "authorization/organizations/\(PathEncoding.segment(organizationId))/roles/\(PathEncoding.segment(slug))/permissions/\(PathEncoding.segment(permissionSlug))"
         try await transport.requestVoid(
             method: "DELETE",
             path: path,
@@ -595,7 +609,7 @@ public struct Authorization: Sendable {
     }
 
     /// Get a resource by external ID
-    /// 
+    ///
     /// Retrieve the details of an authorization resource by its external ID, organization, and resource type. This is useful when you only have the external ID from your system and need to fetch the full resource details.
     public func getResourceByExternalId(
         organizationId: String,
@@ -603,7 +617,8 @@ public struct Authorization: Sendable {
         externalId: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> AuthorizationResource {
-        let path = "authorization/organizations/\(PathEncoding.segment(organizationId))/resources/\(PathEncoding.segment(resourceTypeSlug))/\(PathEncoding.segment(externalId))"
+        let path =
+            "authorization/organizations/\(PathEncoding.segment(organizationId))/resources/\(PathEncoding.segment(resourceTypeSlug))/\(PathEncoding.segment(externalId))"
         return try await transport.request(
             method: "GET",
             path: path,
@@ -615,7 +630,7 @@ public struct Authorization: Sendable {
     }
 
     /// Update a resource by external ID
-    /// 
+    ///
     /// Update an existing authorization resource using its external ID.
     public func updateResourceByExternalId(
         organizationId: String,
@@ -628,7 +643,8 @@ public struct Authorization: Sendable {
         parentResourceTypeSlug: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> AuthorizationResource {
-        let path = "authorization/organizations/\(PathEncoding.segment(organizationId))/resources/\(PathEncoding.segment(resourceTypeSlug))/\(PathEncoding.segment(externalId))"
+        let path =
+            "authorization/organizations/\(PathEncoding.segment(organizationId))/resources/\(PathEncoding.segment(resourceTypeSlug))/\(PathEncoding.segment(externalId))"
         var body = EncodableBody()
         body.set("name", name)
         body.set("description", description)
@@ -646,7 +662,7 @@ public struct Authorization: Sendable {
     }
 
     /// Delete an authorization resource by external ID
-    /// 
+    ///
     /// Delete an authorization resource by organization, resource type, and external ID. This also deletes all descendant resources.
     public func deleteResourceByExternalId(
         organizationId: String,
@@ -655,7 +671,8 @@ public struct Authorization: Sendable {
         cascadeDelete: Bool? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "authorization/organizations/\(PathEncoding.segment(organizationId))/resources/\(PathEncoding.segment(resourceTypeSlug))/\(PathEncoding.segment(externalId))"
+        let path =
+            "authorization/organizations/\(PathEncoding.segment(organizationId))/resources/\(PathEncoding.segment(resourceTypeSlug))/\(PathEncoding.segment(externalId))"
         var query: [URLQueryItem] = []
         if let cascadeDelete {
             query.append(URLQueryItem(name: "cascade_delete", value: "\(cascadeDelete)"))
@@ -670,7 +687,7 @@ public struct Authorization: Sendable {
     }
 
     /// List memberships for a resource by external ID
-    /// 
+    ///
     /// Returns all organization memberships that have a specific permission on a resource, using the resource's external ID. This is useful for answering "Who can access this resource?" when you only have the external ID.
     public func listMembershipsForResourceByExternalId(
         organizationId: String,
@@ -684,7 +701,8 @@ public struct Authorization: Sendable {
         assignment: AuthorizationAssignment? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<UserOrganizationMembershipBaseListData> {
-        let path = "authorization/organizations/\(PathEncoding.segment(organizationId))/resources/\(PathEncoding.segment(resourceTypeSlug))/\(PathEncoding.segment(externalId))/organization_memberships"
+        let path =
+            "authorization/organizations/\(PathEncoding.segment(organizationId))/resources/\(PathEncoding.segment(resourceTypeSlug))/\(PathEncoding.segment(externalId))/organization_memberships"
         var query: [URLQueryItem] = []
         if let before {
             query.append(URLQueryItem(name: "before", value: before))
@@ -713,7 +731,7 @@ public struct Authorization: Sendable {
     }
 
     /// List role assignments for a resource by external ID
-    /// 
+    ///
     /// List all role assignments granted on a resource, identified by its external ID. Each assignment includes the organization membership it was granted to.
     public func listRoleAssignmentsForResourceByExternalId(
         organizationId: String,
@@ -726,7 +744,8 @@ public struct Authorization: Sendable {
         roleSlug: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<UserRoleAssignment> {
-        let path = "authorization/organizations/\(PathEncoding.segment(organizationId))/resources/\(PathEncoding.segment(resourceTypeSlug))/\(PathEncoding.segment(externalId))/role_assignments"
+        let path =
+            "authorization/organizations/\(PathEncoding.segment(organizationId))/resources/\(PathEncoding.segment(resourceTypeSlug))/\(PathEncoding.segment(externalId))/role_assignments"
         var query: [URLQueryItem] = []
         if let before {
             query.append(URLQueryItem(name: "before", value: before))
@@ -754,7 +773,7 @@ public struct Authorization: Sendable {
     }
 
     /// List resources
-    /// 
+    ///
     /// Get a paginated list of authorization resources.
     public func listResources(
         before: String? = nil,
@@ -796,7 +815,8 @@ public struct Authorization: Sendable {
             query.append(URLQueryItem(name: "parent_resource_id", value: parentResourceId))
         }
         if let parentResourceTypeSlug {
-            query.append(URLQueryItem(name: "parent_resource_type_slug", value: parentResourceTypeSlug))
+            query.append(
+                URLQueryItem(name: "parent_resource_type_slug", value: parentResourceTypeSlug))
         }
         if let parentExternalId {
             query.append(URLQueryItem(name: "parent_external_id", value: parentExternalId))
@@ -812,7 +832,7 @@ public struct Authorization: Sendable {
     }
 
     /// Create an authorization resource
-    /// 
+    ///
     /// Create a new authorization resource.
     public func createResource(
         externalId: String,
@@ -846,7 +866,7 @@ public struct Authorization: Sendable {
     }
 
     /// Get a resource
-    /// 
+    ///
     /// Retrieve the details of an authorization resource by its ID.
     public func getResource(
         resourceId: String,
@@ -864,7 +884,7 @@ public struct Authorization: Sendable {
     }
 
     /// Update a resource
-    /// 
+    ///
     /// Update an existing authorization resource.
     public func updateResource(
         resourceId: String,
@@ -893,7 +913,7 @@ public struct Authorization: Sendable {
     }
 
     /// Delete an authorization resource
-    /// 
+    ///
     /// Delete an authorization resource and all its descendants.
     public func deleteResource(
         resourceId: String,
@@ -915,7 +935,7 @@ public struct Authorization: Sendable {
     }
 
     /// List organization memberships for resource
-    /// 
+    ///
     /// Returns all organization memberships that have a specific permission on a resource instance. This is useful for answering "Who can access this resource?".
     public func listMembershipsForResource(
         resourceId: String,
@@ -927,7 +947,8 @@ public struct Authorization: Sendable {
         assignment: AuthorizationAssignment? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<UserOrganizationMembershipBaseListData> {
-        let path = "authorization/resources/\(PathEncoding.segment(resourceId))/organization_memberships"
+        let path =
+            "authorization/resources/\(PathEncoding.segment(resourceId))/organization_memberships"
         var query: [URLQueryItem] = []
         if let before {
             query.append(URLQueryItem(name: "before", value: before))
@@ -956,7 +977,7 @@ public struct Authorization: Sendable {
     }
 
     /// List role assignments for a resource
-    /// 
+    ///
     /// List all role assignments granted on a specific resource instance. Each assignment includes the organization membership it was granted to.
     public func listRoleAssignmentsForResource(
         resourceId: String,
@@ -995,7 +1016,7 @@ public struct Authorization: Sendable {
     }
 
     /// List environment roles
-    /// 
+    ///
     /// List all environment roles in priority order.
     public func listEnvironmentRoles(
         requestOptions: RequestOptions? = nil
@@ -1012,7 +1033,7 @@ public struct Authorization: Sendable {
     }
 
     /// Create an environment role
-    /// 
+    ///
     /// Create a new environment role.
     public func createEnvironmentRole(
         slug: String,
@@ -1038,7 +1059,7 @@ public struct Authorization: Sendable {
     }
 
     /// Get an environment role
-    /// 
+    ///
     /// Get an environment role by its slug.
     public func getEnvironmentRole(
         slug: String,
@@ -1056,7 +1077,7 @@ public struct Authorization: Sendable {
     }
 
     /// Update an environment role
-    /// 
+    ///
     /// Update an existing environment role.
     public func updateEnvironmentRole(
         slug: String,
@@ -1079,7 +1100,7 @@ public struct Authorization: Sendable {
     }
 
     /// Add a permission to an environment role
-    /// 
+    ///
     /// Add a single permission to an environment role. If the permission is already assigned to the role, this operation has no effect.
     public func addEnvironmentRolePermission(
         slug: String,
@@ -1100,7 +1121,7 @@ public struct Authorization: Sendable {
     }
 
     /// Set permissions for an environment role
-    /// 
+    ///
     /// Replace all permissions on an environment role with the provided list.
     public func setEnvironmentRolePermissions(
         slug: String,
@@ -1121,7 +1142,7 @@ public struct Authorization: Sendable {
     }
 
     /// List permissions
-    /// 
+    ///
     /// Get a list of all permissions in your WorkOS environment.
     public func listPermissions(
         before: String? = nil,
@@ -1155,7 +1176,7 @@ public struct Authorization: Sendable {
     }
 
     /// Create a permission
-    /// 
+    ///
     /// Create a new permission in your WorkOS environment. The permission can then be assigned to environment roles and custom roles.
     public func createPermission(
         slug: String,
@@ -1181,7 +1202,7 @@ public struct Authorization: Sendable {
     }
 
     /// Get a permission
-    /// 
+    ///
     /// Retrieve a permission by its unique slug.
     public func getPermission(
         slug: String,
@@ -1199,7 +1220,7 @@ public struct Authorization: Sendable {
     }
 
     /// Update a permission
-    /// 
+    ///
     /// Update an existing permission. Only the fields provided in the request body will be updated.
     public func updatePermission(
         slug: String,
@@ -1222,7 +1243,7 @@ public struct Authorization: Sendable {
     }
 
     /// Delete a permission
-    /// 
+    ///
     /// Delete an existing permission. System permissions cannot be deleted.
     public func deletePermission(
         slug: String,

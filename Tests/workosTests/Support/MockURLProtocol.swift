@@ -2,7 +2,7 @@
 
 import Foundation
 #if canImport(FoundationNetworking)
-import FoundationNetworking
+    import FoundationNetworking
 #endif
 
 /// A URLProtocol that returns a canned response and records the outgoing request,
@@ -20,19 +20,22 @@ final class MockURLProtocol: URLProtocol {
     private static var storedBody: Data?
 
     static func setStub(_ newStub: Stub) {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         stub = newStub
         storedRequest = nil
         storedBody = nil
     }
 
     static var lastRequest: URLRequest? {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return storedRequest
     }
 
     static var lastBody: Data? {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return storedBody
     }
 
@@ -56,12 +59,14 @@ final class MockURLProtocol: URLProtocol {
     override func stopLoading() {}
 
     private static func snapshot() -> Stub {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return stub
     }
 
     private static func record(_ request: URLRequest) {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         storedRequest = request
         if let body = request.httpBody {
             storedBody = body

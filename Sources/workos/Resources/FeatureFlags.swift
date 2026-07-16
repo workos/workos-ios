@@ -6,12 +6,8 @@ import Foundation
 public struct FeatureFlags: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// List feature flags
-    /// 
+    ///
     /// Get a list of all of your existing feature flags matching the criteria specified.
     public func list(
         before: String? = nil,
@@ -45,7 +41,7 @@ public struct FeatureFlags: Sendable {
     }
 
     /// Get a feature flag
-    /// 
+    ///
     /// Get the details of an existing feature flag by its slug.
     public func get(
         slug: String,
@@ -63,7 +59,7 @@ public struct FeatureFlags: Sendable {
     }
 
     /// Disable a feature flag
-    /// 
+    ///
     /// Disables a feature flag in the current environment.
     public func disable(
         slug: String,
@@ -81,7 +77,7 @@ public struct FeatureFlags: Sendable {
     }
 
     /// Enable a feature flag
-    /// 
+    ///
     /// Enables a feature flag in the current environment.
     public func enable(
         slug: String,
@@ -99,14 +95,15 @@ public struct FeatureFlags: Sendable {
     }
 
     /// Add a feature flag target
-    /// 
+    ///
     /// Enables a feature flag for a specific target in the current environment. Currently, supported targets include users and organizations.
     public func addFlagTarget(
         slug: String,
         resourceId: String,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "feature-flags/\(PathEncoding.segment(slug))/targets/\(PathEncoding.segment(resourceId))"
+        let path =
+            "feature-flags/\(PathEncoding.segment(slug))/targets/\(PathEncoding.segment(resourceId))"
         try await transport.requestVoid(
             method: "POST",
             path: path,
@@ -117,14 +114,15 @@ public struct FeatureFlags: Sendable {
     }
 
     /// Remove a feature flag target
-    /// 
+    ///
     /// Removes a target from the feature flag's target list in the current environment. Currently, supported targets include users and organizations.
     public func removeFlagTarget(
         slug: String,
         resourceId: String,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "feature-flags/\(PathEncoding.segment(slug))/targets/\(PathEncoding.segment(resourceId))"
+        let path =
+            "feature-flags/\(PathEncoding.segment(slug))/targets/\(PathEncoding.segment(resourceId))"
         try await transport.requestVoid(
             method: "DELETE",
             path: path,
@@ -135,7 +133,7 @@ public struct FeatureFlags: Sendable {
     }
 
     /// List enabled feature flags for an organization
-    /// 
+    ///
     /// Get a list of all enabled feature flags for an organization.
     public func listOrganization(
         organizationId: String,
@@ -170,7 +168,7 @@ public struct FeatureFlags: Sendable {
     }
 
     /// List enabled feature flags for a user
-    /// 
+    ///
     /// Get a list of all enabled feature flags for the provided user. This includes feature flags enabled specifically for the user as well as any organizations that the user is a member of.
     public func listUser(
         userId: String,

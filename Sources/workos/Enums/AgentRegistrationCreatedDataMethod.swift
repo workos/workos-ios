@@ -38,5 +38,9 @@ public enum AgentRegistrationCreatedDataMethod: RawRepresentable, Codable, Senda
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [AgentRegistrationCreatedDataMethod] = [.anonymous, .serviceAuth, .idJag]
+    public static let allKnownCases: [AgentRegistrationCreatedDataMethod] = [
+        .anonymous,
+        .serviceAuth,
+        .idJag,
+    ]
 }

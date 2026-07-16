@@ -2,7 +2,8 @@
 
 import Foundation
 
-public struct UrnWorkosOAuthGrantTypeMfaTotpSessionAuthenticateRequest: Codable, Sendable, Equatable {
+public struct UrnWorkosOAuthGrantTypeMfaTotpSessionAuthenticateRequest: Codable, Sendable, Equatable
+{
     /// The client ID of the application.
     public let clientId: String
     /// The client secret of the application.

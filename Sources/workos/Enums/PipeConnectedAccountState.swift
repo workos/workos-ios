@@ -35,5 +35,8 @@ public enum PipeConnectedAccountState: RawRepresentable, Codable, Sendable, Hash
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [PipeConnectedAccountState] = [.connected, .needsReauthorization]
+    public static let allKnownCases: [PipeConnectedAccountState] = [
+        .connected,
+        .needsReauthorization,
+    ]
 }

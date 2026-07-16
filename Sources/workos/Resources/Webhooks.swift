@@ -6,12 +6,8 @@ import Foundation
 public struct Webhooks: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// List Webhook Endpoints
-    /// 
+    ///
     /// Get a list of all of your existing webhook endpoints.
     public func listWebhookEndpoints(
         before: String? = nil,
@@ -45,7 +41,7 @@ public struct Webhooks: Sendable {
     }
 
     /// Create a Webhook Endpoint
-    /// 
+    ///
     /// Create a new webhook endpoint to receive event notifications.
     public func createWebhookEndpoint(
         endpointUrl: String,
@@ -67,7 +63,7 @@ public struct Webhooks: Sendable {
     }
 
     /// Update a Webhook Endpoint
-    /// 
+    ///
     /// Update the properties of an existing webhook endpoint.
     public func updateWebhookEndpoint(
         id: String,
@@ -92,7 +88,7 @@ public struct Webhooks: Sendable {
     }
 
     /// Delete a Webhook Endpoint
-    /// 
+    ///
     /// Delete an existing webhook endpoint.
     public func deleteWebhookEndpoint(
         id: String,

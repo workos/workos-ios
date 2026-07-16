@@ -6,12 +6,8 @@ import Foundation
 public struct Organizations: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// List Organizations
-    /// 
+    ///
     /// Get a list of all of your existing organizations matching the criteria specified.
     public func list(
         before: String? = nil,
@@ -55,7 +51,7 @@ public struct Organizations: Sendable {
     }
 
     /// Create an Organization
-    /// 
+    ///
     /// Creates a new organization in the current environment.
     public func create(
         name: String,
@@ -85,7 +81,7 @@ public struct Organizations: Sendable {
     }
 
     /// Get an Organization by External ID
-    /// 
+    ///
     /// Get the details of an existing organization by an [external identifier](https://workos.com/docs/authkit/metadata/external-identifiers).
     public func getOrganizationByExternalId(
         externalId: String,
@@ -103,7 +99,7 @@ public struct Organizations: Sendable {
     }
 
     /// Get an Organization
-    /// 
+    ///
     /// Get the details of an existing organization.
     public func get(
         id: String,
@@ -121,7 +117,7 @@ public struct Organizations: Sendable {
     }
 
     /// Update an Organization
-    /// 
+    ///
     /// Updates an organization in the current environment.
     public func update(
         id: String,
@@ -154,7 +150,7 @@ public struct Organizations: Sendable {
     }
 
     /// Delete an Organization
-    /// 
+    ///
     /// Permanently deletes an organization in the current environment. It cannot be undone.
     public func delete(
         id: String,
@@ -171,7 +167,7 @@ public struct Organizations: Sendable {
     }
 
     /// Get Audit Log Configuration
-    /// 
+    ///
     /// Get the unified view of audit log trail and stream configuration for an organization.
     public func getAuditLogConfiguration(
         id: String,

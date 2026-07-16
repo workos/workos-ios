@@ -44,5 +44,11 @@ public enum ConnectionActivatedDataState: RawRepresentable, Codable, Sendable, H
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [ConnectionActivatedDataState] = [.draft, .active, .validating, .inactive, .deleting]
+    public static let allKnownCases: [ConnectionActivatedDataState] = [
+        .draft,
+        .active,
+        .validating,
+        .inactive,
+        .deleting,
+    ]
 }

@@ -50,5 +50,13 @@ public enum RadarStandaloneResponseBlocklistType: RawRepresentable, Codable, Sen
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [RadarStandaloneResponseBlocklistType] = [.ipAddress, .domain, .email, .device, .userAgent, .deviceFingerprint, .country]
+    public static let allKnownCases: [RadarStandaloneResponseBlocklistType] = [
+        .ipAddress,
+        .domain,
+        .email,
+        .device,
+        .userAgent,
+        .deviceFingerprint,
+        .country,
+    ]
 }

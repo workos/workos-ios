@@ -35,5 +35,8 @@ public enum CustomProviderDefinitionAuthenticateVia: RawRepresentable, Codable, 
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [CustomProviderDefinitionAuthenticateVia] = [.requestBody, .basicAuthHeader]
+    public static let allKnownCases: [CustomProviderDefinitionAuthenticateVia] = [
+        .requestBody,
+        .basicAuthHeader,
+    ]
 }

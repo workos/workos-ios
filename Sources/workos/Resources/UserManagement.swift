@@ -6,12 +6,8 @@ import Foundation
 public struct UserManagement: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// Get JWKS
-    /// 
+    ///
     /// Returns the JSON Web Key Set (JWKS) containing the public keys used for verifying access tokens.
     public func getJwks(
         clientId: String,
@@ -338,7 +334,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Get device authorization URL
-    /// 
+    ///
     /// Initiates the CLI Auth flow by requesting a device code and verification URLs. This endpoint implements the OAuth 2.0 Device Authorization Flow ([RFC 8628](https://datatracker.ietf.org/doc/html/rfc8628)) and is designed for command-line applications or other devices with limited input capabilities.
     public func createDevice(
         clientId: String,
@@ -358,7 +354,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Send a Radar SMS challenge
-    /// 
+    ///
     /// Sends a one-time verification code over SMS to a user as part of a Radar challenge. Use the returned `verification_id` to authenticate the user with the `urn:workos:oauth:grant-type:radar-sms-challenge:code` grant type.
     public func createRadarChallenge(
         userId: String,
@@ -386,7 +382,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Get Radar Challenge details
-    /// 
+    ///
     /// Get the details of an existing Radar Challenge, including the OTP code.
     public func getRadarChallenge(
         id: String,
@@ -404,7 +400,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Revoke Session
-    /// 
+    ///
     /// Revoke a [user session](https://workos.com/docs/reference/authkit/session).
     public func revokeSession(
         sessionId: String,
@@ -423,7 +419,7 @@ public struct UserManagement: Sendable {
     }
 
     /// List CORS origins
-    /// 
+    ///
     /// Lists the CORS origins for the current environment.
     public func listCorsOrigins(
         before: String? = nil,
@@ -457,7 +453,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Create a CORS origin
-    /// 
+    ///
     /// Creates a new CORS origin for the current environment. CORS origins allow browser-based applications to make requests to the WorkOS API.
     public func createCorsOrigin(
         origin: String,
@@ -477,7 +473,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Get an email verification code
-    /// 
+    ///
     /// Get the details of an existing email verification code that can be used to send an email to a user for verification.
     public func getEmailVerification(
         id: String,
@@ -495,7 +491,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Create a password reset token
-    /// 
+    ///
     /// Creates a one-time token that can be used to reset a user's password.
     public func resetPassword(
         email: String,
@@ -515,7 +511,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Reset the password
-    /// 
+    ///
     /// Sets a new password using the `token` query parameter from the link that the user received. Successfully resetting the password will verify a user's email, if it hasn't been verified yet.
     public func confirmPasswordReset(
         token: String,
@@ -537,7 +533,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Get a password reset token
-    /// 
+    ///
     /// Get the details of an existing password reset token that can be used to reset a user's password.
     public func getPasswordReset(
         id: String,
@@ -555,7 +551,7 @@ public struct UserManagement: Sendable {
     }
 
     /// List users
-    /// 
+    ///
     /// Get a list of all of your existing users matching the criteria specified.
     public func list(
         before: String? = nil,
@@ -601,7 +597,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Create a user
-    /// 
+    ///
     /// Create a new user in the current environment.
     public func create(
         email: String,
@@ -645,7 +641,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Get a user by external ID
-    /// 
+    ///
     /// Get the details of an existing user by an [external identifier](https://workos.com/docs/authkit/metadata/external-identifiers).
     public func getUserByExternalId(
         externalId: String,
@@ -663,7 +659,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Get a user
-    /// 
+    ///
     /// Get the details of an existing user.
     public func get(
         id: String,
@@ -681,7 +677,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Update a user
-    /// 
+    ///
     /// Updates properties of a user. The omitted properties will be left unchanged.
     public func update(
         id: String,
@@ -722,7 +718,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Delete a user
-    /// 
+    ///
     /// Permanently deletes a user in the current environment. It cannot be undone.
     public func delete(
         id: String,
@@ -739,7 +735,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Confirm email change
-    /// 
+    ///
     /// Confirms an email change using the one-time code received by the user.
     public func confirmEmailChange(
         id: String,
@@ -760,7 +756,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Send email change code
-    /// 
+    ///
     /// Sends an email that contains a one-time code used to change a user's email address.
     public func sendEmailChange(
         id: String,
@@ -781,7 +777,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Verify email
-    /// 
+    ///
     /// Verifies an email address using the one-time code received by the user.
     public func verifyEmail(
         id: String,
@@ -802,7 +798,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Send verification email
-    /// 
+    ///
     /// Sends an email that contains a one-time code used to verify a user's email address.
     public func sendVerificationEmail(
         id: String,
@@ -820,7 +816,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Get user identities
-    /// 
+    ///
     /// Get a list of identities associated with the user. A user can have multiple associated identities after going through [identity linking](https://workos.com/docs/authkit/identity-linking). Currently only OAuth identities are supported. More provider types may be added in the future.
     public func getUserIdentities(
         id: String,
@@ -838,7 +834,7 @@ public struct UserManagement: Sendable {
     }
 
     /// List sessions
-    /// 
+    ///
     /// Get a list of all active sessions for a specific user.
     public func listSessions(
         id: String,
@@ -873,7 +869,7 @@ public struct UserManagement: Sendable {
     }
 
     /// List invitations
-    /// 
+    ///
     /// Get a list of all of invitations matching the criteria specified.
     public func listInvitations(
         before: String? = nil,
@@ -915,7 +911,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Send an invitation
-    /// 
+    ///
     /// Sends an invitation email to the recipient.
     public func sendInvitation(
         email: String,
@@ -945,7 +941,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Find an invitation by token
-    /// 
+    ///
     /// Retrieve an existing invitation using the token.
     public func findInvitationByToken(
         token: String,
@@ -963,7 +959,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Get an invitation
-    /// 
+    ///
     /// Get the details of an existing invitation.
     public func getInvitation(
         id: String,
@@ -981,7 +977,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Accept an invitation
-    /// 
+    ///
     /// Accepts an invitation and, if linked to an organization, activates the user's membership in that organization.
     public func acceptInvitation(
         id: String,
@@ -999,7 +995,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Resend an invitation
-    /// 
+    ///
     /// Resends an invitation email to the recipient. The invitation must be in a pending state.
     public func resendInvitation(
         id: String,
@@ -1020,7 +1016,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Revoke an invitation
-    /// 
+    ///
     /// Revokes an existing invitation.
     public func revokeInvitation(
         id: String,
@@ -1038,7 +1034,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Get JWT template
-    /// 
+    ///
     /// Get the JWT template for the current environment.
     public func listJwttemplate(
         requestOptions: RequestOptions? = nil
@@ -1055,7 +1051,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Update JWT template
-    /// 
+    ///
     /// Update the JWT template for the current environment.
     public func updateJwttemplate(
         content: String,
@@ -1075,7 +1071,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Create a Magic Auth code
-    /// 
+    ///
     /// Creates a one-time authentication code that can be sent to the user's email address. The code expires in 10 minutes. To verify the code, [authenticate the user with Magic Auth](https://workos.com/docs/reference/authkit/authentication/magic-auth).
     public func createMagicAuth(
         email: String,
@@ -1105,7 +1101,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Get Magic Auth code details
-    /// 
+    ///
     /// Get the details of an existing [Magic Auth](https://workos.com/docs/reference/authkit/magic-auth) code that can be used to send an email to a user for authentication.
     public func getMagicAuth(
         id: String,
@@ -1123,7 +1119,7 @@ public struct UserManagement: Sendable {
     }
 
     /// List redirect URIs
-    /// 
+    ///
     /// Lists the redirect URIs for an environment.
     public func listRedirectUris(
         before: String? = nil,
@@ -1157,7 +1153,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Create a redirect URI
-    /// 
+    ///
     /// Creates a new redirect URI for an application.
     public func createRedirectUri(
         uri: String,
@@ -1177,7 +1173,7 @@ public struct UserManagement: Sendable {
     }
 
     /// List authorized applications
-    /// 
+    ///
     /// Get a list of all Connect applications that the user has authorized.
     public func listUserAuthorizedApplications(
         userId: String,
@@ -1212,14 +1208,15 @@ public struct UserManagement: Sendable {
     }
 
     /// Delete an authorized application
-    /// 
+    ///
     /// Delete an existing Authorized Connect Application.
     public func deleteUserAuthorizedApplication(
         userId: String,
         applicationId: String,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "user_management/users/\(PathEncoding.segment(userId))/authorized_applications/\(PathEncoding.segment(applicationId))"
+        let path =
+            "user_management/users/\(PathEncoding.segment(userId))/authorized_applications/\(PathEncoding.segment(applicationId))"
         try await transport.requestVoid(
             method: "DELETE",
             path: path,
@@ -1230,7 +1227,7 @@ public struct UserManagement: Sendable {
     }
 
     /// List API keys for a user
-    /// 
+    ///
     /// Get a list of API keys owned by a specific user.
     public func listUserApiKeys(
         userId: String,
@@ -1269,7 +1266,7 @@ public struct UserManagement: Sendable {
     }
 
     /// Create an API key for a user
-    /// 
+    ///
     /// Create a new API key owned by a user. The user must have an active membership in the specified organization.
     public func createUserApiKey(
         userId: String,

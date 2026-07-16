@@ -6,12 +6,8 @@ import Foundation
 public struct ApiKeys: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// List API keys for an organization
-    /// 
+    ///
     /// Get a list of all API keys for an organization.
     public func listOrganization(
         organizationId: String,
@@ -46,7 +42,7 @@ public struct ApiKeys: Sendable {
     }
 
     /// Create an API key for an organization
-    /// 
+    ///
     /// Create a new API key for an organization.
     public func createOrganization(
         organizationId: String,
@@ -71,7 +67,7 @@ public struct ApiKeys: Sendable {
     }
 
     /// Validate API key
-    /// 
+    ///
     /// Validate an API key value and return the API key object if valid.
     public func createValidation(
         value: String,
@@ -91,7 +87,7 @@ public struct ApiKeys: Sendable {
     }
 
     /// Delete an API key
-    /// 
+    ///
     /// Permanently deletes an API key. This action cannot be undone. Once deleted, any requests using this API key will fail authentication.
     public func delete(
         id: String,
@@ -108,7 +104,7 @@ public struct ApiKeys: Sendable {
     }
 
     /// Expire an API key
-    /// 
+    ///
     /// Expire an API key immediately, schedule a future expiration, or clear a scheduled future expiration.
     public func createApiKeyExpire(
         id: String,

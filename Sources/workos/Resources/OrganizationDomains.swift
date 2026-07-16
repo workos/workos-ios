@@ -6,12 +6,8 @@ import Foundation
 public struct OrganizationDomains: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// Create an Organization Domain
-    /// 
+    ///
     /// Creates a new Organization Domain.
     public func create(
         domain: String,
@@ -33,7 +29,7 @@ public struct OrganizationDomains: Sendable {
     }
 
     /// Get an Organization Domain
-    /// 
+    ///
     /// Get the details of an existing organization domain.
     public func get(
         id: String,
@@ -51,7 +47,7 @@ public struct OrganizationDomains: Sendable {
     }
 
     /// Delete an Organization Domain
-    /// 
+    ///
     /// Permanently deletes an organization domain. It cannot be undone.
     public func delete(
         id: String,
@@ -68,7 +64,7 @@ public struct OrganizationDomains: Sendable {
     }
 
     /// Verify an Organization Domain
-    /// 
+    ///
     /// Initiates verification process for an Organization Domain.
     public func verify(
         id: String,

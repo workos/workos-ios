@@ -50,5 +50,13 @@ public enum WidgetSessionTokenScopes: RawRepresentable, Codable, Sendable, Hasha
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [WidgetSessionTokenScopes] = [.widgetsUsersTableManage, .widgetsDomainVerificationManage, .widgetsSSOManage, .widgetsApiKeysManage, .widgetsDsyncManage, .widgetsAuditLogStreamingManage, .widgetsPipesManage]
+    public static let allKnownCases: [WidgetSessionTokenScopes] = [
+        .widgetsUsersTableManage,
+        .widgetsDomainVerificationManage,
+        .widgetsSSOManage,
+        .widgetsApiKeysManage,
+        .widgetsDsyncManage,
+        .widgetsAuditLogStreamingManage,
+        .widgetsPipesManage,
+    ]
 }

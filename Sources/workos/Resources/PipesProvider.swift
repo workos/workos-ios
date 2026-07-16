@@ -6,18 +6,15 @@ import Foundation
 public struct PipesProvider: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// List providers for an organization
-    /// 
+    ///
     /// Returns a list of all providers available to the specified organization, along with any configured custom OAuth scopes, enabled state, and organization-managed credentials where applicable.
     public func listOrganizationDataIntegrationConfigurations(
         organizationId: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegrationConfigurationListResponse {
-        let path = "organizations/\(PathEncoding.segment(organizationId))/data_integration_configurations"
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/data_integration_configurations"
         return try await transport.request(
             method: "GET",
             path: path,
@@ -29,7 +26,7 @@ public struct PipesProvider: Sendable {
     }
 
     /// Configure a provider for an organization
-    /// 
+    ///
     /// Creates or updates an organization's provider configuration. Use this endpoint to enable or disable a provider, set custom OAuth scopes, or supply organization-managed OAuth credentials.
     public func updateOrganizationDataIntegrationConfiguration(
         organizationId: String,
@@ -40,7 +37,8 @@ public struct PipesProvider: Sendable {
         clientSecret: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegrationConfigurationResponse {
-        let path = "organizations/\(PathEncoding.segment(organizationId))/data_integration_configurations/\(PathEncoding.segment(slug))"
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/data_integration_configurations/\(PathEncoding.segment(slug))"
         var body = EncodableBody()
         body.set("enabled", enabled)
         body.set("scopes", scopes)

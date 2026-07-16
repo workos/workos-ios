@@ -3,7 +3,8 @@
 import Foundation
 
 /// Enumeration of valid AuthenticateResponseAuthenticationMethod values.
-public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable, Sendable, Hashable {
+public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable, Sendable, Hashable
+{
     case sso
     case password
     case passkey
@@ -95,5 +96,28 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [AuthenticateResponseAuthenticationMethod] = [.sso, .password, .passkey, .appleOAuth, .bitbucketOAuth, .crossAppAuth, .discordOAuth, .externalAuth, .gitHubOAuth, .gitLabOAuth, .googleOAuth, .intuitOAuth, .linkedInOAuth, .microsoftOAuth, .salesforceOAuth, .slackOAuth, .vercelMarketplaceOAuth, .vercelOAuth, .xeroOAuth, .magicAuth, .impersonation, .migratedSession]
+    public static let allKnownCases: [AuthenticateResponseAuthenticationMethod] = [
+        .sso,
+        .password,
+        .passkey,
+        .appleOAuth,
+        .bitbucketOAuth,
+        .crossAppAuth,
+        .discordOAuth,
+        .externalAuth,
+        .gitHubOAuth,
+        .gitLabOAuth,
+        .googleOAuth,
+        .intuitOAuth,
+        .linkedInOAuth,
+        .microsoftOAuth,
+        .salesforceOAuth,
+        .slackOAuth,
+        .vercelMarketplaceOAuth,
+        .vercelOAuth,
+        .xeroOAuth,
+        .magicAuth,
+        .impersonation,
+        .migratedSession,
+    ]
 }

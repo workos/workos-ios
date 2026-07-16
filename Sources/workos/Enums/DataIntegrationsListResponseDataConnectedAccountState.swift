@@ -3,7 +3,9 @@
 import Foundation
 
 /// Enumeration of valid DataIntegrationsListResponseDataConnectedAccountState values.
-public enum DataIntegrationsListResponseDataConnectedAccountState: RawRepresentable, Codable, Sendable, Hashable {
+public enum DataIntegrationsListResponseDataConnectedAccountState: RawRepresentable, Codable,
+    Sendable, Hashable
+{
     case connected
     case needsReauthorization
     case disconnected
@@ -38,5 +40,9 @@ public enum DataIntegrationsListResponseDataConnectedAccountState: RawRepresenta
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DataIntegrationsListResponseDataConnectedAccountState] = [.connected, .needsReauthorization, .disconnected]
+    public static let allKnownCases: [DataIntegrationsListResponseDataConnectedAccountState] = [
+        .connected,
+        .needsReauthorization,
+        .disconnected,
+    ]
 }

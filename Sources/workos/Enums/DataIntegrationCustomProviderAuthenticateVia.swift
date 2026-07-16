@@ -3,7 +3,9 @@
 import Foundation
 
 /// Enumeration of valid DataIntegrationCustomProviderAuthenticateVia values.
-public enum DataIntegrationCustomProviderAuthenticateVia: RawRepresentable, Codable, Sendable, Hashable {
+public enum DataIntegrationCustomProviderAuthenticateVia: RawRepresentable, Codable, Sendable,
+    Hashable
+{
     case requestBody
     case basicAuthHeader
     /// A value not known at SDK generation time.
@@ -35,5 +37,8 @@ public enum DataIntegrationCustomProviderAuthenticateVia: RawRepresentable, Coda
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DataIntegrationCustomProviderAuthenticateVia] = [.requestBody, .basicAuthHeader]
+    public static let allKnownCases: [DataIntegrationCustomProviderAuthenticateVia] = [
+        .requestBody,
+        .basicAuthHeader,
+    ]
 }

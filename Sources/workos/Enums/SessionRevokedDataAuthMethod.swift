@@ -59,5 +59,16 @@ public enum SessionRevokedDataAuthMethod: RawRepresentable, Codable, Sendable, H
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [SessionRevokedDataAuthMethod] = [.crossAppAuth, .externalAuth, .impersonation, .magicCode, .migratedSession, .oauth, .passkey, .password, .sso, .unknown2]
+    public static let allKnownCases: [SessionRevokedDataAuthMethod] = [
+        .crossAppAuth,
+        .externalAuth,
+        .impersonation,
+        .magicCode,
+        .migratedSession,
+        .oauth,
+        .passkey,
+        .password,
+        .sso,
+        .unknown2,
+    ]
 }

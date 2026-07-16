@@ -6,12 +6,8 @@ import Foundation
 public struct Agents: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// Validate an agent credential
-    /// 
+    ///
     /// Validate an agent credential — an API key or access token — against the environment of the API key used to authenticate the request. This is a read-only check: it never consumes or mutates the credential.
     public func createValidate(
         type: AgentAdminValidateCredentialRequestType,
@@ -35,7 +31,7 @@ public struct Agents: Sendable {
     }
 
     /// Get an agent registration
-    /// 
+    ///
     /// Retrieve the details of an agent registration by ID. The registration is scoped to the environment of the API key used to authenticate the request.
     public func getRegistration(
         id: String,

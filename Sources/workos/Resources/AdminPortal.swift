@@ -6,12 +6,8 @@ import Foundation
 public struct AdminPortal: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// Generate a Portal Link
-    /// 
+    ///
     /// Generate a Portal Link scoped to an Organization.
     public func generateLink(
         organization: String,

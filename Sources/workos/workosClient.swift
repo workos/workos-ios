@@ -2,12 +2,12 @@
 
 import Foundation
 
-/// The workos API client.
+/// The WorkOS API client.
 ///
 /// ```swift
-/// let client = workosClient(apiKey: "sk_...")
+/// let client = WorkOSClient(apiKey: "sk_...")
 /// ```
-public final class workosClient: Sendable {
+public final class WorkOSClient: Sendable {
     /// The configuration this client was created with.
     public let configuration: Configuration
     let transport: Transport
@@ -64,10 +64,14 @@ public final class workosClient: Sendable {
     public var multiFactorAuth: MultiFactorAuth { MultiFactorAuth(transport: transport) }
 
     /// Operations for the OrganizationDomains API.
-    public var organizationDomains: OrganizationDomains { OrganizationDomains(transport: transport) }
+    public var organizationDomains: OrganizationDomains {
+        OrganizationDomains(transport: transport)
+    }
 
     /// Operations for the OrganizationMembershipResource API.
-    public var organizationMembership: OrganizationMembershipResource { OrganizationMembershipResource(transport: transport) }
+    public var organizationMembership: OrganizationMembershipResource {
+        OrganizationMembershipResource(transport: transport)
+    }
 
     /// Operations for the Organizations API.
     public var organizations: Organizations { Organizations(transport: transport) }

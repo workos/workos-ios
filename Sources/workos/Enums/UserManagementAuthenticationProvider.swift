@@ -71,5 +71,20 @@ public enum UserManagementAuthenticationProvider: RawRepresentable, Codable, Sen
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [UserManagementAuthenticationProvider] = [.authkit, .appleOAuth, .bitbucketOAuth, .gitHubOAuth, .gitLabOAuth, .googleOAuth, .intuitOAuth, .linkedInOAuth, .microsoftOAuth, .salesforceOAuth, .slackOAuth, .vercelMarketplaceOAuth, .vercelOAuth, .xeroOAuth]
+    public static let allKnownCases: [UserManagementAuthenticationProvider] = [
+        .authkit,
+        .appleOAuth,
+        .bitbucketOAuth,
+        .gitHubOAuth,
+        .gitLabOAuth,
+        .googleOAuth,
+        .intuitOAuth,
+        .linkedInOAuth,
+        .microsoftOAuth,
+        .salesforceOAuth,
+        .slackOAuth,
+        .vercelMarketplaceOAuth,
+        .vercelOAuth,
+        .xeroOAuth,
+    ]
 }

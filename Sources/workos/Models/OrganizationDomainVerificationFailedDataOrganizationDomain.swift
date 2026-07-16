@@ -3,7 +3,9 @@
 import Foundation
 
 /// The organization domain that failed verification.
-public struct OrganizationDomainVerificationFailedDataOrganizationDomain: Codable, Sendable, Equatable {
+public struct OrganizationDomainVerificationFailedDataOrganizationDomain: Codable, Sendable,
+    Equatable
+{
     /// Distinguishes the organization domain object.
     public let object: String
     /// Unique identifier of the organization domain.
@@ -19,7 +21,8 @@ public struct OrganizationDomainVerificationFailedDataOrganizationDomain: Codabl
     /// Validation token to be used in DNS TXT record.
     public let verificationToken: String?
     /// Strategy used to verify the domain.
-    public let verificationStrategy: OrganizationDomainVerificationFailedDataOrganizationDomainVerificationStrategy?
+    public let verificationStrategy:
+        OrganizationDomainVerificationFailedDataOrganizationDomainVerificationStrategy?
     /// An ISO 8601 timestamp.
     public let createdAt: Date
     /// An ISO 8601 timestamp.
@@ -35,7 +38,8 @@ public struct OrganizationDomainVerificationFailedDataOrganizationDomain: Codabl
         state: OrganizationDomainVerificationFailedDataOrganizationDomainState? = nil,
         verificationPrefix: String? = nil,
         verificationToken: String? = nil,
-        verificationStrategy: OrganizationDomainVerificationFailedDataOrganizationDomainVerificationStrategy? = nil
+        verificationStrategy:
+            OrganizationDomainVerificationFailedDataOrganizationDomainVerificationStrategy? = nil
     ) {
         self.object = object
         self.id = id

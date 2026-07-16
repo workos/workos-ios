@@ -15,7 +15,10 @@ public struct APIError: Error, Sendable, Equatable {
     /// The raw decoded error body, when available.
     public let raw: AnyCodable?
 
-    public init(statusCode: Int, message: String, code: String? = nil, requestID: String? = nil, raw: AnyCodable? = nil) {
+    public init(
+        statusCode: Int, message: String, code: String? = nil, requestID: String? = nil,
+        raw: AnyCodable? = nil
+    ) {
         self.statusCode = statusCode
         self.message = message
         self.code = code
@@ -24,8 +27,8 @@ public struct APIError: Error, Sendable, Equatable {
     }
 }
 
-/// The error type thrown by workos SDK operations.
-public enum workosError: Error, Sendable {
+/// The error type thrown by WorkOS SDK operations.
+public enum WorkOSError: Error, Sendable {
     /// 400 — BadRequest error.
     case badRequest(APIError)
     /// 401 — Authentication error.
@@ -52,7 +55,7 @@ public enum workosError: Error, Sendable {
     case invalidResponse
 
     /// Map an HTTP status code and decoded payload to the appropriate case.
-    public static func from(statusCode: Int, apiError: APIError) -> workosError {
+    public static func from(statusCode: Int, apiError: APIError) -> WorkOSError {
         switch statusCode {
         case 400: return .badRequest(apiError)
         case 401: return .authentication(apiError)

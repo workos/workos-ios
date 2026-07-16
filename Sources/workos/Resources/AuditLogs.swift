@@ -6,12 +6,8 @@ import Foundation
 public struct AuditLogs: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// Get Retention
-    /// 
+    ///
     /// Get the configured event retention period for the given Organization.
     public func getOrganizationAuditLogsRetention(
         id: String,
@@ -29,7 +25,7 @@ public struct AuditLogs: Sendable {
     }
 
     /// Set Retention
-    /// 
+    ///
     /// Set the event retention period for the given Organization.
     public func updateOrganizationAuditLogsRetention(
         id: String,
@@ -50,7 +46,7 @@ public struct AuditLogs: Sendable {
     }
 
     /// List Actions
-    /// 
+    ///
     /// Get a list of all Audit Log actions in the current environment.
     public func listActions(
         before: String? = nil,
@@ -84,7 +80,7 @@ public struct AuditLogs: Sendable {
     }
 
     /// List Schemas
-    /// 
+    ///
     /// Get a list of all schemas for the Audit Logs action identified by `:name`.
     public func listActionSchemas(
         actionName: String,
@@ -119,7 +115,7 @@ public struct AuditLogs: Sendable {
     }
 
     /// Create Schema
-    /// 
+    ///
     /// Creates a new Audit Log schema used to validate the payload of incoming Audit Log Events. If the `action` does not exist, it will also be created.
     public func createSchema(
         actionName: String,
@@ -144,13 +140,13 @@ public struct AuditLogs: Sendable {
     }
 
     /// Create Event
-    /// 
+    ///
     /// Create an Audit Log Event.
-    /// 
+    ///
     /// This API supports idempotency which guarantees that performing the same operation multiple times will have the same result as if the operation were performed only once. This is handy in situations where you may need to retry a request due to a failure or prevent accidental duplicate requests from creating more than one resource.
-    /// 
+    ///
     /// To achieve idempotency, you can add `Idempotency-Key` request header to a Create Event request with a unique string as the value. Each subsequent request matching this unique string will return the same response. We suggest using [v4 UUIDs](https://en.wikipedia.org/wiki/Universally_unique_identifier) for idempotency keys to avoid collisions.
-    /// 
+    ///
     /// Idempotency keys expire after 24 hours. The API will generate a new response if you submit a request with an expired key.
     public func createEvent(
         organizationId: String,
@@ -172,7 +168,7 @@ public struct AuditLogs: Sendable {
     }
 
     /// Create Export
-    /// 
+    ///
     /// Create an Audit Log Export. Exports are scoped to a single organization within a specified date range.
     public func createExport(
         organizationId: String,
@@ -206,7 +202,7 @@ public struct AuditLogs: Sendable {
     }
 
     /// Get Export
-    /// 
+    ///
     /// Get an Audit Log Export. The URL will expire after 10 minutes. If the export is needed again at a later time, refetching the export will regenerate the URL.
     public func getExport(
         auditLogExportId: String,

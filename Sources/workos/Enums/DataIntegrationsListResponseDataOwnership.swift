@@ -3,7 +3,8 @@
 import Foundation
 
 /// Enumeration of valid DataIntegrationsListResponseDataOwnership values.
-public enum DataIntegrationsListResponseDataOwnership: RawRepresentable, Codable, Sendable, Hashable {
+public enum DataIntegrationsListResponseDataOwnership: RawRepresentable, Codable, Sendable, Hashable
+{
     case userlandUser
     case organization
     /// A value not known at SDK generation time.
@@ -35,5 +36,8 @@ public enum DataIntegrationsListResponseDataOwnership: RawRepresentable, Codable
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DataIntegrationsListResponseDataOwnership] = [.userlandUser, .organization]
+    public static let allKnownCases: [DataIntegrationsListResponseDataOwnership] = [
+        .userlandUser,
+        .organization,
+    ]
 }

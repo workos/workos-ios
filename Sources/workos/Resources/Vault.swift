@@ -6,12 +6,8 @@ import Foundation
 public struct Vault: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// Create a data key
-    /// 
+    ///
     /// Generate an isolated encryption key for local encryption operations.
     public func createDataKey(
         context: [String: String],
@@ -31,7 +27,7 @@ public struct Vault: Sendable {
     }
 
     /// Decrypt a data key
-    /// 
+    ///
     /// Decrypt a previously encrypted data key from WorkOS Vault.
     public func createDecrypt(
         keys: String,
@@ -51,7 +47,7 @@ public struct Vault: Sendable {
     }
 
     /// Re-encrypt a data key
-    /// 
+    ///
     /// Decrypt an existing data key and re-encrypt it under a new key context.
     public func createRekey(
         context: [String: String],
@@ -73,7 +69,7 @@ public struct Vault: Sendable {
     }
 
     /// List objects
-    /// 
+    ///
     /// List all encrypted objects with cursor-based pagination.
     public func listKv(
         limit: Int? = nil,
@@ -115,7 +111,7 @@ public struct Vault: Sendable {
     }
 
     /// Create an object
-    /// 
+    ///
     /// Encrypt and store a new key-value object.
     public func createKv(
         keyContext: [String: String],
@@ -139,7 +135,7 @@ public struct Vault: Sendable {
     }
 
     /// Read an object by name
-    /// 
+    ///
     /// Fetch and decrypt an object by its unique name.
     public func getName(
         name: String,
@@ -157,7 +153,7 @@ public struct Vault: Sendable {
     }
 
     /// Read an object by ID
-    /// 
+    ///
     /// Fetch and decrypt an object by its unique identifier.
     public func getKv(
         id: String,
@@ -175,7 +171,7 @@ public struct Vault: Sendable {
     }
 
     /// Update an object
-    /// 
+    ///
     /// Update the value of an existing encrypted object.
     public func updateKv(
         id: String,
@@ -198,7 +194,7 @@ public struct Vault: Sendable {
     }
 
     /// Delete an object
-    /// 
+    ///
     /// Delete an encrypted object.
     public func deleteKv(
         id: String,
@@ -220,7 +216,7 @@ public struct Vault: Sendable {
     }
 
     /// Describe an object
-    /// 
+    ///
     /// Fetch metadata for an object without decrypting it.
     public func listKvMetadata(
         id: String,
@@ -238,7 +234,7 @@ public struct Vault: Sendable {
     }
 
     /// List object versions
-    /// 
+    ///
     /// Retrieve all versions for a specific object.
     public func listKvVersions(
         id: String,

@@ -3,7 +3,9 @@
 import Foundation
 
 /// Enumeration of valid UpdateCustomProviderDefinitionAuthenticateVia values.
-public enum UpdateCustomProviderDefinitionAuthenticateVia: RawRepresentable, Codable, Sendable, Hashable {
+public enum UpdateCustomProviderDefinitionAuthenticateVia: RawRepresentable, Codable, Sendable,
+    Hashable
+{
     case requestBody
     case basicAuthHeader
     /// A value not known at SDK generation time.
@@ -35,5 +37,8 @@ public enum UpdateCustomProviderDefinitionAuthenticateVia: RawRepresentable, Cod
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [UpdateCustomProviderDefinitionAuthenticateVia] = [.requestBody, .basicAuthHeader]
+    public static let allKnownCases: [UpdateCustomProviderDefinitionAuthenticateVia] = [
+        .requestBody,
+        .basicAuthHeader,
+    ]
 }

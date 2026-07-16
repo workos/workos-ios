@@ -38,5 +38,9 @@ public enum AuthenticationFactorsCreateRequestType: RawRepresentable, Codable, S
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [AuthenticationFactorsCreateRequestType] = [.genericOtp, .sms, .totp]
+    public static let allKnownCases: [AuthenticationFactorsCreateRequestType] = [
+        .genericOtp,
+        .sms,
+        .totp,
+    ]
 }

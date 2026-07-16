@@ -41,5 +41,10 @@ public enum AuditLogConfigurationLogStreamState: RawRepresentable, Codable, Send
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [AuditLogConfigurationLogStreamState] = [.active, .inactive, .error, .invalid]
+    public static let allKnownCases: [AuditLogConfigurationLogStreamState] = [
+        .active,
+        .inactive,
+        .error,
+        .invalid,
+    ]
 }

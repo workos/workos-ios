@@ -3,9 +3,12 @@
 import Foundation
 
 /// The previous configured targets for the flag rule.
-public struct FlagRuleUpdatedContextPreviousAttributeContextConfiguredTarget: Codable, Sendable, Equatable {
+public struct FlagRuleUpdatedContextPreviousAttributeContextConfiguredTarget: Codable, Sendable,
+    Equatable
+{
     /// The organizations targeted by the flag rule.
-    public let organizations: [FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetOrganization]
+    public let organizations:
+        [FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetOrganization]
     /// The users targeted by the flag rule.
     public let users: [FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetUser]
 

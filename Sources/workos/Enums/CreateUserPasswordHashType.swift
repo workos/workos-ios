@@ -50,5 +50,13 @@ public enum CreateUserPasswordHashType: RawRepresentable, Codable, Sendable, Has
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [CreateUserPasswordHashType] = [.bcrypt, .firebaseScrypt, .ssha, .ssha256, .scrypt, .pbkdf2, .argon2]
+    public static let allKnownCases: [CreateUserPasswordHashType] = [
+        .bcrypt,
+        .firebaseScrypt,
+        .ssha,
+        .ssha256,
+        .scrypt,
+        .pbkdf2,
+        .argon2,
+    ]
 }

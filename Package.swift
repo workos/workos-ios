@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "workos",
+    name: "WorkOS",
     platforms: [
         .iOS(.v17),
         .macCatalyst(.v17),
@@ -14,11 +14,11 @@ let package = Package(
         .visionOS(.v1),
     ],
     products: [
-        .library(name: "workos", targets: ["workos"]),
+        .library(name: "WorkOS", targets: ["WorkOS"])
     ],
     targets: [
-        .target(name: "workos"),
-        .testTarget(name: "workosTests", dependencies: ["workos"]),
+        .target(name: "WorkOS"),
+        .testTarget(name: "WorkOSTests", dependencies: ["WorkOS"]),
     ],
     swiftLanguageModes: [.v5]
 )

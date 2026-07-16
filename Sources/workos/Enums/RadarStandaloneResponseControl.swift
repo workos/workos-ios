@@ -50,5 +50,13 @@ public enum RadarStandaloneResponseControl: RawRepresentable, Codable, Sendable,
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [RadarStandaloneResponseControl] = [.botDetection, .bruteForceAttack, .impossibleTravel, .repeatSignUp, .staleAccount, .unrecognizedDevice, .restriction]
+    public static let allKnownCases: [RadarStandaloneResponseControl] = [
+        .botDetection,
+        .bruteForceAttack,
+        .impossibleTravel,
+        .repeatSignUp,
+        .staleAccount,
+        .unrecognizedDevice,
+        .restriction,
+    ]
 }

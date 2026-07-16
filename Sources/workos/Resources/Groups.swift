@@ -6,12 +6,8 @@ import Foundation
 public struct Groups: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// List groups
-    /// 
+    ///
     /// Get a paginated list of groups within an organization.
     public func listOrganization(
         organizationId: String,
@@ -46,7 +42,7 @@ public struct Groups: Sendable {
     }
 
     /// Create a group
-    /// 
+    ///
     /// Create a new group within an organization.
     public func createOrganization(
         organizationId: String,
@@ -69,14 +65,15 @@ public struct Groups: Sendable {
     }
 
     /// Get a group
-    /// 
+    ///
     /// Retrieve a group by its ID within an organization.
     public func getOrganization(
         organizationId: String,
         groupId: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> Group {
-        let path = "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))"
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))"
         return try await transport.request(
             method: "GET",
             path: path,
@@ -88,7 +85,7 @@ public struct Groups: Sendable {
     }
 
     /// Update a group
-    /// 
+    ///
     /// Update an existing group. Only the fields provided in the request body will be updated.
     public func updateOrganization(
         organizationId: String,
@@ -97,7 +94,8 @@ public struct Groups: Sendable {
         description: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Group {
-        let path = "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))"
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))"
         var body = EncodableBody()
         body.set("name", name)
         body.set("description", description)
@@ -112,14 +110,15 @@ public struct Groups: Sendable {
     }
 
     /// Delete a group
-    /// 
+    ///
     /// Delete a group from an organization.
     public func deleteOrganization(
         organizationId: String,
         groupId: String,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))"
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))"
         try await transport.requestVoid(
             method: "DELETE",
             path: path,
@@ -130,7 +129,7 @@ public struct Groups: Sendable {
     }
 
     /// List Group members
-    /// 
+    ///
     /// Get a list of organization memberships in a group.
     public func listGroupOrganizationMemberships(
         organizationId: String,
@@ -141,7 +140,8 @@ public struct Groups: Sendable {
         order: PaginationOrder? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<UserOrganizationMembershipBaseListData> {
-        let path = "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))/organization-memberships"
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))/organization-memberships"
         var query: [URLQueryItem] = []
         if let before {
             query.append(URLQueryItem(name: "before", value: before))
@@ -166,7 +166,7 @@ public struct Groups: Sendable {
     }
 
     /// Add a member to a Group
-    /// 
+    ///
     /// Add an organization membership to a group.
     public func createGroupOrganizationMembership(
         organizationId: String,
@@ -174,7 +174,8 @@ public struct Groups: Sendable {
         organizationMembershipId: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> Group {
-        let path = "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))/organization-memberships"
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))/organization-memberships"
         var body = EncodableBody()
         body.set("organization_membership_id", organizationMembershipId)
         return try await transport.request(
@@ -188,7 +189,7 @@ public struct Groups: Sendable {
     }
 
     /// Remove a member from a Group
-    /// 
+    ///
     /// Remove an organization membership from a group.
     public func deleteGroupOrganizationMembership(
         organizationId: String,
@@ -196,7 +197,8 @@ public struct Groups: Sendable {
         omId: String,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))/organization-memberships/\(PathEncoding.segment(omId))"
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))/organization-memberships/\(PathEncoding.segment(omId))"
         try await transport.requestVoid(
             method: "DELETE",
             path: path,

@@ -38,5 +38,7 @@ public enum RadarStandaloneResponseVerdict: RawRepresentable, Codable, Sendable,
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [RadarStandaloneResponseVerdict] = [.allow, .block, .challenge]
+    public static let allKnownCases: [RadarStandaloneResponseVerdict] = [
+        .allow, .block, .challenge,
+    ]
 }

@@ -3,7 +3,9 @@
 import Foundation
 
 /// Enumeration of valid OrganizationDomainVerificationFailedDataOrganizationDomainState values.
-public enum OrganizationDomainVerificationFailedDataOrganizationDomainState: RawRepresentable, Codable, Sendable, Hashable {
+public enum OrganizationDomainVerificationFailedDataOrganizationDomainState: RawRepresentable,
+    Codable, Sendable, Hashable
+{
     case failed
     case legacyVerified
     case pending
@@ -44,5 +46,12 @@ public enum OrganizationDomainVerificationFailedDataOrganizationDomainState: Raw
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [OrganizationDomainVerificationFailedDataOrganizationDomainState] = [.failed, .legacyVerified, .pending, .unverified, .verified]
+    public static let allKnownCases:
+        [OrganizationDomainVerificationFailedDataOrganizationDomainState] = [
+            .failed,
+            .legacyVerified,
+            .pending,
+            .unverified,
+            .verified,
+        ]
 }

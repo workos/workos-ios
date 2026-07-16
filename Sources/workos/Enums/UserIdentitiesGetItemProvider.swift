@@ -71,5 +71,20 @@ public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, 
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [UserIdentitiesGetItemProvider] = [.appleOAuth, .bitbucketOAuth, .discordOAuth, .githubOAuth, .gitLabOAuth, .googleOAuth, .intuitOAuth, .linkedInOAuth, .microsoftOAuth, .salesforceOAuth, .slackOAuth, .vercelMarketplaceOAuth, .vercelOAuth, .xeroOAuth]
+    public static let allKnownCases: [UserIdentitiesGetItemProvider] = [
+        .appleOAuth,
+        .bitbucketOAuth,
+        .discordOAuth,
+        .githubOAuth,
+        .gitLabOAuth,
+        .googleOAuth,
+        .intuitOAuth,
+        .linkedInOAuth,
+        .microsoftOAuth,
+        .salesforceOAuth,
+        .slackOAuth,
+        .vercelMarketplaceOAuth,
+        .vercelOAuth,
+        .xeroOAuth,
+    ]
 }

@@ -44,5 +44,11 @@ public enum DsyncDeletedDataState: RawRepresentable, Codable, Sendable, Hashable
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DsyncDeletedDataState] = [.active, .validating, .invalidCredentials, .inactive, .deleting]
+    public static let allKnownCases: [DsyncDeletedDataState] = [
+        .active,
+        .validating,
+        .invalidCredentials,
+        .inactive,
+        .deleting,
+    ]
 }

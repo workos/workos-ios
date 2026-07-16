@@ -44,5 +44,11 @@ public enum OrganizationDomainUpdatedDataState: RawRepresentable, Codable, Senda
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [OrganizationDomainUpdatedDataState] = [.failed, .legacyVerified, .pending, .unverified, .verified]
+    public static let allKnownCases: [OrganizationDomainUpdatedDataState] = [
+        .failed,
+        .legacyVerified,
+        .pending,
+        .unverified,
+        .verified,
+    ]
 }

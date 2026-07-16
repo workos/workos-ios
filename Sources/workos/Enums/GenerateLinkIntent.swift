@@ -50,5 +50,13 @@ public enum GenerateLinkIntent: RawRepresentable, Codable, Sendable, Hashable {
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [GenerateLinkIntent] = [.sso, .dsync, .auditLogs, .logStreams, .domainVerification, .certificateRenewal, .bringYourOwnKey]
+    public static let allKnownCases: [GenerateLinkIntent] = [
+        .sso,
+        .dsync,
+        .auditLogs,
+        .logStreams,
+        .domainVerification,
+        .certificateRenewal,
+        .bringYourOwnKey,
+    ]
 }

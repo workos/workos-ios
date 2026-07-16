@@ -50,5 +50,13 @@ public enum AuditLogConfigurationLogStreamType: RawRepresentable, Codable, Senda
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [AuditLogConfigurationLogStreamType] = [.azureSentinel, .datadog, .genericHttps, .googleCloudStorage, .s3, .snowflake, .splunk]
+    public static let allKnownCases: [AuditLogConfigurationLogStreamType] = [
+        .azureSentinel,
+        .datadog,
+        .genericHttps,
+        .googleCloudStorage,
+        .s3,
+        .snowflake,
+        .splunk,
+    ]
 }

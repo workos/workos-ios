@@ -6,12 +6,8 @@ import Foundation
 public struct Radar: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// Create an attempt
-    /// 
+    ///
     /// Assess a request for risk using the Radar engine and receive a verdict.
     public func createAttempt(
         ipAddress: String,
@@ -41,7 +37,7 @@ public struct Radar: Sendable {
     }
 
     /// Update a Radar attempt
-    /// 
+    ///
     /// You may optionally inform Radar that an authentication attempt or challenge was successful using this endpoint. Some Radar controls depend on tracking recent successful attempts, such as impossible travel.
     public func updateAttempt(
         id: String,
@@ -63,7 +59,7 @@ public struct Radar: Sendable {
     }
 
     /// Add an entry to a Radar list
-    /// 
+    ///
     /// Add an entry to a Radar list.
     public func addListEntry(
         type: RadarListType,
@@ -71,7 +67,8 @@ public struct Radar: Sendable {
         entry: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> RadarListEntryAlreadyPresentResponse {
-        let path = "radar/lists/\(PathEncoding.segment(type.rawValue))/\(PathEncoding.segment(action.rawValue))"
+        let path =
+            "radar/lists/\(PathEncoding.segment(type.rawValue))/\(PathEncoding.segment(action.rawValue))"
         var body = EncodableBody()
         body.set("entry", entry)
         return try await transport.request(
@@ -85,7 +82,7 @@ public struct Radar: Sendable {
     }
 
     /// Remove an entry from a Radar list
-    /// 
+    ///
     /// Remove an entry from a Radar list.
     public func removeListEntry(
         type: RadarListType,
@@ -93,7 +90,8 @@ public struct Radar: Sendable {
         entry: String,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "radar/lists/\(PathEncoding.segment(type.rawValue))/\(PathEncoding.segment(action.rawValue))"
+        let path =
+            "radar/lists/\(PathEncoding.segment(type.rawValue))/\(PathEncoding.segment(action.rawValue))"
         var body = EncodableBody()
         body.set("entry", entry)
         try await transport.requestVoid(

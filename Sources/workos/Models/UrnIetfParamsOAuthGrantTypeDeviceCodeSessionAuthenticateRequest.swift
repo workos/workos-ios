@@ -2,7 +2,9 @@
 
 import Foundation
 
-public struct UrnIetfParamsOAuthGrantTypeDeviceCodeSessionAuthenticateRequest: Codable, Sendable, Equatable {
+public struct UrnIetfParamsOAuthGrantTypeDeviceCodeSessionAuthenticateRequest: Codable, Sendable,
+    Equatable
+{
     /// The client ID of the application.
     public let clientId: String
     public let grantType: String

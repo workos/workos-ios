@@ -3,7 +3,9 @@
 import Foundation
 
 /// Enumeration of valid OrganizationDomainUpdatedDataVerificationStrategy values.
-public enum OrganizationDomainUpdatedDataVerificationStrategy: RawRepresentable, Codable, Sendable, Hashable {
+public enum OrganizationDomainUpdatedDataVerificationStrategy: RawRepresentable, Codable, Sendable,
+    Hashable
+{
     case dns
     case manual
     /// A value not known at SDK generation time.
@@ -35,5 +37,8 @@ public enum OrganizationDomainUpdatedDataVerificationStrategy: RawRepresentable,
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [OrganizationDomainUpdatedDataVerificationStrategy] = [.dns, .manual]
+    public static let allKnownCases: [OrganizationDomainUpdatedDataVerificationStrategy] = [
+        .dns,
+        .manual,
+    ]
 }

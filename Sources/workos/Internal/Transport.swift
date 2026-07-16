@@ -2,7 +2,7 @@
 
 import Foundation
 #if canImport(FoundationNetworking)
-import FoundationNetworking
+    import FoundationNetworking
 #endif
 
 /// The HTTP transport: request assembly, retries with backoff, and error mapping.
@@ -23,11 +23,12 @@ public struct Transport: Sendable {
         options: RequestOptions?,
         as type: T.Type
     ) async throws -> T {
-        let data = try await perform(method: method, path: path, query: query, body: body, options: options)
+        let data = try await perform(
+            method: method, path: path, query: query, body: body, options: options)
         do {
             return try Coding.makeDecoder().decode(T.self, from: data)
         } catch {
-            throw workosError.decoding(error)
+            throw WorkOSError.decoding(error)
         }
     }
 
@@ -38,7 +39,8 @@ public struct Transport: Sendable {
         body: (any Encodable & Sendable)?,
         options: RequestOptions?
     ) async throws {
-        _ = try await perform(method: method, path: path, query: query, body: body, options: options)
+        _ = try await perform(
+            method: method, path: path, query: query, body: body, options: options)
     }
 
     private func perform(
@@ -52,13 +54,13 @@ public struct Transport: Sendable {
         if urlString.hasSuffix("/") { urlString.removeLast() }
         urlString += "/" + path
         guard var components = URLComponents(string: urlString) else {
-            throw workosError.invalidResponse
+            throw WorkOSError.invalidResponse
         }
         if !query.isEmpty {
             components.queryItems = (components.queryItems ?? []) + query
         }
         guard let url = components.url else {
-            throw workosError.invalidResponse
+            throw WorkOSError.invalidResponse
         }
 
         var request = URLRequest(url: url)
@@ -74,7 +76,8 @@ public struct Transport: Sendable {
         }
 
         if method == "POST" {
-            request.setValue(options?.idempotencyKey ?? UUID().uuidString, forHTTPHeaderField: "Idempotency-Key")
+            request.setValue(
+                options?.idempotencyKey ?? UUID().uuidString, forHTTPHeaderField: "Idempotency-Key")
         }
 
         if let options {
@@ -88,14 +91,17 @@ public struct Transport: Sendable {
             do {
                 let (data, response) = try await session.data(for: request)
                 guard let http = response as? HTTPURLResponse else {
-                    throw workosError.invalidResponse
+                    throw WorkOSError.invalidResponse
                 }
                 if (200..<300).contains(http.statusCode) {
                     return data
                 }
-                if configuration.retryableStatusCodes.contains(http.statusCode), attempt < configuration.maxRetries {
+                if configuration.retryableStatusCodes.contains(http.statusCode),
+                    attempt < configuration.maxRetries
+                {
                     attempt += 1
-                    let delay = backoffNanoseconds(attempt: attempt, retryAfter: http.value(forHTTPHeaderField: "Retry-After"))
+                    let delay = backoffNanoseconds(
+                        attempt: attempt, retryAfter: http.value(forHTTPHeaderField: "Retry-After"))
                     try await Task.sleep(nanoseconds: delay)
                     continue
                 }
@@ -111,7 +117,7 @@ public struct Transport: Sendable {
                     try await Task.sleep(nanoseconds: delay)
                     continue
                 }
-                throw workosError.network(error)
+                throw WorkOSError.network(error)
             }
         }
     }
@@ -127,7 +133,7 @@ public struct Transport: Sendable {
         return UInt64(delay * 1_000_000_000)
     }
 
-    private func makeError(statusCode: Int, data: Data, requestID: String?) -> workosError {
+    private func makeError(statusCode: Int, data: Data, requestID: String?) -> WorkOSError {
         let decoder = Coding.makeDecoder()
         let body = try? decoder.decode(APIErrorBody.self, from: data)
         let raw = try? decoder.decode(AnyCodable.self, from: data)
@@ -139,7 +145,7 @@ public struct Transport: Sendable {
             requestID: requestID ?? body?.requestID,
             raw: raw
         )
-        return workosError.from(statusCode: statusCode, apiError: apiError)
+        return WorkOSError.from(statusCode: statusCode, apiError: apiError)
     }
 }
 

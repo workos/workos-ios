@@ -41,5 +41,10 @@ public enum InvitationResentDataState: RawRepresentable, Codable, Sendable, Hash
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [InvitationResentDataState] = [.pending, .accepted, .expired, .revoked]
+    public static let allKnownCases: [InvitationResentDataState] = [
+        .pending,
+        .accepted,
+        .expired,
+        .revoked,
+    ]
 }

@@ -3,7 +3,9 @@
 import Foundation
 
 /// Enumeration of valid DataIntegrationsListResponseDataAuthMethods values.
-public enum DataIntegrationsListResponseDataAuthMethods: RawRepresentable, Codable, Sendable, Hashable {
+public enum DataIntegrationsListResponseDataAuthMethods: RawRepresentable, Codable, Sendable,
+    Hashable
+{
     case oauth
     case apiKey
     /// A value not known at SDK generation time.
@@ -35,5 +37,8 @@ public enum DataIntegrationsListResponseDataAuthMethods: RawRepresentable, Codab
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DataIntegrationsListResponseDataAuthMethods] = [.oauth, .apiKey]
+    public static let allKnownCases: [DataIntegrationsListResponseDataAuthMethods] = [
+        .oauth,
+        .apiKey,
+    ]
 }

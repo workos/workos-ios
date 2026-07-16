@@ -2,7 +2,9 @@
 
 import Foundation
 
-public struct FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetOrganization: Codable, Sendable, Equatable {
+public struct FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetOrganization: Codable,
+    Sendable, Equatable
+{
     /// The ID of the organization.
     public let id: String
     /// The name of the organization.

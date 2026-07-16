@@ -35,5 +35,8 @@ public enum AgentAdminValidateCredentialRequestType: RawRepresentable, Codable, 
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [AgentAdminValidateCredentialRequestType] = [.apiKey, .accessToken]
+    public static let allKnownCases: [AgentAdminValidateCredentialRequestType] = [
+        .apiKey,
+        .accessToken,
+    ]
 }

@@ -3,7 +3,8 @@
 import Foundation
 
 /// Enumeration of valid AuthenticationRadarRiskDetectedDataAction values.
-public enum AuthenticationRadarRiskDetectedDataAction: RawRepresentable, Codable, Sendable, Hashable {
+public enum AuthenticationRadarRiskDetectedDataAction: RawRepresentable, Codable, Sendable, Hashable
+{
     case signup
     case login
     /// A value not known at SDK generation time.
@@ -35,5 +36,7 @@ public enum AuthenticationRadarRiskDetectedDataAction: RawRepresentable, Codable
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [AuthenticationRadarRiskDetectedDataAction] = [.signup, .login]
+    public static let allKnownCases: [AuthenticationRadarRiskDetectedDataAction] = [
+        .signup, .login,
+    ]
 }

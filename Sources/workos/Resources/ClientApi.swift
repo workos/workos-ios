@@ -6,12 +6,8 @@ import Foundation
 public struct ClientApi: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// Generate a Client API token
-    /// 
+    ///
     /// Generate a short-lived, session-bound token for the Client GraphQL API, scoped to an organization and user.
     public func createToken(
         organizationId: String,

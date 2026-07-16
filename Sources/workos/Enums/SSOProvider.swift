@@ -68,5 +68,19 @@ public enum SSOProvider: RawRepresentable, Codable, Sendable, Hashable {
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [SSOProvider] = [.appleOAuth, .bitbucketOAuth, .gitHubOAuth, .gitLabOAuth, .googleOAuth, .intuitOAuth, .linkedInOAuth, .microsoftOAuth, .salesforceOAuth, .slackOAuth, .vercelMarketplaceOAuth, .vercelOAuth, .xeroOAuth]
+    public static let allKnownCases: [SSOProvider] = [
+        .appleOAuth,
+        .bitbucketOAuth,
+        .gitHubOAuth,
+        .gitLabOAuth,
+        .googleOAuth,
+        .intuitOAuth,
+        .linkedInOAuth,
+        .microsoftOAuth,
+        .salesforceOAuth,
+        .slackOAuth,
+        .vercelMarketplaceOAuth,
+        .vercelOAuth,
+        .xeroOAuth,
+    ]
 }

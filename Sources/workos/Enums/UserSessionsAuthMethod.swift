@@ -59,5 +59,16 @@ public enum UserSessionsAuthMethod: RawRepresentable, Codable, Sendable, Hashabl
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [UserSessionsAuthMethod] = [.crossAppAuth, .externalAuth, .impersonation, .magicCode, .migratedSession, .oauth, .passkey, .password, .sso, .unknown2]
+    public static let allKnownCases: [UserSessionsAuthMethod] = [
+        .crossAppAuth,
+        .externalAuth,
+        .impersonation,
+        .magicCode,
+        .migratedSession,
+        .oauth,
+        .passkey,
+        .password,
+        .sso,
+        .unknown2,
+    ]
 }

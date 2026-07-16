@@ -30,7 +30,8 @@ public enum AnyCodable: Codable, Sendable, Equatable {
         } else if let value = try? container.decode([String: AnyCodable].self) {
             self = .object(value)
         } else {
-            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unsupported JSON value")
+            throw DecodingError.dataCorruptedError(
+                in: container, debugDescription: "Unsupported JSON value")
         }
     }
 

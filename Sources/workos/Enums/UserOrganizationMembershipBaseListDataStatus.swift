@@ -3,7 +3,9 @@
 import Foundation
 
 /// Enumeration of valid UserOrganizationMembershipBaseListDataStatus values.
-public enum UserOrganizationMembershipBaseListDataStatus: RawRepresentable, Codable, Sendable, Hashable {
+public enum UserOrganizationMembershipBaseListDataStatus: RawRepresentable, Codable, Sendable,
+    Hashable
+{
     case active
     case inactive
     case pending
@@ -38,5 +40,9 @@ public enum UserOrganizationMembershipBaseListDataStatus: RawRepresentable, Coda
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [UserOrganizationMembershipBaseListDataStatus] = [.active, .inactive, .pending]
+    public static let allKnownCases: [UserOrganizationMembershipBaseListDataStatus] = [
+        .active,
+        .inactive,
+        .pending,
+    ]
 }

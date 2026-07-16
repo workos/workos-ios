@@ -6,12 +6,8 @@ import Foundation
 public struct Pipes: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// List data integrations
-    /// 
+    ///
     /// Lists the environment's data integrations configured with `custom` or `organization` credentials, including custom providers.
     public func listDataIntegrations(
         before: String? = nil,
@@ -45,7 +41,7 @@ public struct Pipes: Sendable {
     }
 
     /// Create a data integration
-    /// 
+    ///
     /// Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials, or `organization` to have each organization supply its own. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
     public func createDataIntegration(
         provider: String,
@@ -75,7 +71,7 @@ public struct Pipes: Sendable {
     }
 
     /// Get a data integration
-    /// 
+    ///
     /// Retrieves a data integration by its slug.
     public func getDataIntegration(
         slug: String,
@@ -93,7 +89,7 @@ public struct Pipes: Sendable {
     }
 
     /// Update a data integration
-    /// 
+    ///
     /// Updates the description, enabled state, or custom credentials of a data integration. For custom providers, `custom_provider` updates the OAuth definition.
     public func updateDataIntegration(
         slug: String,
@@ -122,7 +118,7 @@ public struct Pipes: Sendable {
     }
 
     /// Delete a data integration
-    /// 
+    ///
     /// Deletes a data integration and all of its connected installations. For a custom provider, also deletes the custom provider definition.
     public func deleteDataIntegration(
         slug: String,
@@ -139,7 +135,7 @@ public struct Pipes: Sendable {
     }
 
     /// Upsert an API key for a connected account
-    /// 
+    ///
     /// Creates or updates an API-key-based installation for the specified integration and user. If an installation already exists, the stored API key is rotated to the new value.
     public func updateDataIntegrationApiKey(
         slug: String,
@@ -164,7 +160,7 @@ public struct Pipes: Sendable {
     }
 
     /// Get authorization URL
-    /// 
+    ///
     /// Generates an OAuth authorization URL to initiate the connection flow for a user. Redirect the user to the returned URL to begin the OAuth flow with the third-party provider.
     public func authorizeDataIntegration(
         slug: String,
@@ -189,7 +185,7 @@ public struct Pipes: Sendable {
     }
 
     /// Vend credentials for a connected account
-    /// 
+    ///
     /// Returns credentials for a user's connected account. Branches on the installation's `auth_method`: OAuth installations return an access token (refreshed if needed); API-key installations return the stored secret.
     public func createDataIntegrationCredential(
         slug: String,
@@ -212,7 +208,7 @@ public struct Pipes: Sendable {
     }
 
     /// Get an access token for a connected account
-    /// 
+    ///
     /// Fetches a valid OAuth access token for a user's connected account. WorkOS automatically handles token refresh, ensuring you always receive a valid, non-expired token.
     public func getAccessToken(
         provider: String,
@@ -235,7 +231,7 @@ public struct Pipes: Sendable {
     }
 
     /// Get a connected account
-    /// 
+    ///
     /// Retrieves a user's [connected account](https://workos.com/docs/reference/pipes/connected-account) for a specific provider.
     public func getUserConnectedAccount(
         userId: String,
@@ -243,7 +239,8 @@ public struct Pipes: Sendable {
         organizationId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
-        let path = "user_management/users/\(PathEncoding.segment(userId))/connected_accounts/\(PathEncoding.segment(slug))"
+        let path =
+            "user_management/users/\(PathEncoding.segment(userId))/connected_accounts/\(PathEncoding.segment(slug))"
         var query: [URLQueryItem] = []
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
@@ -259,7 +256,7 @@ public struct Pipes: Sendable {
     }
 
     /// Import a connected account
-    /// 
+    ///
     /// Imports a [connected account](https://workos.com/docs/reference/pipes/connected-account) for a user by providing OAuth tokens directly. Use this to migrate existing connections or set up connections without going through the OAuth flow.
     public func createUserConnectedAccount(
         userId: String,
@@ -272,7 +269,8 @@ public struct Pipes: Sendable {
         organizationId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
-        let path = "user_management/users/\(PathEncoding.segment(userId))/connected_accounts/\(PathEncoding.segment(slug))"
+        let path =
+            "user_management/users/\(PathEncoding.segment(userId))/connected_accounts/\(PathEncoding.segment(slug))"
         var query: [URLQueryItem] = []
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
@@ -294,7 +292,7 @@ public struct Pipes: Sendable {
     }
 
     /// Update a connected account
-    /// 
+    ///
     /// Updates a user's [connected account](https://workos.com/docs/reference/pipes/connected-account) tokens, scopes, or state for a specific provider.
     public func updateUserConnectedAccount(
         userId: String,
@@ -307,7 +305,8 @@ public struct Pipes: Sendable {
         organizationId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
-        let path = "user_management/users/\(PathEncoding.segment(userId))/connected_accounts/\(PathEncoding.segment(slug))"
+        let path =
+            "user_management/users/\(PathEncoding.segment(userId))/connected_accounts/\(PathEncoding.segment(slug))"
         var query: [URLQueryItem] = []
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
@@ -329,7 +328,7 @@ public struct Pipes: Sendable {
     }
 
     /// Delete a connected account
-    /// 
+    ///
     /// Disconnects WorkOS's account for the user, including removing any stored access and refresh tokens. The user will need to reauthorize if they want to reconnect. This does not revoke access on the provider side.
     public func deleteUserConnectedAccount(
         userId: String,
@@ -337,7 +336,8 @@ public struct Pipes: Sendable {
         organizationId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let path = "user_management/users/\(PathEncoding.segment(userId))/connected_accounts/\(PathEncoding.segment(slug))"
+        let path =
+            "user_management/users/\(PathEncoding.segment(userId))/connected_accounts/\(PathEncoding.segment(slug))"
         var query: [URLQueryItem] = []
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
@@ -352,7 +352,7 @@ public struct Pipes: Sendable {
     }
 
     /// List providers for a user
-    /// 
+    ///
     /// Retrieves a list of available providers and the user's connection status for each. Returns all providers configured for your environment, along with the user's [connected account](https://workos.com/docs/reference/pipes/connected-account) information where applicable.
     public func listUserDataProviders(
         userId: String,

@@ -50,5 +50,13 @@ public enum RadarListType: RawRepresentable, Codable, Sendable, Hashable {
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [RadarListType] = [.ipAddress, .domain, .email, .device, .userAgent, .deviceFingerprint, .country]
+    public static let allKnownCases: [RadarListType] = [
+        .ipAddress,
+        .domain,
+        .email,
+        .device,
+        .userAgent,
+        .deviceFingerprint,
+        .country,
+    ]
 }

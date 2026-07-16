@@ -44,5 +44,11 @@ public enum DirectoryState: RawRepresentable, Codable, Sendable, Hashable {
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DirectoryState] = [.linked, .validating, .invalidCredentials, .unlinked, .deleting]
+    public static let allKnownCases: [DirectoryState] = [
+        .linked,
+        .validating,
+        .invalidCredentials,
+        .unlinked,
+        .deleting,
+    ]
 }

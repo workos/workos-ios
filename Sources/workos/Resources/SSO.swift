@@ -6,12 +6,8 @@ import Foundation
 public struct SSO: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// List Connections
-    /// 
+    ///
     /// Get a list of all of your existing connections matching the criteria specified.
     public func listConnections(
         before: String? = nil,
@@ -61,7 +57,7 @@ public struct SSO: Sendable {
     }
 
     /// Get a Connection
-    /// 
+    ///
     /// Get the details of an existing connection.
     public func getConnection(
         id: String,
@@ -79,7 +75,7 @@ public struct SSO: Sendable {
     }
 
     /// Delete a Connection
-    /// 
+    ///
     /// Permanently deletes an existing connection. It cannot be undone.
     public func deleteConnection(
         id: String,
@@ -96,7 +92,7 @@ public struct SSO: Sendable {
     }
 
     /// Logout Authorize
-    /// 
+    ///
     /// You should call this endpoint from your server to generate a logout token which is required for the [Logout Redirect](https://workos.com/docs/reference/sso/logout) endpoint.
     public func authorizeLogout(
         profileId: String,
@@ -116,7 +112,7 @@ public struct SSO: Sendable {
     }
 
     /// Get a User Profile
-    /// 
+    ///
     /// Exchange an access token for a user's [Profile](https://workos.com/docs/reference/sso/profile). Because this profile is returned in the [Get a Profile and Token endpoint](https://workos.com/docs/reference/sso/profile/get-profile-and-token) your application usually does not need to call this endpoint. It is available for any authentication flows that require an additional endpoint to retrieve a user's profile.
     public func getProfile(
         requestOptions: RequestOptions? = nil
@@ -133,7 +129,7 @@ public struct SSO: Sendable {
     }
 
     /// Get a Profile and Token
-    /// 
+    ///
     /// Get an access token along with the user [Profile](https://workos.com/docs/reference/sso/profile) using the code passed to your [Redirect URI](https://workos.com/docs/reference/sso/get-authorization-url/redirect-uri).
     public func getProfileAndToken(
         code: String,

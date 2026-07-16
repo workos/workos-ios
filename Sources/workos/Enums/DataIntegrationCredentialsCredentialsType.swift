@@ -3,7 +3,8 @@
 import Foundation
 
 /// Enumeration of valid DataIntegrationCredentialsCredentialsType values.
-public enum DataIntegrationCredentialsCredentialsType: RawRepresentable, Codable, Sendable, Hashable {
+public enum DataIntegrationCredentialsCredentialsType: RawRepresentable, Codable, Sendable, Hashable
+{
     case shared
     case custom
     case organization
@@ -38,5 +39,9 @@ public enum DataIntegrationCredentialsCredentialsType: RawRepresentable, Codable
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DataIntegrationCredentialsCredentialsType] = [.shared, .custom, .organization]
+    public static let allKnownCases: [DataIntegrationCredentialsCredentialsType] = [
+        .shared,
+        .custom,
+        .organization,
+    ]
 }

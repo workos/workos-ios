@@ -38,5 +38,9 @@ public enum OrganizationMembershipCreatedDataStatus: RawRepresentable, Codable, 
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [OrganizationMembershipCreatedDataStatus] = [.active, .inactive, .pending]
+    public static let allKnownCases: [OrganizationMembershipCreatedDataStatus] = [
+        .active,
+        .inactive,
+        .pending,
+    ]
 }

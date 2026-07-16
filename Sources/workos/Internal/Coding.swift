@@ -22,7 +22,8 @@ enum Coding {
             if let date = iso8601Fractional.date(from: string) { return date }
             if let date = iso8601Plain.date(from: string) { return date }
             if let date = dateOnly.date(from: string) { return date }
-            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date: \(string)")
+            throw DecodingError.dataCorruptedError(
+                in: container, debugDescription: "Invalid date: \(string)")
         }
         return decoder
     }

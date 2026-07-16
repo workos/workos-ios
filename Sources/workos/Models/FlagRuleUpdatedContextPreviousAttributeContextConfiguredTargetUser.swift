@@ -2,7 +2,9 @@
 
 import Foundation
 
-public struct FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetUser: Codable, Sendable, Equatable {
+public struct FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetUser: Codable, Sendable,
+    Equatable
+{
     /// The ID of the user.
     public let id: String
     /// The email of the user.

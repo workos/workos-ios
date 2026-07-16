@@ -41,5 +41,10 @@ public enum EventContextActorSource: RawRepresentable, Codable, Sendable, Hashab
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [EventContextActorSource] = [.api, .dashboard, .adminPortal, .system]
+    public static let allKnownCases: [EventContextActorSource] = [
+        .api,
+        .dashboard,
+        .adminPortal,
+        .system,
+    ]
 }

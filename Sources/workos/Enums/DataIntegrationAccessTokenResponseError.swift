@@ -35,5 +35,8 @@ public enum DataIntegrationAccessTokenResponseError: RawRepresentable, Codable, 
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DataIntegrationAccessTokenResponseError] = [.notInstalled, .needsReauthorization]
+    public static let allKnownCases: [DataIntegrationAccessTokenResponseError] = [
+        .notInstalled,
+        .needsReauthorization,
+    ]
 }

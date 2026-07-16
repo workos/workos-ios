@@ -3,9 +3,11 @@
 import Foundation
 
 /// The SAML certificate details.
-public struct ConnectionSAMLCertificateRenewalRequiredDataCertificate: Codable, Sendable, Equatable {
+public struct ConnectionSAMLCertificateRenewalRequiredDataCertificate: Codable, Sendable, Equatable
+{
     /// The type of the SAML certificate.
-    public let certificateType: ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType
+    public let certificateType:
+        ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType
     /// An ISO 8601 timestamp.
     public let expiryDate: Date
     /// Whether the certificate has already expired.

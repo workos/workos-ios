@@ -6,12 +6,8 @@ import Foundation
 public struct MultiFactorAuth: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// Verify Challenge
-    /// 
+    ///
     /// Verifies an Authentication Challenge.
     public func verifyChallenge(
         id: String,
@@ -32,7 +28,7 @@ public struct MultiFactorAuth: Sendable {
     }
 
     /// Enroll Factor
-    /// 
+    ///
     /// Enrolls an Authentication Factor to be used as an additional factor of authentication. The returned ID should be used to create an authentication Challenge.
     public func enroll(
         type: AuthenticationFactorsCreateRequestType,
@@ -60,7 +56,7 @@ public struct MultiFactorAuth: Sendable {
     }
 
     /// Get Factor
-    /// 
+    ///
     /// Gets an Authentication Factor.
     public func get(
         id: String,
@@ -78,7 +74,7 @@ public struct MultiFactorAuth: Sendable {
     }
 
     /// Delete Factor
-    /// 
+    ///
     /// Permanently deletes an Authentication Factor. It cannot be undone.
     public func delete(
         id: String,
@@ -95,7 +91,7 @@ public struct MultiFactorAuth: Sendable {
     }
 
     /// Challenge Factor
-    /// 
+    ///
     /// Creates a Challenge for an Authentication Factor.
     public func challenge(
         id: String,
@@ -116,7 +112,7 @@ public struct MultiFactorAuth: Sendable {
     }
 
     /// List authentication factors
-    /// 
+    ///
     /// Lists the [authentication factors](https://workos.com/docs/reference/authkit/mfa/authentication-factor) for a user.
     public func listUser(
         userlandUserId: String,
@@ -151,7 +147,7 @@ public struct MultiFactorAuth: Sendable {
     }
 
     /// Enroll an authentication factor
-    /// 
+    ///
     /// Enrolls a user in a new [authentication factor](https://workos.com/docs/reference/authkit/mfa/authentication-factor).
     public func createUser(
         userlandUserId: String,

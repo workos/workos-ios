@@ -6,21 +6,17 @@ import Foundation
 public struct Connect: Sendable {
     let transport: Transport
 
-    init(transport: Transport) {
-        self.transport = transport
-    }
-
     /// Complete external authentication
-    /// 
+    ///
     /// Completes an external authentication flow and returns control to AuthKit. This endpoint is used with [Standalone Connect](https://workos.com/docs/authkit/connect/standalone) to bridge your existing authentication system with the Connect OAuth API infrastructure.
-    /// 
+    ///
     /// After successfully authenticating a user in your application, calling this endpoint will:
-    /// 
+    ///
     /// - Create or update the user in AuthKit, using the given `id` as its `external_id`.
     /// - Return a `redirect_uri` your application should redirect to in order for AuthKit to complete the flow
-    /// 
+    ///
     /// Users are automatically created or updated based on the `id` and `email` provided. If a user with the same `id` exists, their information is updated. Otherwise, a new user is created.
-    /// 
+    ///
     /// If you provide a new `id` with an `email` that already belongs to an existing user, the request will fail with an error as email addresses are unique to a user.
     public func completeOauth2(
         externalAuthId: String,
@@ -44,7 +40,7 @@ public struct Connect: Sendable {
     }
 
     /// List Connect Applications
-    /// 
+    ///
     /// List all Connect Applications in the current environment with optional filtering.
     public func listApplications(
         before: String? = nil,
@@ -144,7 +140,7 @@ public struct Connect: Sendable {
     }
 
     /// Get a Connect Application
-    /// 
+    ///
     /// Retrieve details for a specific Connect Application by ID or client ID.
     public func getApplication(
         id: String,
@@ -162,7 +158,7 @@ public struct Connect: Sendable {
     }
 
     /// Update a Connect Application
-    /// 
+    ///
     /// Update an existing Connect Application. For OAuth applications, you can update redirect URIs. For all applications, you can update the name, description, and scopes.
     public func updateApplication(
         id: String,
@@ -189,7 +185,7 @@ public struct Connect: Sendable {
     }
 
     /// Delete a Connect Application
-    /// 
+    ///
     /// Delete an existing Connect Application.
     public func deleteApplication(
         id: String,
@@ -206,7 +202,7 @@ public struct Connect: Sendable {
     }
 
     /// List Client Secrets for a Connect Application
-    /// 
+    ///
     /// List all client secrets associated with a Connect Application.
     public func listApplicationClientSecrets(
         id: String,
@@ -224,7 +220,7 @@ public struct Connect: Sendable {
     }
 
     /// Create a new client secret for a Connect Application
-    /// 
+    ///
     /// Create new secrets for a Connect Application.
     public func createApplicationClientSecret(
         id: String,
@@ -243,7 +239,7 @@ public struct Connect: Sendable {
     }
 
     /// Delete a Client Secret
-    /// 
+    ///
     /// Delete (revoke) an existing client secret.
     public func deleteClientSecret(
         id: String,
