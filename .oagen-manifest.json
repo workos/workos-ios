@@ -1,0 +1,1635 @@
+{
+  "version": 2,
+  "language": "ios",
+  "generatedAt": "2026-07-16T16:19:35.808Z",
+  "files": [
+    ".oagen-ios-smoke.json",
+    ".swift-format",
+    "Package.swift",
+    "Sources/workos/Configuration.swift",
+    "Sources/workos/Enums/AgentAdminValidateCredentialRequestType.swift",
+    "Sources/workos/Enums/AgentRegistrationCreatedDataKind.swift",
+    "Sources/workos/Enums/AgentRegistrationCreatedDataMethod.swift",
+    "Sources/workos/Enums/AgentRegistrationCreatedDataStatus.swift",
+    "Sources/workos/Enums/AgentRegistrationKind.swift",
+    "Sources/workos/Enums/AgentRegistrationStatus.swift",
+    "Sources/workos/Enums/ApplicationsRegistrationTypes.swift",
+    "Sources/workos/Enums/AuditLogConfigurationLogStreamState.swift",
+    "Sources/workos/Enums/AuditLogConfigurationLogStreamType.swift",
+    "Sources/workos/Enums/AuditLogConfigurationState.swift",
+    "Sources/workos/Enums/AuditLogExportState.swift",
+    "Sources/workos/Enums/AuthenticateResponseAuthenticationMethod.swift",
+    "Sources/workos/Enums/AuthenticationFactorEnrolledType.swift",
+    "Sources/workos/Enums/AuthenticationFactorType.swift",
+    "Sources/workos/Enums/AuthenticationFactorsCreateRequestType.swift",
+    "Sources/workos/Enums/AuthenticationRadarRiskDetectedDataAction.swift",
+    "Sources/workos/Enums/AuthorizationAssignment.swift",
+    "Sources/workos/Enums/ConnectedAccountAuthMethod.swift",
+    "Sources/workos/Enums/ConnectedAccountState.swift",
+    "Sources/workos/Enums/ConnectionActivatedDataConnectionType.swift",
+    "Sources/workos/Enums/ConnectionActivatedDataState.swift",
+    "Sources/workos/Enums/ConnectionActivatedDataStatus.swift",
+    "Sources/workos/Enums/ConnectionDeactivatedDataConnectionType.swift",
+    "Sources/workos/Enums/ConnectionDeactivatedDataState.swift",
+    "Sources/workos/Enums/ConnectionDeactivatedDataStatus.swift",
+    "Sources/workos/Enums/ConnectionDeletedDataConnectionType.swift",
+    "Sources/workos/Enums/ConnectionDeletedDataState.swift",
+    "Sources/workos/Enums/ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType.swift",
+    "Sources/workos/Enums/ConnectionSAMLCertificateRenewedDataCertificateCertificateType.swift",
+    "Sources/workos/Enums/ConnectionState.swift",
+    "Sources/workos/Enums/ConnectionStatus.swift",
+    "Sources/workos/Enums/ConnectionType.swift",
+    "Sources/workos/Enums/ConnectionsConnectionType.swift",
+    "Sources/workos/Enums/CreateUserInviteOptionsLocale.swift",
+    "Sources/workos/Enums/CreateUserPasswordHashType.swift",
+    "Sources/workos/Enums/CreateWebhookEndpointEvents.swift",
+    "Sources/workos/Enums/CustomProviderDefinitionAuthenticateVia.swift",
+    "Sources/workos/Enums/DataIntegrationAccessTokenResponseError.swift",
+    "Sources/workos/Enums/DataIntegrationCredentialType.swift",
+    "Sources/workos/Enums/DataIntegrationCredentialsCredentialsType.swift",
+    "Sources/workos/Enums/DataIntegrationCredentialsResponseError.swift",
+    "Sources/workos/Enums/DataIntegrationCredentialsType.swift",
+    "Sources/workos/Enums/DataIntegrationCustomProviderAuthenticateVia.swift",
+    "Sources/workos/Enums/DataIntegrationState.swift",
+    "Sources/workos/Enums/DataIntegrationsListResponseDataAuthMethods.swift",
+    "Sources/workos/Enums/DataIntegrationsListResponseDataConnectedAccountAuthMethod.swift",
+    "Sources/workos/Enums/DataIntegrationsListResponseDataConnectedAccountState.swift",
+    "Sources/workos/Enums/DataIntegrationsListResponseDataOwnership.swift",
+    "Sources/workos/Enums/DirectoryState.swift",
+    "Sources/workos/Enums/DirectoryType.swift",
+    "Sources/workos/Enums/DirectoryUserState.swift",
+    "Sources/workos/Enums/DirectoryUserWithGroupsState.swift",
+    "Sources/workos/Enums/DsyncActivatedDataState.swift",
+    "Sources/workos/Enums/DsyncActivatedDataType.swift",
+    "Sources/workos/Enums/DsyncDeletedDataState.swift",
+    "Sources/workos/Enums/DsyncDeletedDataType.swift",
+    "Sources/workos/Enums/DsyncUserUpdatedDataState.swift",
+    "Sources/workos/Enums/EventContextActorSource.swift",
+    "Sources/workos/Enums/FlagCreatedContextActorSource.swift",
+    "Sources/workos/Enums/FlagDeletedContextActorSource.swift",
+    "Sources/workos/Enums/FlagRuleUpdatedContextAccessType.swift",
+    "Sources/workos/Enums/FlagRuleUpdatedContextActorSource.swift",
+    "Sources/workos/Enums/FlagRuleUpdatedContextPreviousAttributeContextAccessType.swift",
+    "Sources/workos/Enums/FlagUpdatedContextActorSource.swift",
+    "Sources/workos/Enums/GenerateLinkIntent.swift",
+    "Sources/workos/Enums/InvitationAcceptedDataState.swift",
+    "Sources/workos/Enums/InvitationCreatedDataState.swift",
+    "Sources/workos/Enums/InvitationResentDataState.swift",
+    "Sources/workos/Enums/InvitationRevokedDataState.swift",
+    "Sources/workos/Enums/InvitationState.swift",
+    "Sources/workos/Enums/OrganizationCreatedDataDomainState.swift",
+    "Sources/workos/Enums/OrganizationCreatedDataDomainVerificationStrategy.swift",
+    "Sources/workos/Enums/OrganizationDeletedDataDomainState.swift",
+    "Sources/workos/Enums/OrganizationDeletedDataDomainVerificationStrategy.swift",
+    "Sources/workos/Enums/OrganizationDomainCreatedDataState.swift",
+    "Sources/workos/Enums/OrganizationDomainCreatedDataVerificationStrategy.swift",
+    "Sources/workos/Enums/OrganizationDomainDataState.swift",
+    "Sources/workos/Enums/OrganizationDomainDeletedDataState.swift",
+    "Sources/workos/Enums/OrganizationDomainDeletedDataVerificationStrategy.swift",
+    "Sources/workos/Enums/OrganizationDomainState.swift",
+    "Sources/workos/Enums/OrganizationDomainUpdatedDataState.swift",
+    "Sources/workos/Enums/OrganizationDomainUpdatedDataVerificationStrategy.swift",
+    "Sources/workos/Enums/OrganizationDomainVerificationFailedDataOrganizationDomainState.swift",
+    "Sources/workos/Enums/OrganizationDomainVerificationFailedDataOrganizationDomainVerificationStrategy.swift",
+    "Sources/workos/Enums/OrganizationDomainVerificationFailedDataReason.swift",
+    "Sources/workos/Enums/OrganizationDomainVerificationStrategy.swift",
+    "Sources/workos/Enums/OrganizationDomainVerifiedDataState.swift",
+    "Sources/workos/Enums/OrganizationDomainVerifiedDataVerificationStrategy.swift",
+    "Sources/workos/Enums/OrganizationMembershipCreatedDataStatus.swift",
+    "Sources/workos/Enums/OrganizationMembershipDeletedDataStatus.swift",
+    "Sources/workos/Enums/OrganizationMembershipStatus.swift",
+    "Sources/workos/Enums/OrganizationMembershipUpdatedDataStatus.swift",
+    "Sources/workos/Enums/OrganizationUpdatedDataDomainState.swift",
+    "Sources/workos/Enums/OrganizationUpdatedDataDomainVerificationStrategy.swift",
+    "Sources/workos/Enums/PaginationOrder.swift",
+    "Sources/workos/Enums/PipeConnectedAccountState.swift",
+    "Sources/workos/Enums/ProfileConnectionType.swift",
+    "Sources/workos/Enums/RadarListAction.swift",
+    "Sources/workos/Enums/RadarListType.swift",
+    "Sources/workos/Enums/RadarStandaloneAssessRequestAction.swift",
+    "Sources/workos/Enums/RadarStandaloneAssessRequestAuthMethod.swift",
+    "Sources/workos/Enums/RadarStandaloneResponseBlocklistType.swift",
+    "Sources/workos/Enums/RadarStandaloneResponseControl.swift",
+    "Sources/workos/Enums/RadarStandaloneResponseVerdict.swift",
+    "Sources/workos/Enums/ResendUserInviteOptionsLocale.swift",
+    "Sources/workos/Enums/RoleType.swift",
+    "Sources/workos/Enums/SSOProvider.swift",
+    "Sources/workos/Enums/SessionCreatedDataAuthMethod.swift",
+    "Sources/workos/Enums/SessionCreatedDataStatus.swift",
+    "Sources/workos/Enums/SessionRevokedDataAuthMethod.swift",
+    "Sources/workos/Enums/SessionRevokedDataStatus.swift",
+    "Sources/workos/Enums/UpdateCustomProviderDefinitionAuthenticateVia.swift",
+    "Sources/workos/Enums/UpdateUserPasswordHashType.swift",
+    "Sources/workos/Enums/UpdateWebhookEndpointEvents.swift",
+    "Sources/workos/Enums/UpdateWebhookEndpointStatus.swift",
+    "Sources/workos/Enums/UserIdentitiesGetItemProvider.swift",
+    "Sources/workos/Enums/UserInviteState.swift",
+    "Sources/workos/Enums/UserManagementAuthenticationProvider.swift",
+    "Sources/workos/Enums/UserManagementAuthenticationScreenHint.swift",
+    "Sources/workos/Enums/UserManagementOrganizationMembershipStatuses.swift",
+    "Sources/workos/Enums/UserOrganizationMembershipBaseListDataStatus.swift",
+    "Sources/workos/Enums/UserOrganizationMembershipStatus.swift",
+    "Sources/workos/Enums/UserRoleAssignmentSourceType.swift",
+    "Sources/workos/Enums/UserSessionsAuthMethod.swift",
+    "Sources/workos/Enums/UserSessionsStatus.swift",
+    "Sources/workos/Enums/VaultByokKeyProvider.swift",
+    "Sources/workos/Enums/VaultDataCreatedDataActorSource.swift",
+    "Sources/workos/Enums/VaultDataDeletedDataActorSource.swift",
+    "Sources/workos/Enums/VaultDataReadDataActorSource.swift",
+    "Sources/workos/Enums/VaultDataUpdatedDataActorSource.swift",
+    "Sources/workos/Enums/VaultDekDecryptedDataActorSource.swift",
+    "Sources/workos/Enums/VaultDekReadDataActorSource.swift",
+    "Sources/workos/Enums/VaultKekCreatedDataActorSource.swift",
+    "Sources/workos/Enums/VaultKekDeletedDataActorSource.swift",
+    "Sources/workos/Enums/VaultMetadataReadDataActorSource.swift",
+    "Sources/workos/Enums/VaultNamesListedDataActorSource.swift",
+    "Sources/workos/Enums/VaultOrder.swift",
+    "Sources/workos/Enums/WaitlistUserState.swift",
+    "Sources/workos/Enums/WebhookEndpointStatus.swift",
+    "Sources/workos/Enums/WidgetSessionTokenScopes.swift",
+    "Sources/workos/Errors/workosError.swift",
+    "Sources/workos/Internal/AnyCodable.swift",
+    "Sources/workos/Internal/Coding.swift",
+    "Sources/workos/Internal/Pagination.swift",
+    "Sources/workos/Internal/PathEncoding.swift",
+    "Sources/workos/Internal/RequestBody.swift",
+    "Sources/workos/Internal/Transport.swift",
+    "Sources/workos/Models/AccessTokenAgentRegistrationCredentialIssuedDataDetail.swift",
+    "Sources/workos/Models/ActionAuthenticationDenied.swift",
+    "Sources/workos/Models/ActionAuthenticationDeniedData.swift",
+    "Sources/workos/Models/ActionUserRegistrationDenied.swift",
+    "Sources/workos/Models/ActionUserRegistrationDeniedData.swift",
+    "Sources/workos/Models/Actor.swift",
+    "Sources/workos/Models/AddRolePermission.swift",
+    "Sources/workos/Models/AgentAdminValidateCredentialRequest.swift",
+    "Sources/workos/Models/AgentCredentialValidation.swift",
+    "Sources/workos/Models/AgentRegistration.swift",
+    "Sources/workos/Models/AgentRegistrationAgentIdentity.swift",
+    "Sources/workos/Models/AgentRegistrationClaim.swift",
+    "Sources/workos/Models/AgentRegistrationClaimAttemptCreated.swift",
+    "Sources/workos/Models/AgentRegistrationClaimAttemptCreatedData.swift",
+    "Sources/workos/Models/AgentRegistrationClaimClaimCompletion.swift",
+    "Sources/workos/Models/AgentRegistrationClaimCompleted.swift",
+    "Sources/workos/Models/AgentRegistrationClaimCompletedData.swift",
+    "Sources/workos/Models/AgentRegistrationClaimCompletedDataClaimedBy.swift",
+    "Sources/workos/Models/AgentRegistrationCreated.swift",
+    "Sources/workos/Models/AgentRegistrationCreatedData.swift",
+    "Sources/workos/Models/AgentRegistrationCreatedDataAgentIdentity.swift",
+    "Sources/workos/Models/AgentRegistrationCredentialIssued.swift",
+    "Sources/workos/Models/AgentRegistrationCredentialIssuedData.swift",
+    "Sources/workos/Models/AgentRegistrationCredentialIssuedDataDetail.swift",
+    "Sources/workos/Models/AgentRegistrationDeleted.swift",
+    "Sources/workos/Models/AgentRegistrationDeletedData.swift",
+    "Sources/workos/Models/AgentRegistrationExpired.swift",
+    "Sources/workos/Models/AgentRegistrationExpiredData.swift",
+    "Sources/workos/Models/AgentRegistrationOrganizationSwitched.swift",
+    "Sources/workos/Models/AgentRegistrationOrganizationSwitchedData.swift",
+    "Sources/workos/Models/AgentRegistrationRevoked.swift",
+    "Sources/workos/Models/AgentRegistrationRevokedData.swift",
+    "Sources/workos/Models/ApiKey.swift",
+    "Sources/workos/Models/ApiKeyCreated.swift",
+    "Sources/workos/Models/ApiKeyCreatedData.swift",
+    "Sources/workos/Models/ApiKeyCreatedDataOwner.swift",
+    "Sources/workos/Models/ApiKeyOwner.swift",
+    "Sources/workos/Models/ApiKeyRevoked.swift",
+    "Sources/workos/Models/ApiKeyRevokedData.swift",
+    "Sources/workos/Models/ApiKeyRevokedDataOwner.swift",
+    "Sources/workos/Models/ApiKeyUpdated.swift",
+    "Sources/workos/Models/ApiKeyUpdatedData.swift",
+    "Sources/workos/Models/ApiKeyUpdatedDataOwner.swift",
+    "Sources/workos/Models/ApiKeyUpdatedDataPreviousAttribute.swift",
+    "Sources/workos/Models/ApiKeyValidationResponse.swift",
+    "Sources/workos/Models/ApplicationCredentialsListItem.swift",
+    "Sources/workos/Models/AssignRole.swift",
+    "Sources/workos/Models/AuditLogAction.swift",
+    "Sources/workos/Models/AuditLogConfiguration.swift",
+    "Sources/workos/Models/AuditLogConfigurationLogStream.swift",
+    "Sources/workos/Models/AuditLogEvent.swift",
+    "Sources/workos/Models/AuditLogEventActor.swift",
+    "Sources/workos/Models/AuditLogEventContext.swift",
+    "Sources/workos/Models/AuditLogEventCreateResponse.swift",
+    "Sources/workos/Models/AuditLogEventIngestion.swift",
+    "Sources/workos/Models/AuditLogEventTarget.swift",
+    "Sources/workos/Models/AuditLogExport.swift",
+    "Sources/workos/Models/AuditLogExportCreation.swift",
+    "Sources/workos/Models/AuditLogSchema.swift",
+    "Sources/workos/Models/AuditLogSchemaActor.swift",
+    "Sources/workos/Models/AuditLogSchemaActorInput.swift",
+    "Sources/workos/Models/AuditLogSchemaInput.swift",
+    "Sources/workos/Models/AuditLogSchemaTarget.swift",
+    "Sources/workos/Models/AuditLogSchemaTargetInput.swift",
+    "Sources/workos/Models/AuditLogsRetention.swift",
+    "Sources/workos/Models/AuthMethodMismatchError.swift",
+    "Sources/workos/Models/AuthenticateResponse.swift",
+    "Sources/workos/Models/AuthenticateResponseImpersonator.swift",
+    "Sources/workos/Models/AuthenticateResponseOAuthToken.swift",
+    "Sources/workos/Models/AuthenticationChallenge.swift",
+    "Sources/workos/Models/AuthenticationChallengeVerifyResponse.swift",
+    "Sources/workos/Models/AuthenticationChallengesVerifyRequest.swift",
+    "Sources/workos/Models/AuthenticationEmailVerificationFailed.swift",
+    "Sources/workos/Models/AuthenticationEmailVerificationFailedData.swift",
+    "Sources/workos/Models/AuthenticationEmailVerificationFailedDataError.swift",
+    "Sources/workos/Models/AuthenticationEmailVerificationSucceeded.swift",
+    "Sources/workos/Models/AuthenticationEmailVerificationSucceededData.swift",
+    "Sources/workos/Models/AuthenticationFactor.swift",
+    "Sources/workos/Models/AuthenticationFactorEnrolled.swift",
+    "Sources/workos/Models/AuthenticationFactorEnrolledSms.swift",
+    "Sources/workos/Models/AuthenticationFactorEnrolledTotp.swift",
+    "Sources/workos/Models/AuthenticationFactorSms.swift",
+    "Sources/workos/Models/AuthenticationFactorTotp.swift",
+    "Sources/workos/Models/AuthenticationFactorsCreateRequest.swift",
+    "Sources/workos/Models/AuthenticationMagicAuthFailed.swift",
+    "Sources/workos/Models/AuthenticationMagicAuthFailedData.swift",
+    "Sources/workos/Models/AuthenticationMagicAuthFailedDataError.swift",
+    "Sources/workos/Models/AuthenticationMagicAuthSucceeded.swift",
+    "Sources/workos/Models/AuthenticationMagicAuthSucceededData.swift",
+    "Sources/workos/Models/AuthenticationMfaFailed.swift",
+    "Sources/workos/Models/AuthenticationMfaFailedData.swift",
+    "Sources/workos/Models/AuthenticationMfaFailedDataError.swift",
+    "Sources/workos/Models/AuthenticationMfaSucceeded.swift",
+    "Sources/workos/Models/AuthenticationMfaSucceededData.swift",
+    "Sources/workos/Models/AuthenticationOAuthFailed.swift",
+    "Sources/workos/Models/AuthenticationOAuthFailedData.swift",
+    "Sources/workos/Models/AuthenticationOAuthFailedDataError.swift",
+    "Sources/workos/Models/AuthenticationOAuthSucceeded.swift",
+    "Sources/workos/Models/AuthenticationOAuthSucceededData.swift",
+    "Sources/workos/Models/AuthenticationPasskeyFailed.swift",
+    "Sources/workos/Models/AuthenticationPasskeyFailedData.swift",
+    "Sources/workos/Models/AuthenticationPasskeyFailedDataError.swift",
+    "Sources/workos/Models/AuthenticationPasskeySucceeded.swift",
+    "Sources/workos/Models/AuthenticationPasskeySucceededData.swift",
+    "Sources/workos/Models/AuthenticationPasswordFailed.swift",
+    "Sources/workos/Models/AuthenticationPasswordFailedData.swift",
+    "Sources/workos/Models/AuthenticationPasswordFailedDataError.swift",
+    "Sources/workos/Models/AuthenticationPasswordSucceeded.swift",
+    "Sources/workos/Models/AuthenticationPasswordSucceededData.swift",
+    "Sources/workos/Models/AuthenticationRadarRiskDetected.swift",
+    "Sources/workos/Models/AuthenticationRadarRiskDetectedData.swift",
+    "Sources/workos/Models/AuthenticationReauthenticationSucceeded.swift",
+    "Sources/workos/Models/AuthenticationReauthenticationSucceededData.swift",
+    "Sources/workos/Models/AuthenticationSSOFailed.swift",
+    "Sources/workos/Models/AuthenticationSSOFailedData.swift",
+    "Sources/workos/Models/AuthenticationSSOFailedDataError.swift",
+    "Sources/workos/Models/AuthenticationSSOFailedDataSSO.swift",
+    "Sources/workos/Models/AuthenticationSSOStarted.swift",
+    "Sources/workos/Models/AuthenticationSSOStartedData.swift",
+    "Sources/workos/Models/AuthenticationSSOStartedDataSSO.swift",
+    "Sources/workos/Models/AuthenticationSSOSucceeded.swift",
+    "Sources/workos/Models/AuthenticationSSOSucceededData.swift",
+    "Sources/workos/Models/AuthenticationSSOSucceededDataSSO.swift",
+    "Sources/workos/Models/AuthenticationSSOTimedOut.swift",
+    "Sources/workos/Models/AuthenticationSSOTimedOutData.swift",
+    "Sources/workos/Models/AuthenticationSSOTimedOutDataError.swift",
+    "Sources/workos/Models/AuthenticationSSOTimedOutDataSSO.swift",
+    "Sources/workos/Models/AuthorizationCheck.swift",
+    "Sources/workos/Models/AuthorizationCodeSessionAuthenticateRequest.swift",
+    "Sources/workos/Models/AuthorizationPermission.swift",
+    "Sources/workos/Models/AuthorizationPermissionList.swift",
+    "Sources/workos/Models/AuthorizationPermissionListListMetadata.swift",
+    "Sources/workos/Models/AuthorizationResource.swift",
+    "Sources/workos/Models/AuthorizationResourceList.swift",
+    "Sources/workos/Models/AuthorizationResourceListListMetadata.swift",
+    "Sources/workos/Models/AuthorizedConnectApplicationList.swift",
+    "Sources/workos/Models/AuthorizedConnectApplicationListData.swift",
+    "Sources/workos/Models/AuthorizedConnectApplicationListListMetadata.swift",
+    "Sources/workos/Models/ChallengeAuthenticationFactor.swift",
+    "Sources/workos/Models/CheckAuthorization.swift",
+    "Sources/workos/Models/ClientApiToken.swift",
+    "Sources/workos/Models/ClientApiTokenResponse.swift",
+    "Sources/workos/Models/ConfigureDataIntegrationBody.swift",
+    "Sources/workos/Models/ConfirmEmailChange.swift",
+    "Sources/workos/Models/ConnectApplication.swift",
+    "Sources/workos/Models/ConnectApplicationList.swift",
+    "Sources/workos/Models/ConnectApplicationListListMetadata.swift",
+    "Sources/workos/Models/ConnectApplicationM2M.swift",
+    "Sources/workos/Models/ConnectApplicationOAuth.swift",
+    "Sources/workos/Models/ConnectApplicationOAuthRedirectUris.swift",
+    "Sources/workos/Models/ConnectApplicationRedirectUri.swift",
+    "Sources/workos/Models/ConnectedAccount.swift",
+    "Sources/workos/Models/ConnectedAccountDto.swift",
+    "Sources/workos/Models/Connection.swift",
+    "Sources/workos/Models/ConnectionActivated.swift",
+    "Sources/workos/Models/ConnectionActivatedData.swift",
+    "Sources/workos/Models/ConnectionActivatedDataDomain.swift",
+    "Sources/workos/Models/ConnectionDeactivated.swift",
+    "Sources/workos/Models/ConnectionDeactivatedData.swift",
+    "Sources/workos/Models/ConnectionDeactivatedDataDomain.swift",
+    "Sources/workos/Models/ConnectionDeleted.swift",
+    "Sources/workos/Models/ConnectionDeletedData.swift",
+    "Sources/workos/Models/ConnectionDomain.swift",
+    "Sources/workos/Models/ConnectionList.swift",
+    "Sources/workos/Models/ConnectionListListMetadata.swift",
+    "Sources/workos/Models/ConnectionSAMLCertificateRenewalRequired.swift",
+    "Sources/workos/Models/ConnectionSAMLCertificateRenewalRequiredData.swift",
+    "Sources/workos/Models/ConnectionSAMLCertificateRenewalRequiredDataCertificate.swift",
+    "Sources/workos/Models/ConnectionSAMLCertificateRenewalRequiredDataConnection.swift",
+    "Sources/workos/Models/ConnectionSAMLCertificateRenewed.swift",
+    "Sources/workos/Models/ConnectionSAMLCertificateRenewedData.swift",
+    "Sources/workos/Models/ConnectionSAMLCertificateRenewedDataCertificate.swift",
+    "Sources/workos/Models/ConnectionSAMLCertificateRenewedDataConnection.swift",
+    "Sources/workos/Models/CorsOriginResponse.swift",
+    "Sources/workos/Models/CreateApplicationSecret.swift",
+    "Sources/workos/Models/CreateAuthorizationPermission.swift",
+    "Sources/workos/Models/CreateAuthorizationResource.swift",
+    "Sources/workos/Models/CreateCorsOrigin.swift",
+    "Sources/workos/Models/CreateDataIntegration.swift",
+    "Sources/workos/Models/CreateDataKeyRequest.swift",
+    "Sources/workos/Models/CreateDataKeyResponse.swift",
+    "Sources/workos/Models/CreateGroup.swift",
+    "Sources/workos/Models/CreateGroupMembership.swift",
+    "Sources/workos/Models/CreateGroupRoleAssignment.swift",
+    "Sources/workos/Models/CreateM2MApplication.swift",
+    "Sources/workos/Models/CreateMagicCodeAndReturn.swift",
+    "Sources/workos/Models/CreateOAuthApplication.swift",
+    "Sources/workos/Models/CreateObjectRequest.swift",
+    "Sources/workos/Models/CreateOrganizationApiKey.swift",
+    "Sources/workos/Models/CreateOrganizationDomain.swift",
+    "Sources/workos/Models/CreateOrganizationRole.swift",
+    "Sources/workos/Models/CreatePasswordReset.swift",
+    "Sources/workos/Models/CreatePasswordResetToken.swift",
+    "Sources/workos/Models/CreateRedirectUri.swift",
+    "Sources/workos/Models/CreateRole.swift",
+    "Sources/workos/Models/CreateUser.swift",
+    "Sources/workos/Models/CreateUserApiKey.swift",
+    "Sources/workos/Models/CreateUserInviteOptions.swift",
+    "Sources/workos/Models/CreateUserOrganizationMembership.swift",
+    "Sources/workos/Models/CreateWebhookEndpoint.swift",
+    "Sources/workos/Models/CustomProviderDefinition.swift",
+    "Sources/workos/Models/DataIntegration.swift",
+    "Sources/workos/Models/DataIntegrationAccessTokenResponse.swift",
+    "Sources/workos/Models/DataIntegrationAccessTokenResponseAccessToken.swift",
+    "Sources/workos/Models/DataIntegrationAuthorizeUrlResponse.swift",
+    "Sources/workos/Models/DataIntegrationConfigurationListResponse.swift",
+    "Sources/workos/Models/DataIntegrationConfigurationResponse.swift",
+    "Sources/workos/Models/DataIntegrationCredential.swift",
+    "Sources/workos/Models/DataIntegrationCredentials.swift",
+    "Sources/workos/Models/DataIntegrationCredentialsDto.swift",
+    "Sources/workos/Models/DataIntegrationCredentialsResponse.swift",
+    "Sources/workos/Models/DataIntegrationCredentialsResponseCredential.swift",
+    "Sources/workos/Models/DataIntegrationCustomProvider.swift",
+    "Sources/workos/Models/DataIntegrationList.swift",
+    "Sources/workos/Models/DataIntegrationListListMetadata.swift",
+    "Sources/workos/Models/DataIntegrationsGetDataIntegrationAuthorizeUrlRequest.swift",
+    "Sources/workos/Models/DataIntegrationsGetUserTokenRequest.swift",
+    "Sources/workos/Models/DataIntegrationsListResponse.swift",
+    "Sources/workos/Models/DataIntegrationsListResponseData.swift",
+    "Sources/workos/Models/DataIntegrationsListResponseDataConnectedAccount.swift",
+    "Sources/workos/Models/DataIntegrationsUpsertApiKeyRequest.swift",
+    "Sources/workos/Models/DataIntegrationsVendCredentialsRequest.swift",
+    "Sources/workos/Models/DecryptRequest.swift",
+    "Sources/workos/Models/DecryptResponse.swift",
+    "Sources/workos/Models/DeleteGroupRoleAssignmentsByCriteria.swift",
+    "Sources/workos/Models/DeleteObjectResponse.swift",
+    "Sources/workos/Models/DeviceAuthorizationResponse.swift",
+    "Sources/workos/Models/Directory.swift",
+    "Sources/workos/Models/DirectoryGroup.swift",
+    "Sources/workos/Models/DirectoryGroupList.swift",
+    "Sources/workos/Models/DirectoryGroupListListMetadata.swift",
+    "Sources/workos/Models/DirectoryList.swift",
+    "Sources/workos/Models/DirectoryListListMetadata.swift",
+    "Sources/workos/Models/DirectoryMetadata.swift",
+    "Sources/workos/Models/DirectoryMetadataUser.swift",
+    "Sources/workos/Models/DirectoryUser.swift",
+    "Sources/workos/Models/DirectoryUserEmail.swift",
+    "Sources/workos/Models/DirectoryUserList.swift",
+    "Sources/workos/Models/DirectoryUserListListMetadata.swift",
+    "Sources/workos/Models/DirectoryUserWithGroups.swift",
+    "Sources/workos/Models/DirectoryUserWithGroupsEmail.swift",
+    "Sources/workos/Models/DsyncActivated.swift",
+    "Sources/workos/Models/DsyncActivatedData.swift",
+    "Sources/workos/Models/DsyncActivatedDataDomain.swift",
+    "Sources/workos/Models/DsyncDeleted.swift",
+    "Sources/workos/Models/DsyncDeletedData.swift",
+    "Sources/workos/Models/DsyncGroupCreated.swift",
+    "Sources/workos/Models/DsyncGroupDeleted.swift",
+    "Sources/workos/Models/DsyncGroupUpdated.swift",
+    "Sources/workos/Models/DsyncGroupUpdatedData.swift",
+    "Sources/workos/Models/DsyncGroupUserAdded.swift",
+    "Sources/workos/Models/DsyncGroupUserAddedData.swift",
+    "Sources/workos/Models/DsyncGroupUserRemoved.swift",
+    "Sources/workos/Models/DsyncGroupUserRemovedData.swift",
+    "Sources/workos/Models/DsyncTokenCreated.swift",
+    "Sources/workos/Models/DsyncTokenCreatedData.swift",
+    "Sources/workos/Models/DsyncTokenRevoked.swift",
+    "Sources/workos/Models/DsyncTokenRevokedData.swift",
+    "Sources/workos/Models/DsyncUserCreated.swift",
+    "Sources/workos/Models/DsyncUserDeleted.swift",
+    "Sources/workos/Models/DsyncUserUpdated.swift",
+    "Sources/workos/Models/DsyncUserUpdatedData.swift",
+    "Sources/workos/Models/DsyncUserUpdatedDataEmail.swift",
+    "Sources/workos/Models/EmailChange.swift",
+    "Sources/workos/Models/EmailChangeConfirmation.swift",
+    "Sources/workos/Models/EmailChangeConfirmationUser.swift",
+    "Sources/workos/Models/EmailVerification.swift",
+    "Sources/workos/Models/EmailVerificationCreated.swift",
+    "Sources/workos/Models/EmailVerificationCreatedData.swift",
+    "Sources/workos/Models/EnrollUserAuthenticationFactor.swift",
+    "Sources/workos/Models/ErrorResponse.swift",
+    "Sources/workos/Models/EventContext.swift",
+    "Sources/workos/Models/EventContextActor.swift",
+    "Sources/workos/Models/EventContextGoogleAnalyticsSession.swift",
+    "Sources/workos/Models/EventList.swift",
+    "Sources/workos/Models/EventListListMetadata.swift",
+    "Sources/workos/Models/EventSchema.swift",
+    "Sources/workos/Models/ExpireApiKey.swift",
+    "Sources/workos/Models/ExternalAuthCompleteResponse.swift",
+    "Sources/workos/Models/FeatureFlag.swift",
+    "Sources/workos/Models/FeatureFlagOwner.swift",
+    "Sources/workos/Models/Flag.swift",
+    "Sources/workos/Models/FlagCreated.swift",
+    "Sources/workos/Models/FlagCreatedContext.swift",
+    "Sources/workos/Models/FlagCreatedContextActor.swift",
+    "Sources/workos/Models/FlagCreatedData.swift",
+    "Sources/workos/Models/FlagCreatedDataOwner.swift",
+    "Sources/workos/Models/FlagDeleted.swift",
+    "Sources/workos/Models/FlagDeletedContext.swift",
+    "Sources/workos/Models/FlagDeletedContextActor.swift",
+    "Sources/workos/Models/FlagDeletedData.swift",
+    "Sources/workos/Models/FlagDeletedDataOwner.swift",
+    "Sources/workos/Models/FlagList.swift",
+    "Sources/workos/Models/FlagListListMetadata.swift",
+    "Sources/workos/Models/FlagOwner.swift",
+    "Sources/workos/Models/FlagRuleUpdated.swift",
+    "Sources/workos/Models/FlagRuleUpdatedContext.swift",
+    "Sources/workos/Models/FlagRuleUpdatedContextActor.swift",
+    "Sources/workos/Models/FlagRuleUpdatedContextConfiguredTarget.swift",
+    "Sources/workos/Models/FlagRuleUpdatedContextConfiguredTargetOrganization.swift",
+    "Sources/workos/Models/FlagRuleUpdatedContextConfiguredTargetUser.swift",
+    "Sources/workos/Models/FlagRuleUpdatedContextPreviousAttribute.swift",
+    "Sources/workos/Models/FlagRuleUpdatedContextPreviousAttributeContext.swift",
+    "Sources/workos/Models/FlagRuleUpdatedContextPreviousAttributeContextConfiguredTarget.swift",
+    "Sources/workos/Models/FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetOrganization.swift",
+    "Sources/workos/Models/FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetUser.swift",
+    "Sources/workos/Models/FlagRuleUpdatedContextPreviousAttributeData.swift",
+    "Sources/workos/Models/FlagRuleUpdatedData.swift",
+    "Sources/workos/Models/FlagRuleUpdatedDataOwner.swift",
+    "Sources/workos/Models/FlagUpdated.swift",
+    "Sources/workos/Models/FlagUpdatedContext.swift",
+    "Sources/workos/Models/FlagUpdatedContextActor.swift",
+    "Sources/workos/Models/FlagUpdatedContextPreviousAttribute.swift",
+    "Sources/workos/Models/FlagUpdatedContextPreviousAttributeData.swift",
+    "Sources/workos/Models/FlagUpdatedData.swift",
+    "Sources/workos/Models/FlagUpdatedDataOwner.swift",
+    "Sources/workos/Models/GenerateLink.swift",
+    "Sources/workos/Models/Group.swift",
+    "Sources/workos/Models/GroupCreated.swift",
+    "Sources/workos/Models/GroupDeleted.swift",
+    "Sources/workos/Models/GroupList.swift",
+    "Sources/workos/Models/GroupListListMetadata.swift",
+    "Sources/workos/Models/GroupMemberAdded.swift",
+    "Sources/workos/Models/GroupMemberAddedData.swift",
+    "Sources/workos/Models/GroupMemberRemoved.swift",
+    "Sources/workos/Models/GroupMemberRemovedData.swift",
+    "Sources/workos/Models/GroupRoleAssignment.swift",
+    "Sources/workos/Models/GroupRoleAssignmentList.swift",
+    "Sources/workos/Models/GroupRoleAssignmentResource.swift",
+    "Sources/workos/Models/GroupUpdated.swift",
+    "Sources/workos/Models/Invitation.swift",
+    "Sources/workos/Models/InvitationAccepted.swift",
+    "Sources/workos/Models/InvitationAcceptedData.swift",
+    "Sources/workos/Models/InvitationCreated.swift",
+    "Sources/workos/Models/InvitationCreatedData.swift",
+    "Sources/workos/Models/InvitationResent.swift",
+    "Sources/workos/Models/InvitationResentData.swift",
+    "Sources/workos/Models/InvitationRevoked.swift",
+    "Sources/workos/Models/InvitationRevokedData.swift",
+    "Sources/workos/Models/JWTTemplateResponse.swift",
+    "Sources/workos/Models/JwksResponse.swift",
+    "Sources/workos/Models/JwksResponseKeys.swift",
+    "Sources/workos/Models/ListMetadata.swift",
+    "Sources/workos/Models/MagicAuth.swift",
+    "Sources/workos/Models/MagicAuthCreated.swift",
+    "Sources/workos/Models/MagicAuthCreatedData.swift",
+    "Sources/workos/Models/MagicAuthSendMagicAuthCodeAndReturnResponse.swift",
+    "Sources/workos/Models/NewConnectApplicationSecret.swift",
+    "Sources/workos/Models/ObjectListResponse.swift",
+    "Sources/workos/Models/ObjectMetadata.swift",
+    "Sources/workos/Models/ObjectSummary.swift",
+    "Sources/workos/Models/ObjectVersion.swift",
+    "Sources/workos/Models/ObjectWithoutValue.swift",
+    "Sources/workos/Models/Organization.swift",
+    "Sources/workos/Models/OrganizationApiKey.swift",
+    "Sources/workos/Models/OrganizationApiKeyList.swift",
+    "Sources/workos/Models/OrganizationApiKeyListListMetadata.swift",
+    "Sources/workos/Models/OrganizationApiKeyOwner.swift",
+    "Sources/workos/Models/OrganizationApiKeyWithValue.swift",
+    "Sources/workos/Models/OrganizationApiKeyWithValueOwner.swift",
+    "Sources/workos/Models/OrganizationCreated.swift",
+    "Sources/workos/Models/OrganizationCreatedData.swift",
+    "Sources/workos/Models/OrganizationCreatedDataDomain.swift",
+    "Sources/workos/Models/OrganizationDeleted.swift",
+    "Sources/workos/Models/OrganizationDeletedData.swift",
+    "Sources/workos/Models/OrganizationDeletedDataDomain.swift",
+    "Sources/workos/Models/OrganizationDomain.swift",
+    "Sources/workos/Models/OrganizationDomainCreated.swift",
+    "Sources/workos/Models/OrganizationDomainCreatedData.swift",
+    "Sources/workos/Models/OrganizationDomainData.swift",
+    "Sources/workos/Models/OrganizationDomainDeleted.swift",
+    "Sources/workos/Models/OrganizationDomainDeletedData.swift",
+    "Sources/workos/Models/OrganizationDomainUpdated.swift",
+    "Sources/workos/Models/OrganizationDomainUpdatedData.swift",
+    "Sources/workos/Models/OrganizationDomainVerificationFailed.swift",
+    "Sources/workos/Models/OrganizationDomainVerificationFailedData.swift",
+    "Sources/workos/Models/OrganizationDomainVerificationFailedDataOrganizationDomain.swift",
+    "Sources/workos/Models/OrganizationDomainVerified.swift",
+    "Sources/workos/Models/OrganizationDomainVerifiedData.swift",
+    "Sources/workos/Models/OrganizationInput.swift",
+    "Sources/workos/Models/OrganizationList.swift",
+    "Sources/workos/Models/OrganizationListListMetadata.swift",
+    "Sources/workos/Models/OrganizationMembership.swift",
+    "Sources/workos/Models/OrganizationMembershipCreated.swift",
+    "Sources/workos/Models/OrganizationMembershipCreatedData.swift",
+    "Sources/workos/Models/OrganizationMembershipDeleted.swift",
+    "Sources/workos/Models/OrganizationMembershipDeletedData.swift",
+    "Sources/workos/Models/OrganizationMembershipUpdated.swift",
+    "Sources/workos/Models/OrganizationMembershipUpdatedData.swift",
+    "Sources/workos/Models/OrganizationRoleCreated.swift",
+    "Sources/workos/Models/OrganizationRoleCreatedData.swift",
+    "Sources/workos/Models/OrganizationRoleDeleted.swift",
+    "Sources/workos/Models/OrganizationRoleDeletedData.swift",
+    "Sources/workos/Models/OrganizationRoleUpdated.swift",
+    "Sources/workos/Models/OrganizationRoleUpdatedData.swift",
+    "Sources/workos/Models/OrganizationUpdated.swift",
+    "Sources/workos/Models/OrganizationUpdatedData.swift",
+    "Sources/workos/Models/OrganizationUpdatedDataDomain.swift",
+    "Sources/workos/Models/PasswordReset.swift",
+    "Sources/workos/Models/PasswordResetCreated.swift",
+    "Sources/workos/Models/PasswordResetCreatedData.swift",
+    "Sources/workos/Models/PasswordResetSucceeded.swift",
+    "Sources/workos/Models/PasswordResetSucceededData.swift",
+    "Sources/workos/Models/PasswordSessionAuthenticateRequest.swift",
+    "Sources/workos/Models/Permission.swift",
+    "Sources/workos/Models/PermissionCreated.swift",
+    "Sources/workos/Models/PermissionCreatedData.swift",
+    "Sources/workos/Models/PermissionDeleted.swift",
+    "Sources/workos/Models/PermissionDeletedData.swift",
+    "Sources/workos/Models/PermissionUpdated.swift",
+    "Sources/workos/Models/PermissionUpdatedData.swift",
+    "Sources/workos/Models/PipeConnectedAccount.swift",
+    "Sources/workos/Models/PipesConnectedAccountConnected.swift",
+    "Sources/workos/Models/PipesConnectedAccountConnectionFailed.swift",
+    "Sources/workos/Models/PipesConnectedAccountConnectionFailedData.swift",
+    "Sources/workos/Models/PipesConnectedAccountDisconnected.swift",
+    "Sources/workos/Models/PipesConnectedAccountReauthorizationNeeded.swift",
+    "Sources/workos/Models/PortalLinkResponse.swift",
+    "Sources/workos/Models/Profile.swift",
+    "Sources/workos/Models/RadarChallenge.swift",
+    "Sources/workos/Models/RadarChallengeCreated.swift",
+    "Sources/workos/Models/RadarChallengeCreatedData.swift",
+    "Sources/workos/Models/RadarListEntryAlreadyPresentResponse.swift",
+    "Sources/workos/Models/RadarStandaloneAssessRequest.swift",
+    "Sources/workos/Models/RadarStandaloneDeleteRadarListEntryRequest.swift",
+    "Sources/workos/Models/RadarStandaloneResponse.swift",
+    "Sources/workos/Models/RadarStandaloneUpdateRadarAttemptRequest.swift",
+    "Sources/workos/Models/RadarStandaloneUpdateRadarListRequest.swift",
+    "Sources/workos/Models/RedirectUri.swift",
+    "Sources/workos/Models/RedirectUriInput.swift",
+    "Sources/workos/Models/RefreshTokenSessionAuthenticateRequest.swift",
+    "Sources/workos/Models/RekeyRequest.swift",
+    "Sources/workos/Models/RemoveRole.swift",
+    "Sources/workos/Models/ReplaceGroupRoleAssignmentEntry.swift",
+    "Sources/workos/Models/ReplaceGroupRoleAssignments.swift",
+    "Sources/workos/Models/ResendUserInviteOptions.swift",
+    "Sources/workos/Models/ResetPasswordResponse.swift",
+    "Sources/workos/Models/RevokeSession.swift",
+    "Sources/workos/Models/Role.swift",
+    "Sources/workos/Models/RoleCreated.swift",
+    "Sources/workos/Models/RoleCreatedData.swift",
+    "Sources/workos/Models/RoleDeleted.swift",
+    "Sources/workos/Models/RoleDeletedData.swift",
+    "Sources/workos/Models/RoleList.swift",
+    "Sources/workos/Models/RoleUpdated.swift",
+    "Sources/workos/Models/RoleUpdatedData.swift",
+    "Sources/workos/Models/SSOAuthorizeUrlResponse.swift",
+    "Sources/workos/Models/SSODeviceAuthorizationRequest.swift",
+    "Sources/workos/Models/SSOLogoutAuthorizeRequest.swift",
+    "Sources/workos/Models/SSOLogoutAuthorizeResponse.swift",
+    "Sources/workos/Models/SSOTokenResponse.swift",
+    "Sources/workos/Models/SSOTokenResponseOAuthToken.swift",
+    "Sources/workos/Models/SendEmailChange.swift",
+    "Sources/workos/Models/SendRadarSmsChallenge.swift",
+    "Sources/workos/Models/SendRadarSmsChallengeResponse.swift",
+    "Sources/workos/Models/SendVerificationEmailResponse.swift",
+    "Sources/workos/Models/SessionCreated.swift",
+    "Sources/workos/Models/SessionCreatedData.swift",
+    "Sources/workos/Models/SessionCreatedDataImpersonator.swift",
+    "Sources/workos/Models/SessionRevoked.swift",
+    "Sources/workos/Models/SessionRevokedData.swift",
+    "Sources/workos/Models/SessionRevokedDataImpersonator.swift",
+    "Sources/workos/Models/SetRolePermissions.swift",
+    "Sources/workos/Models/SlimRole.swift",
+    "Sources/workos/Models/TokenQuery.swift",
+    "Sources/workos/Models/UpdateAuditLogsRetention.swift",
+    "Sources/workos/Models/UpdateAuthorizationPermission.swift",
+    "Sources/workos/Models/UpdateAuthorizationResource.swift",
+    "Sources/workos/Models/UpdateCustomProviderDefinition.swift",
+    "Sources/workos/Models/UpdateDataIntegration.swift",
+    "Sources/workos/Models/UpdateGroup.swift",
+    "Sources/workos/Models/UpdateJWTTemplate.swift",
+    "Sources/workos/Models/UpdateOAuthApplication.swift",
+    "Sources/workos/Models/UpdateObjectRequest.swift",
+    "Sources/workos/Models/UpdateOrganization.swift",
+    "Sources/workos/Models/UpdateOrganizationRole.swift",
+    "Sources/workos/Models/UpdateRole.swift",
+    "Sources/workos/Models/UpdateUser.swift",
+    "Sources/workos/Models/UpdateUserOrganizationMembership.swift",
+    "Sources/workos/Models/UpdateWebhookEndpoint.swift",
+    "Sources/workos/Models/UrnIetfParamsOAuthGrantTypeDeviceCodeSessionAuthenticateRequest.swift",
+    "Sources/workos/Models/UrnWorkosOAuthGrantTypeEmailVerificationCodeSessionAuthenticateRequest.swift",
+    "Sources/workos/Models/UrnWorkosOAuthGrantTypeMagicAuthCodeSessionAuthenticateRequest.swift",
+    "Sources/workos/Models/UrnWorkosOAuthGrantTypeMfaTotpSessionAuthenticateRequest.swift",
+    "Sources/workos/Models/UrnWorkosOAuthGrantTypeOrganizationSelectionSessionAuthenticateRequest.swift",
+    "Sources/workos/Models/UrnWorkosOAuthGrantTypeRadarEmailChallengeCodeSessionAuthenticateRequest.swift",
+    "Sources/workos/Models/UrnWorkosOAuthGrantTypeRadarSmsChallengeCodeSessionAuthenticateRequest.swift",
+    "Sources/workos/Models/User.swift",
+    "Sources/workos/Models/UserApiKey.swift",
+    "Sources/workos/Models/UserApiKeyCreatedDataOwner.swift",
+    "Sources/workos/Models/UserApiKeyList.swift",
+    "Sources/workos/Models/UserApiKeyListListMetadata.swift",
+    "Sources/workos/Models/UserApiKeyOwner.swift",
+    "Sources/workos/Models/UserApiKeyRevokedDataOwner.swift",
+    "Sources/workos/Models/UserApiKeyUpdatedDataOwner.swift",
+    "Sources/workos/Models/UserApiKeyWithValue.swift",
+    "Sources/workos/Models/UserApiKeyWithValueOwner.swift",
+    "Sources/workos/Models/UserAuthenticationFactorEnrollResponse.swift",
+    "Sources/workos/Models/UserAuthenticationFactorList.swift",
+    "Sources/workos/Models/UserAuthenticationFactorListListMetadata.swift",
+    "Sources/workos/Models/UserConsentOption.swift",
+    "Sources/workos/Models/UserConsentOptionChoice.swift",
+    "Sources/workos/Models/UserCreateResponse.swift",
+    "Sources/workos/Models/UserCreated.swift",
+    "Sources/workos/Models/UserDeleted.swift",
+    "Sources/workos/Models/UserIdentitiesGetItem.swift",
+    "Sources/workos/Models/UserInvite.swift",
+    "Sources/workos/Models/UserInviteList.swift",
+    "Sources/workos/Models/UserInviteListListMetadata.swift",
+    "Sources/workos/Models/UserList.swift",
+    "Sources/workos/Models/UserListListMetadata.swift",
+    "Sources/workos/Models/UserManagementLoginRequest.swift",
+    "Sources/workos/Models/UserObject.swift",
+    "Sources/workos/Models/UserOrganizationMembership.swift",
+    "Sources/workos/Models/UserOrganizationMembershipBaseList.swift",
+    "Sources/workos/Models/UserOrganizationMembershipBaseListData.swift",
+    "Sources/workos/Models/UserOrganizationMembershipBaseListListMetadata.swift",
+    "Sources/workos/Models/UserOrganizationMembershipList.swift",
+    "Sources/workos/Models/UserOrganizationMembershipListListMetadata.swift",
+    "Sources/workos/Models/UserRoleAssignment.swift",
+    "Sources/workos/Models/UserRoleAssignmentList.swift",
+    "Sources/workos/Models/UserRoleAssignmentListListMetadata.swift",
+    "Sources/workos/Models/UserRoleAssignmentResource.swift",
+    "Sources/workos/Models/UserRoleAssignmentSource.swift",
+    "Sources/workos/Models/UserSessionsImpersonator.swift",
+    "Sources/workos/Models/UserSessionsListItem.swift",
+    "Sources/workos/Models/UserUpdated.swift",
+    "Sources/workos/Models/ValidateApiKey.swift",
+    "Sources/workos/Models/VaultByokKeyDeleted.swift",
+    "Sources/workos/Models/VaultByokKeyDeletedData.swift",
+    "Sources/workos/Models/VaultByokKeyVerificationCompleted.swift",
+    "Sources/workos/Models/VaultByokKeyVerificationCompletedData.swift",
+    "Sources/workos/Models/VaultDataCreated.swift",
+    "Sources/workos/Models/VaultDataCreatedData.swift",
+    "Sources/workos/Models/VaultDataDeleted.swift",
+    "Sources/workos/Models/VaultDataDeletedData.swift",
+    "Sources/workos/Models/VaultDataRead.swift",
+    "Sources/workos/Models/VaultDataReadData.swift",
+    "Sources/workos/Models/VaultDataUpdated.swift",
+    "Sources/workos/Models/VaultDataUpdatedData.swift",
+    "Sources/workos/Models/VaultDekDecrypted.swift",
+    "Sources/workos/Models/VaultDekDecryptedData.swift",
+    "Sources/workos/Models/VaultDekRead.swift",
+    "Sources/workos/Models/VaultDekReadData.swift",
+    "Sources/workos/Models/VaultKekCreated.swift",
+    "Sources/workos/Models/VaultKekCreatedData.swift",
+    "Sources/workos/Models/VaultKekDeleted.swift",
+    "Sources/workos/Models/VaultKekDeletedData.swift",
+    "Sources/workos/Models/VaultMetadataRead.swift",
+    "Sources/workos/Models/VaultMetadataReadData.swift",
+    "Sources/workos/Models/VaultNamesListed.swift",
+    "Sources/workos/Models/VaultNamesListedData.swift",
+    "Sources/workos/Models/VaultObject.swift",
+    "Sources/workos/Models/VerifyEmailAddress.swift",
+    "Sources/workos/Models/VerifyEmailResponse.swift",
+    "Sources/workos/Models/VersionListResponse.swift",
+    "Sources/workos/Models/WaitlistUser.swift",
+    "Sources/workos/Models/WaitlistUserApproved.swift",
+    "Sources/workos/Models/WaitlistUserCreated.swift",
+    "Sources/workos/Models/WaitlistUserDenied.swift",
+    "Sources/workos/Models/WebhookEndpoint.swift",
+    "Sources/workos/Models/WebhookEndpointList.swift",
+    "Sources/workos/Models/WebhookEndpointListListMetadata.swift",
+    "Sources/workos/Models/WidgetSessionToken.swift",
+    "Sources/workos/Models/WidgetSessionTokenResponse.swift",
+    "Sources/workos/RequestOptions.swift",
+    "Sources/workos/Resources/AdminPortal.swift",
+    "Sources/workos/Resources/Agents.swift",
+    "Sources/workos/Resources/ApiKeys.swift",
+    "Sources/workos/Resources/AuditLogs.swift",
+    "Sources/workos/Resources/Authorization.swift",
+    "Sources/workos/Resources/ClientApi.swift",
+    "Sources/workos/Resources/Connect.swift",
+    "Sources/workos/Resources/DirectorySync.swift",
+    "Sources/workos/Resources/Events.swift",
+    "Sources/workos/Resources/FeatureFlags.swift",
+    "Sources/workos/Resources/Groups.swift",
+    "Sources/workos/Resources/MultiFactorAuth.swift",
+    "Sources/workos/Resources/OrganizationDomains.swift",
+    "Sources/workos/Resources/OrganizationMembershipResource.swift",
+    "Sources/workos/Resources/Organizations.swift",
+    "Sources/workos/Resources/Pipes.swift",
+    "Sources/workos/Resources/PipesProvider.swift",
+    "Sources/workos/Resources/Radar.swift",
+    "Sources/workos/Resources/SSO.swift",
+    "Sources/workos/Resources/UserManagement.swift",
+    "Sources/workos/Resources/Vault.swift",
+    "Sources/workos/Resources/Webhooks.swift",
+    "Sources/workos/Resources/Widgets.swift",
+    "Sources/workos/workosClient.swift",
+    "Tests/workosTests/AdminPortalTests.swift",
+    "Tests/workosTests/AgentsTests.swift",
+    "Tests/workosTests/ApiKeysTests.swift",
+    "Tests/workosTests/AuditLogsTests.swift",
+    "Tests/workosTests/AuthorizationTests.swift",
+    "Tests/workosTests/ClientApiTests.swift",
+    "Tests/workosTests/ConnectTests.swift",
+    "Tests/workosTests/DirectorySyncTests.swift",
+    "Tests/workosTests/EventsTests.swift",
+    "Tests/workosTests/FeatureFlagsTests.swift",
+    "Tests/workosTests/GroupsTests.swift",
+    "Tests/workosTests/MultiFactorAuthTests.swift",
+    "Tests/workosTests/OrganizationDomainsTests.swift",
+    "Tests/workosTests/OrganizationMembershipTests.swift",
+    "Tests/workosTests/OrganizationsTests.swift",
+    "Tests/workosTests/PipesProviderTests.swift",
+    "Tests/workosTests/PipesTests.swift",
+    "Tests/workosTests/RadarTests.swift",
+    "Tests/workosTests/SSOTests.swift",
+    "Tests/workosTests/Support/MockURLProtocol.swift",
+    "Tests/workosTests/Support/TestClient.swift",
+    "Tests/workosTests/UserManagementTests.swift",
+    "Tests/workosTests/VaultTests.swift",
+    "Tests/workosTests/WebhooksTests.swift",
+    "Tests/workosTests/WidgetsTests.swift"
+  ],
+  "operations": {
+    "POST /agents/credentials/validate": {
+      "sdkMethod": "createValidate",
+      "service": "agents"
+    },
+    "GET /agents/registrations/{id}": {
+      "sdkMethod": "getRegistration",
+      "service": "agents"
+    },
+    "POST /auth/challenges/{id}/verify": {
+      "sdkMethod": "verifyChallenge",
+      "service": "multiFactorAuth"
+    },
+    "POST /auth/factors/enroll": {
+      "sdkMethod": "enroll",
+      "service": "multiFactorAuth"
+    },
+    "GET /auth/factors/{id}": {
+      "sdkMethod": "get",
+      "service": "multiFactorAuth"
+    },
+    "DELETE /auth/factors/{id}": {
+      "sdkMethod": "delete",
+      "service": "multiFactorAuth"
+    },
+    "POST /auth/factors/{id}/challenge": {
+      "sdkMethod": "challenge",
+      "service": "multiFactorAuth"
+    },
+    "GET /user_management/users/{userlandUserId}/auth_factors": {
+      "sdkMethod": "listUser",
+      "service": "multiFactorAuth"
+    },
+    "POST /user_management/users/{userlandUserId}/auth_factors": {
+      "sdkMethod": "createUser",
+      "service": "multiFactorAuth"
+    },
+    "POST /authkit/oauth2/complete": {
+      "sdkMethod": "completeOauth2",
+      "service": "connect"
+    },
+    "GET /connect/applications": {
+      "sdkMethod": "listApplications",
+      "service": "connect"
+    },
+    "POST /connect/applications": [
+      {
+        "sdkMethod": "createOAuthApplication",
+        "service": "connect"
+      },
+      {
+        "sdkMethod": "createM2MApplication",
+        "service": "connect"
+      }
+    ],
+    "GET /connect/applications/{id}": {
+      "sdkMethod": "getApplication",
+      "service": "connect"
+    },
+    "PUT /connect/applications/{id}": {
+      "sdkMethod": "updateApplication",
+      "service": "connect"
+    },
+    "DELETE /connect/applications/{id}": {
+      "sdkMethod": "deleteApplication",
+      "service": "connect"
+    },
+    "GET /connect/applications/{id}/client_secrets": {
+      "sdkMethod": "listApplicationClientSecrets",
+      "service": "connect"
+    },
+    "POST /connect/applications/{id}/client_secrets": {
+      "sdkMethod": "createApplicationClientSecret",
+      "service": "connect"
+    },
+    "DELETE /connect/client_secrets/{id}": {
+      "sdkMethod": "deleteClientSecret",
+      "service": "connect"
+    },
+    "GET /authorization/groups/{group_id}/role_assignments": {
+      "sdkMethod": "listGroupRoleAssignments",
+      "service": "authorization"
+    },
+    "POST /authorization/groups/{group_id}/role_assignments": {
+      "sdkMethod": "createGroupRoleAssignment",
+      "service": "authorization"
+    },
+    "PUT /authorization/groups/{group_id}/role_assignments": {
+      "sdkMethod": "updateGroupRoleAssignments",
+      "service": "authorization"
+    },
+    "DELETE /authorization/groups/{group_id}/role_assignments": {
+      "sdkMethod": "deleteGroupRoleAssignments",
+      "service": "authorization"
+    },
+    "GET /authorization/groups/{group_id}/role_assignments/{role_assignment_id}": {
+      "sdkMethod": "getGroupRoleAssignment",
+      "service": "authorization"
+    },
+    "DELETE /authorization/groups/{group_id}/role_assignments/{role_assignment_id}": {
+      "sdkMethod": "deleteGroupRoleAssignment",
+      "service": "authorization"
+    },
+    "POST /authorization/organization_memberships/{organization_membership_id}/check": {
+      "sdkMethod": "check",
+      "service": "authorization"
+    },
+    "GET /authorization/organization_memberships/{organization_membership_id}/resources": {
+      "sdkMethod": "listResourcesForMembership",
+      "service": "authorization"
+    },
+    "GET /authorization/organization_memberships/{organization_membership_id}/resources/{resource_id}/permissions": {
+      "sdkMethod": "listEffectivePermissions",
+      "service": "authorization"
+    },
+    "GET /authorization/organization_memberships/{organization_membership_id}/resources/{resource_type_slug}/{external_id}/permissions": {
+      "sdkMethod": "listEffectivePermissionsByExternalId",
+      "service": "authorization"
+    },
+    "GET /authorization/organization_memberships/{organization_membership_id}/role_assignments": {
+      "sdkMethod": "listRoleAssignments",
+      "service": "authorization"
+    },
+    "POST /authorization/organization_memberships/{organization_membership_id}/role_assignments": {
+      "sdkMethod": "assignRole",
+      "service": "authorization"
+    },
+    "DELETE /authorization/organization_memberships/{organization_membership_id}/role_assignments": {
+      "sdkMethod": "removeRole",
+      "service": "authorization"
+    },
+    "DELETE /authorization/organization_memberships/{organization_membership_id}/role_assignments/{role_assignment_id}": {
+      "sdkMethod": "removeRoleAssignment",
+      "service": "authorization"
+    },
+    "GET /authorization/organizations/{organizationId}/roles": {
+      "sdkMethod": "listOrganizationRoles",
+      "service": "authorization"
+    },
+    "POST /authorization/organizations/{organizationId}/roles": {
+      "sdkMethod": "createOrganizationRole",
+      "service": "authorization"
+    },
+    "GET /authorization/organizations/{organizationId}/roles/{slug}": {
+      "sdkMethod": "getOrganizationRole",
+      "service": "authorization"
+    },
+    "PATCH /authorization/organizations/{organizationId}/roles/{slug}": {
+      "sdkMethod": "updateOrganizationRole",
+      "service": "authorization"
+    },
+    "DELETE /authorization/organizations/{organizationId}/roles/{slug}": {
+      "sdkMethod": "deleteOrganizationRole",
+      "service": "authorization"
+    },
+    "POST /authorization/organizations/{organizationId}/roles/{slug}/permissions": {
+      "sdkMethod": "addOrganizationRolePermission",
+      "service": "authorization"
+    },
+    "PUT /authorization/organizations/{organizationId}/roles/{slug}/permissions": {
+      "sdkMethod": "setOrganizationRolePermissions",
+      "service": "authorization"
+    },
+    "DELETE /authorization/organizations/{organizationId}/roles/{slug}/permissions/{permissionSlug}": {
+      "sdkMethod": "removeOrganizationRolePermission",
+      "service": "authorization"
+    },
+    "GET /authorization/organizations/{organization_id}/resources/{resource_type_slug}/{external_id}": {
+      "sdkMethod": "getResourceByExternalId",
+      "service": "authorization"
+    },
+    "PATCH /authorization/organizations/{organization_id}/resources/{resource_type_slug}/{external_id}": {
+      "sdkMethod": "updateResourceByExternalId",
+      "service": "authorization"
+    },
+    "DELETE /authorization/organizations/{organization_id}/resources/{resource_type_slug}/{external_id}": {
+      "sdkMethod": "deleteResourceByExternalId",
+      "service": "authorization"
+    },
+    "GET /authorization/organizations/{organization_id}/resources/{resource_type_slug}/{external_id}/organization_memberships": {
+      "sdkMethod": "listMembershipsForResourceByExternalId",
+      "service": "authorization"
+    },
+    "GET /authorization/organizations/{organization_id}/resources/{resource_type_slug}/{external_id}/role_assignments": {
+      "sdkMethod": "listRoleAssignmentsForResourceByExternalId",
+      "service": "authorization"
+    },
+    "GET /authorization/resources": {
+      "sdkMethod": "listResources",
+      "service": "authorization"
+    },
+    "POST /authorization/resources": {
+      "sdkMethod": "createResource",
+      "service": "authorization"
+    },
+    "GET /authorization/resources/{resource_id}": {
+      "sdkMethod": "getResource",
+      "service": "authorization"
+    },
+    "PATCH /authorization/resources/{resource_id}": {
+      "sdkMethod": "updateResource",
+      "service": "authorization"
+    },
+    "DELETE /authorization/resources/{resource_id}": {
+      "sdkMethod": "deleteResource",
+      "service": "authorization"
+    },
+    "GET /authorization/resources/{resource_id}/organization_memberships": {
+      "sdkMethod": "listMembershipsForResource",
+      "service": "authorization"
+    },
+    "GET /authorization/resources/{resource_id}/role_assignments": {
+      "sdkMethod": "listRoleAssignmentsForResource",
+      "service": "authorization"
+    },
+    "GET /authorization/roles": {
+      "sdkMethod": "listEnvironmentRoles",
+      "service": "authorization"
+    },
+    "POST /authorization/roles": {
+      "sdkMethod": "createEnvironmentRole",
+      "service": "authorization"
+    },
+    "GET /authorization/roles/{slug}": {
+      "sdkMethod": "getEnvironmentRole",
+      "service": "authorization"
+    },
+    "PATCH /authorization/roles/{slug}": {
+      "sdkMethod": "updateEnvironmentRole",
+      "service": "authorization"
+    },
+    "POST /authorization/roles/{slug}/permissions": {
+      "sdkMethod": "addEnvironmentRolePermission",
+      "service": "authorization"
+    },
+    "PUT /authorization/roles/{slug}/permissions": {
+      "sdkMethod": "setEnvironmentRolePermissions",
+      "service": "authorization"
+    },
+    "GET /authorization/permissions": {
+      "sdkMethod": "listPermissions",
+      "service": "authorization"
+    },
+    "POST /authorization/permissions": {
+      "sdkMethod": "createPermission",
+      "service": "authorization"
+    },
+    "GET /authorization/permissions/{slug}": {
+      "sdkMethod": "getPermission",
+      "service": "authorization"
+    },
+    "PATCH /authorization/permissions/{slug}": {
+      "sdkMethod": "updatePermission",
+      "service": "authorization"
+    },
+    "DELETE /authorization/permissions/{slug}": {
+      "sdkMethod": "deletePermission",
+      "service": "authorization"
+    },
+    "POST /client/token": {
+      "sdkMethod": "createToken",
+      "service": "clientApi"
+    },
+    "GET /connections": {
+      "sdkMethod": "listConnections",
+      "service": "sso"
+    },
+    "GET /connections/{id}": {
+      "sdkMethod": "getConnection",
+      "service": "sso"
+    },
+    "DELETE /connections/{id}": {
+      "sdkMethod": "deleteConnection",
+      "service": "sso"
+    },
+    "POST /sso/logout/authorize": {
+      "sdkMethod": "authorizeLogout",
+      "service": "sso"
+    },
+    "GET /sso/profile": {
+      "sdkMethod": "getProfile",
+      "service": "sso"
+    },
+    "POST /sso/token": {
+      "sdkMethod": "getProfileAndToken",
+      "service": "sso"
+    },
+    "GET /data-integrations": {
+      "sdkMethod": "listDataIntegrations",
+      "service": "pipes"
+    },
+    "POST /data-integrations": {
+      "sdkMethod": "createDataIntegration",
+      "service": "pipes"
+    },
+    "GET /data-integrations/{slug}": {
+      "sdkMethod": "getDataIntegration",
+      "service": "pipes"
+    },
+    "PUT /data-integrations/{slug}": {
+      "sdkMethod": "updateDataIntegration",
+      "service": "pipes"
+    },
+    "DELETE /data-integrations/{slug}": {
+      "sdkMethod": "deleteDataIntegration",
+      "service": "pipes"
+    },
+    "PUT /data-integrations/{slug}/api-key": {
+      "sdkMethod": "updateDataIntegrationApiKey",
+      "service": "pipes"
+    },
+    "POST /data-integrations/{slug}/authorize": {
+      "sdkMethod": "authorizeDataIntegration",
+      "service": "pipes"
+    },
+    "POST /data-integrations/{slug}/credentials": {
+      "sdkMethod": "createDataIntegrationCredential",
+      "service": "pipes"
+    },
+    "POST /data-integrations/{provider}/token": {
+      "sdkMethod": "getAccessToken",
+      "service": "pipes"
+    },
+    "GET /user_management/users/{user_id}/connected_accounts/{slug}": {
+      "sdkMethod": "getUserConnectedAccount",
+      "service": "pipes"
+    },
+    "POST /user_management/users/{user_id}/connected_accounts/{slug}": {
+      "sdkMethod": "createUserConnectedAccount",
+      "service": "pipes"
+    },
+    "PUT /user_management/users/{user_id}/connected_accounts/{slug}": {
+      "sdkMethod": "updateUserConnectedAccount",
+      "service": "pipes"
+    },
+    "DELETE /user_management/users/{user_id}/connected_accounts/{slug}": {
+      "sdkMethod": "deleteUserConnectedAccount",
+      "service": "pipes"
+    },
+    "GET /user_management/users/{user_id}/data_providers": {
+      "sdkMethod": "listUserDataProviders",
+      "service": "pipes"
+    },
+    "GET /directories": {
+      "sdkMethod": "list",
+      "service": "directorySync"
+    },
+    "GET /directories/{id}": {
+      "sdkMethod": "get",
+      "service": "directorySync"
+    },
+    "DELETE /directories/{id}": {
+      "sdkMethod": "delete",
+      "service": "directorySync"
+    },
+    "GET /directory_groups": {
+      "sdkMethod": "listGroups",
+      "service": "directorySync"
+    },
+    "GET /directory_groups/{id}": {
+      "sdkMethod": "getGroup",
+      "service": "directorySync"
+    },
+    "GET /directory_users": {
+      "sdkMethod": "listUsers",
+      "service": "directorySync"
+    },
+    "GET /directory_users/{id}": {
+      "sdkMethod": "getUser",
+      "service": "directorySync"
+    },
+    "GET /events": {
+      "sdkMethod": "list",
+      "service": "events"
+    },
+    "GET /feature-flags": {
+      "sdkMethod": "list",
+      "service": "featureFlags"
+    },
+    "GET /feature-flags/{slug}": {
+      "sdkMethod": "get",
+      "service": "featureFlags"
+    },
+    "PUT /feature-flags/{slug}/disable": {
+      "sdkMethod": "disable",
+      "service": "featureFlags"
+    },
+    "PUT /feature-flags/{slug}/enable": {
+      "sdkMethod": "enable",
+      "service": "featureFlags"
+    },
+    "POST /feature-flags/{slug}/targets/{resourceId}": {
+      "sdkMethod": "addFlagTarget",
+      "service": "featureFlags"
+    },
+    "DELETE /feature-flags/{slug}/targets/{resourceId}": {
+      "sdkMethod": "removeFlagTarget",
+      "service": "featureFlags"
+    },
+    "GET /organizations/{organizationId}/feature-flags": {
+      "sdkMethod": "listOrganization",
+      "service": "featureFlags"
+    },
+    "GET /user_management/users/{userId}/feature-flags": {
+      "sdkMethod": "listUser",
+      "service": "featureFlags"
+    },
+    "POST /organization_domains": {
+      "sdkMethod": "create",
+      "service": "organizationDomains"
+    },
+    "GET /organization_domains/{id}": {
+      "sdkMethod": "get",
+      "service": "organizationDomains"
+    },
+    "DELETE /organization_domains/{id}": {
+      "sdkMethod": "delete",
+      "service": "organizationDomains"
+    },
+    "POST /organization_domains/{id}/verify": {
+      "sdkMethod": "verify",
+      "service": "organizationDomains"
+    },
+    "GET /organizations": {
+      "sdkMethod": "list",
+      "service": "organizations"
+    },
+    "POST /organizations": {
+      "sdkMethod": "create",
+      "service": "organizations"
+    },
+    "GET /organizations/external_id/{external_id}": {
+      "sdkMethod": "getOrganizationByExternalId",
+      "service": "organizations"
+    },
+    "GET /organizations/{id}": {
+      "sdkMethod": "get",
+      "service": "organizations"
+    },
+    "PUT /organizations/{id}": {
+      "sdkMethod": "update",
+      "service": "organizations"
+    },
+    "DELETE /organizations/{id}": {
+      "sdkMethod": "delete",
+      "service": "organizations"
+    },
+    "GET /organizations/{id}/audit_log_configuration": {
+      "sdkMethod": "getAuditLogConfiguration",
+      "service": "organizations"
+    },
+    "GET /organizations/{id}/audit_logs_retention": {
+      "sdkMethod": "getOrganizationAuditLogsRetention",
+      "service": "auditLogs"
+    },
+    "PUT /organizations/{id}/audit_logs_retention": {
+      "sdkMethod": "updateOrganizationAuditLogsRetention",
+      "service": "auditLogs"
+    },
+    "GET /audit_logs/actions": {
+      "sdkMethod": "listActions",
+      "service": "auditLogs"
+    },
+    "GET /audit_logs/actions/{actionName}/schemas": {
+      "sdkMethod": "listActionSchemas",
+      "service": "auditLogs"
+    },
+    "POST /audit_logs/actions/{actionName}/schemas": {
+      "sdkMethod": "createSchema",
+      "service": "auditLogs"
+    },
+    "POST /audit_logs/events": {
+      "sdkMethod": "createEvent",
+      "service": "auditLogs"
+    },
+    "POST /audit_logs/exports": {
+      "sdkMethod": "createExport",
+      "service": "auditLogs"
+    },
+    "GET /audit_logs/exports/{auditLogExportId}": {
+      "sdkMethod": "getExport",
+      "service": "auditLogs"
+    },
+    "GET /organizations/{organizationId}/api_keys": {
+      "sdkMethod": "listOrganization",
+      "service": "apiKeys"
+    },
+    "POST /organizations/{organizationId}/api_keys": {
+      "sdkMethod": "createOrganization",
+      "service": "apiKeys"
+    },
+    "POST /api_keys/validations": {
+      "sdkMethod": "createValidation",
+      "service": "apiKeys"
+    },
+    "DELETE /api_keys/{id}": {
+      "sdkMethod": "delete",
+      "service": "apiKeys"
+    },
+    "POST /api_keys/{id}/expire": {
+      "sdkMethod": "createApiKeyExpire",
+      "service": "apiKeys"
+    },
+    "GET /organizations/{organizationId}/data_integration_configurations": {
+      "sdkMethod": "listOrganizationDataIntegrationConfigurations",
+      "service": "pipesProvider"
+    },
+    "PUT /organizations/{organizationId}/data_integration_configurations/{slug}": {
+      "sdkMethod": "updateOrganizationDataIntegrationConfiguration",
+      "service": "pipesProvider"
+    },
+    "GET /organizations/{organizationId}/groups": {
+      "sdkMethod": "listOrganization",
+      "service": "groups"
+    },
+    "POST /organizations/{organizationId}/groups": {
+      "sdkMethod": "createOrganization",
+      "service": "groups"
+    },
+    "GET /organizations/{organizationId}/groups/{groupId}": {
+      "sdkMethod": "getOrganization",
+      "service": "groups"
+    },
+    "PATCH /organizations/{organizationId}/groups/{groupId}": {
+      "sdkMethod": "updateOrganization",
+      "service": "groups"
+    },
+    "DELETE /organizations/{organizationId}/groups/{groupId}": {
+      "sdkMethod": "deleteOrganization",
+      "service": "groups"
+    },
+    "GET /organizations/{organizationId}/groups/{groupId}/organization-memberships": {
+      "sdkMethod": "listGroupOrganizationMemberships",
+      "service": "groups"
+    },
+    "POST /organizations/{organizationId}/groups/{groupId}/organization-memberships": {
+      "sdkMethod": "createGroupOrganizationMembership",
+      "service": "groups"
+    },
+    "DELETE /organizations/{organizationId}/groups/{groupId}/organization-memberships/{omId}": {
+      "sdkMethod": "deleteGroupOrganizationMembership",
+      "service": "groups"
+    },
+    "POST /portal/generate_link": {
+      "sdkMethod": "generateLink",
+      "service": "adminPortal"
+    },
+    "POST /radar/attempts": {
+      "sdkMethod": "createAttempt",
+      "service": "radar"
+    },
+    "PUT /radar/attempts/{id}": {
+      "sdkMethod": "updateAttempt",
+      "service": "radar"
+    },
+    "POST /radar/lists/{type}/{action}": {
+      "sdkMethod": "addListEntry",
+      "service": "radar"
+    },
+    "DELETE /radar/lists/{type}/{action}": {
+      "sdkMethod": "removeListEntry",
+      "service": "radar"
+    },
+    "GET /sso/jwks/{clientId}": {
+      "sdkMethod": "getJwks",
+      "service": "userManagement"
+    },
+    "POST /user_management/authenticate": [
+      {
+        "sdkMethod": "authenticateWithPassword",
+        "service": "userManagement"
+      },
+      {
+        "sdkMethod": "authenticateWithCode",
+        "service": "userManagement"
+      },
+      {
+        "sdkMethod": "authenticateWithRefreshToken",
+        "service": "userManagement"
+      },
+      {
+        "sdkMethod": "authenticateWithMagicAuth",
+        "service": "userManagement"
+      },
+      {
+        "sdkMethod": "authenticateWithEmailVerification",
+        "service": "userManagement"
+      },
+      {
+        "sdkMethod": "authenticateWithTotp",
+        "service": "userManagement"
+      },
+      {
+        "sdkMethod": "authenticateWithOrganizationSelection",
+        "service": "userManagement"
+      },
+      {
+        "sdkMethod": "authenticateWithDeviceCode",
+        "service": "userManagement"
+      },
+      {
+        "sdkMethod": "authenticateWithRadarEmailChallenge",
+        "service": "userManagement"
+      },
+      {
+        "sdkMethod": "authenticateWithRadarSmsChallenge",
+        "service": "userManagement"
+      }
+    ],
+    "POST /user_management/authorize/device": {
+      "sdkMethod": "createDevice",
+      "service": "userManagement"
+    },
+    "POST /user_management/radar_challenges": {
+      "sdkMethod": "createRadarChallenge",
+      "service": "userManagement"
+    },
+    "GET /user_management/radar_challenges/{id}": {
+      "sdkMethod": "getRadarChallenge",
+      "service": "userManagement"
+    },
+    "POST /user_management/sessions/revoke": {
+      "sdkMethod": "revokeSession",
+      "service": "userManagement"
+    },
+    "GET /user_management/cors_origins": {
+      "sdkMethod": "listCorsOrigins",
+      "service": "userManagement"
+    },
+    "POST /user_management/cors_origins": {
+      "sdkMethod": "createCorsOrigin",
+      "service": "userManagement"
+    },
+    "GET /user_management/email_verification/{id}": {
+      "sdkMethod": "getEmailVerification",
+      "service": "userManagement"
+    },
+    "POST /user_management/password_reset": {
+      "sdkMethod": "resetPassword",
+      "service": "userManagement"
+    },
+    "POST /user_management/password_reset/confirm": {
+      "sdkMethod": "confirmPasswordReset",
+      "service": "userManagement"
+    },
+    "GET /user_management/password_reset/{id}": {
+      "sdkMethod": "getPasswordReset",
+      "service": "userManagement"
+    },
+    "GET /user_management/users": {
+      "sdkMethod": "list",
+      "service": "userManagement"
+    },
+    "POST /user_management/users": {
+      "sdkMethod": "create",
+      "service": "userManagement"
+    },
+    "GET /user_management/users/external_id/{external_id}": {
+      "sdkMethod": "getUserByExternalId",
+      "service": "userManagement"
+    },
+    "GET /user_management/users/{id}": {
+      "sdkMethod": "get",
+      "service": "userManagement"
+    },
+    "PUT /user_management/users/{id}": {
+      "sdkMethod": "update",
+      "service": "userManagement"
+    },
+    "DELETE /user_management/users/{id}": {
+      "sdkMethod": "delete",
+      "service": "userManagement"
+    },
+    "POST /user_management/users/{id}/email_change/confirm": {
+      "sdkMethod": "confirmEmailChange",
+      "service": "userManagement"
+    },
+    "POST /user_management/users/{id}/email_change/send": {
+      "sdkMethod": "sendEmailChange",
+      "service": "userManagement"
+    },
+    "POST /user_management/users/{id}/email_verification/confirm": {
+      "sdkMethod": "verifyEmail",
+      "service": "userManagement"
+    },
+    "POST /user_management/users/{id}/email_verification/send": {
+      "sdkMethod": "sendVerificationEmail",
+      "service": "userManagement"
+    },
+    "GET /user_management/users/{id}/identities": {
+      "sdkMethod": "getUserIdentities",
+      "service": "userManagement"
+    },
+    "GET /user_management/users/{id}/sessions": {
+      "sdkMethod": "listSessions",
+      "service": "userManagement"
+    },
+    "GET /user_management/invitations": {
+      "sdkMethod": "listInvitations",
+      "service": "userManagement"
+    },
+    "POST /user_management/invitations": {
+      "sdkMethod": "sendInvitation",
+      "service": "userManagement"
+    },
+    "GET /user_management/invitations/by_token/{token}": {
+      "sdkMethod": "findInvitationByToken",
+      "service": "userManagement"
+    },
+    "GET /user_management/invitations/{id}": {
+      "sdkMethod": "getInvitation",
+      "service": "userManagement"
+    },
+    "POST /user_management/invitations/{id}/accept": {
+      "sdkMethod": "acceptInvitation",
+      "service": "userManagement"
+    },
+    "POST /user_management/invitations/{id}/resend": {
+      "sdkMethod": "resendInvitation",
+      "service": "userManagement"
+    },
+    "POST /user_management/invitations/{id}/revoke": {
+      "sdkMethod": "revokeInvitation",
+      "service": "userManagement"
+    },
+    "GET /user_management/jwt_template": {
+      "sdkMethod": "listJwttemplate",
+      "service": "userManagement"
+    },
+    "PUT /user_management/jwt_template": {
+      "sdkMethod": "updateJwttemplate",
+      "service": "userManagement"
+    },
+    "POST /user_management/magic_auth": {
+      "sdkMethod": "createMagicAuth",
+      "service": "userManagement"
+    },
+    "GET /user_management/magic_auth/{id}": {
+      "sdkMethod": "getMagicAuth",
+      "service": "userManagement"
+    },
+    "GET /user_management/redirect_uris": {
+      "sdkMethod": "listRedirectUris",
+      "service": "userManagement"
+    },
+    "POST /user_management/redirect_uris": {
+      "sdkMethod": "createRedirectUri",
+      "service": "userManagement"
+    },
+    "GET /user_management/users/{user_id}/authorized_applications": {
+      "sdkMethod": "listUserAuthorizedApplications",
+      "service": "userManagement"
+    },
+    "DELETE /user_management/users/{user_id}/authorized_applications/{application_id}": {
+      "sdkMethod": "deleteUserAuthorizedApplication",
+      "service": "userManagement"
+    },
+    "GET /user_management/users/{userId}/api_keys": {
+      "sdkMethod": "listUserApiKeys",
+      "service": "userManagement"
+    },
+    "POST /user_management/users/{userId}/api_keys": {
+      "sdkMethod": "createUserApiKey",
+      "service": "userManagement"
+    },
+    "GET /user_management/organization_memberships": {
+      "sdkMethod": "list",
+      "service": "organizationMembership"
+    },
+    "POST /user_management/organization_memberships": {
+      "sdkMethod": "create",
+      "service": "organizationMembership"
+    },
+    "GET /user_management/organization_memberships/{id}": {
+      "sdkMethod": "get",
+      "service": "organizationMembership"
+    },
+    "PUT /user_management/organization_memberships/{id}": {
+      "sdkMethod": "update",
+      "service": "organizationMembership"
+    },
+    "DELETE /user_management/organization_memberships/{id}": {
+      "sdkMethod": "delete",
+      "service": "organizationMembership"
+    },
+    "PUT /user_management/organization_memberships/{id}/deactivate": {
+      "sdkMethod": "deactivate",
+      "service": "organizationMembership"
+    },
+    "PUT /user_management/organization_memberships/{id}/reactivate": {
+      "sdkMethod": "reactivate",
+      "service": "organizationMembership"
+    },
+    "GET /user_management/organization_memberships/{omId}/groups": {
+      "sdkMethod": "listOrganizationMembershipGroups",
+      "service": "organizationMembership"
+    },
+    "POST /vault/v1/keys/data-key": {
+      "sdkMethod": "createDataKey",
+      "service": "vault"
+    },
+    "POST /vault/v1/keys/decrypt": {
+      "sdkMethod": "createDecrypt",
+      "service": "vault"
+    },
+    "POST /vault/v1/keys/rekey": {
+      "sdkMethod": "createRekey",
+      "service": "vault"
+    },
+    "GET /vault/v1/kv": {
+      "sdkMethod": "listKv",
+      "service": "vault"
+    },
+    "POST /vault/v1/kv": {
+      "sdkMethod": "createKv",
+      "service": "vault"
+    },
+    "GET /vault/v1/kv/name/{name}": {
+      "sdkMethod": "getName",
+      "service": "vault"
+    },
+    "GET /vault/v1/kv/{id}": {
+      "sdkMethod": "getKv",
+      "service": "vault"
+    },
+    "PUT /vault/v1/kv/{id}": {
+      "sdkMethod": "updateKv",
+      "service": "vault"
+    },
+    "DELETE /vault/v1/kv/{id}": {
+      "sdkMethod": "deleteKv",
+      "service": "vault"
+    },
+    "GET /vault/v1/kv/{id}/metadata": {
+      "sdkMethod": "listKvMetadata",
+      "service": "vault"
+    },
+    "GET /vault/v1/kv/{id}/versions": {
+      "sdkMethod": "listKvVersions",
+      "service": "vault"
+    },
+    "GET /webhook_endpoints": {
+      "sdkMethod": "listWebhookEndpoints",
+      "service": "webhooks"
+    },
+    "POST /webhook_endpoints": {
+      "sdkMethod": "createWebhookEndpoint",
+      "service": "webhooks"
+    },
+    "PATCH /webhook_endpoints/{id}": {
+      "sdkMethod": "updateWebhookEndpoint",
+      "service": "webhooks"
+    },
+    "DELETE /webhook_endpoints/{id}": {
+      "sdkMethod": "deleteWebhookEndpoint",
+      "service": "webhooks"
+    },
+    "POST /widgets/token": {
+      "sdkMethod": "createToken",
+      "service": "widgets"
+    }
+  }
+}
