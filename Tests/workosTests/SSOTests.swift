@@ -94,8 +94,8 @@ import Testing
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
         #expect(json?["code"] != nil)
         let query =
-            URLComponents(url: try #require(request.url), resolvedAgainstBaseURL: false)?.queryItems
-            ?? []
+            URLComponents(url: try #require(request.url), resolvingAgainstBaseURL: false)?
+            .queryItems ?? []
         #expect(query.contains(URLQueryItem(name: "code", value: "test_code")))
         _ = result
     }

@@ -50,7 +50,7 @@ import Testing
         #expect(items.count == 2)
         #expect(recorder.allRequests.count == 2)
         let second = try #require(recorder.allRequests.last?.url)
-        let query = URLComponents(url: second, resolvedAgainstBaseURL: false)?.queryItems ?? []
+        let query = URLComponents(url: second, resolvingAgainstBaseURL: false)?.queryItems ?? []
         #expect(query.contains(URLQueryItem(name: "after", value: "cursor_2")))
     }
 

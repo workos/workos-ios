@@ -124,8 +124,8 @@ import Testing
                 == "/authorization/organization_memberships/sample-organization-membership-id/resources"
         )
         let query =
-            URLComponents(url: try #require(request.url), resolvedAgainstBaseURL: false)?.queryItems
-            ?? []
+            URLComponents(url: try #require(request.url), resolvingAgainstBaseURL: false)?
+            .queryItems ?? []
         #expect(
             query.contains(URLQueryItem(name: "permission_slug", value: "test_permission_slug")))
         #expect(result.data.count == 1)
@@ -306,8 +306,8 @@ import Testing
                 == "/authorization/organizations/sample-organization-id/resources/sample-resource-type-slug/sample-external-id/organization_memberships"
         )
         let query =
-            URLComponents(url: try #require(request.url), resolvedAgainstBaseURL: false)?.queryItems
-            ?? []
+            URLComponents(url: try #require(request.url), resolvingAgainstBaseURL: false)?
+            .queryItems ?? []
         #expect(
             query.contains(URLQueryItem(name: "permission_slug", value: "test_permission_slug")))
         #expect(result.data.count == 1)
@@ -610,8 +610,8 @@ import Testing
             request.url?.path
                 == "/authorization/resources/sample-resource-id/organization_memberships")
         let query =
-            URLComponents(url: try #require(request.url), resolvedAgainstBaseURL: false)?.queryItems
-            ?? []
+            URLComponents(url: try #require(request.url), resolvingAgainstBaseURL: false)?
+            .queryItems ?? []
         #expect(
             query.contains(URLQueryItem(name: "permission_slug", value: "test_permission_slug")))
         #expect(result.data.count == 1)
