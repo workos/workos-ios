@@ -131,6 +131,20 @@ import Testing
         #expect(result.count == 1)
     }
 
+    @Test func createApplicationClientSecretSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connect_application_secret","id":"secret_01J9Q2Z3X4Y5W6V7U8T9S0R1Q","secret_hint":"abc123","last_used_at":null,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","secret":"abc123def456ghi789jkl012mno345pqr678stu901vwx234yz"}"#
+        )
+        let result = try await client.connect.createApplicationClientSecret(
+            id: "sample-id", body: CreateApplicationSecret())
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/connect/applications/sample-id/client_secrets")
+        #expect(result.id == "secret_01J9Q2Z3X4Y5W6V7U8T9S0R1Q")
+    }
+
     @Test func deleteClientSecretSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(responding: #"{}"#)
         try await client.connect.deleteClientSecret(id: "sample-id")

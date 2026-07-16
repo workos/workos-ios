@@ -42,4 +42,34 @@ import Testing
         #expect(request.httpMethod == "PUT")
         #expect(request.url?.path == "/radar/attempts/sample-id")
     }
+
+    @Test func addListEntrySendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding: #"{"message":"Entry already present in list"}"#)
+        let result = try await client.radar.addListEntry(
+            type: RadarListType(rawValue: "ip_address"), action: RadarListAction(rawValue: "block"),
+            entry: "test_entry")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/radar/lists/ip_address/block")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["entry"] != nil)
+        _ = result
+    }
+
+    @Test func removeListEntrySendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.radar.removeListEntry(
+            type: RadarListType(rawValue: "ip_address"), action: RadarListAction(rawValue: "block"),
+            entry: "test_entry")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/radar/lists/ip_address/block")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["entry"] != nil)
+    }
 }

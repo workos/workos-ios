@@ -1,9 +1,7 @@
 {
   "version": 2,
   "language": "ios",
-  "generatedAt": "2026-07-16T17:01:22.125Z",
   "files": [
-    ".oagen-ios-smoke.json",
     "Sources/WorkOS/Configuration.swift",
     "Sources/WorkOS/Enums/AgentAdminValidateCredentialRequestType.swift",
     "Sources/WorkOS/Enums/AgentRegistrationCreatedDataKind.swift",
@@ -783,31 +781,31 @@
       "service": "multiFactorAuth"
     },
     "POST /auth/factors/enroll": {
-      "sdkMethod": "enroll",
+      "sdkMethod": "enrollFactor",
       "service": "multiFactorAuth"
     },
     "GET /auth/factors/{id}": {
-      "sdkMethod": "get",
+      "sdkMethod": "getFactor",
       "service": "multiFactorAuth"
     },
     "DELETE /auth/factors/{id}": {
-      "sdkMethod": "delete",
+      "sdkMethod": "deleteFactor",
       "service": "multiFactorAuth"
     },
     "POST /auth/factors/{id}/challenge": {
-      "sdkMethod": "challenge",
+      "sdkMethod": "challengeFactor",
       "service": "multiFactorAuth"
     },
     "GET /user_management/users/{userlandUserId}/auth_factors": {
-      "sdkMethod": "listUser",
+      "sdkMethod": "listUserAuthFactors",
       "service": "multiFactorAuth"
     },
     "POST /user_management/users/{userlandUserId}/auth_factors": {
-      "sdkMethod": "createUser",
+      "sdkMethod": "createUserAuthFactor",
       "service": "multiFactorAuth"
     },
     "POST /authkit/oauth2/complete": {
-      "sdkMethod": "completeOauth2",
+      "sdkMethod": "completeOAuth2",
       "service": "connect"
     },
     "GET /connect/applications": {
@@ -1169,11 +1167,11 @@
       "service": "featureFlags"
     },
     "GET /organizations/{organizationId}/feature-flags": {
-      "sdkMethod": "listOrganization",
+      "sdkMethod": "listOrganizationFeatureFlags",
       "service": "featureFlags"
     },
     "GET /user_management/users/{userId}/feature-flags": {
-      "sdkMethod": "listUser",
+      "sdkMethod": "listUserFeatureFlags",
       "service": "featureFlags"
     },
     "POST /organization_domains": {
@@ -1201,7 +1199,7 @@
       "service": "organizations"
     },
     "GET /organizations/external_id/{external_id}": {
-      "sdkMethod": "getOrganizationByExternalId",
+      "sdkMethod": "getByExternalId",
       "service": "organizations"
     },
     "GET /organizations/{id}": {
@@ -1253,11 +1251,11 @@
       "service": "auditLogs"
     },
     "GET /organizations/{organizationId}/api_keys": {
-      "sdkMethod": "listOrganization",
+      "sdkMethod": "listOrganizationApiKeys",
       "service": "apiKeys"
     },
     "POST /organizations/{organizationId}/api_keys": {
-      "sdkMethod": "createOrganization",
+      "sdkMethod": "createOrganizationApiKey",
       "service": "apiKeys"
     },
     "POST /api_keys/validations": {
@@ -1269,7 +1267,7 @@
       "service": "apiKeys"
     },
     "POST /api_keys/{id}/expire": {
-      "sdkMethod": "createApiKeyExpire",
+      "sdkMethod": "createExpire",
       "service": "apiKeys"
     },
     "GET /organizations/{organizationId}/data_integration_configurations": {
@@ -1281,35 +1279,35 @@
       "service": "pipesProvider"
     },
     "GET /organizations/{organizationId}/groups": {
-      "sdkMethod": "listOrganization",
+      "sdkMethod": "listOrganizationGroups",
       "service": "groups"
     },
     "POST /organizations/{organizationId}/groups": {
-      "sdkMethod": "createOrganization",
+      "sdkMethod": "createOrganizationGroup",
       "service": "groups"
     },
     "GET /organizations/{organizationId}/groups/{groupId}": {
-      "sdkMethod": "getOrganization",
+      "sdkMethod": "getOrganizationGroup",
       "service": "groups"
     },
     "PATCH /organizations/{organizationId}/groups/{groupId}": {
-      "sdkMethod": "updateOrganization",
+      "sdkMethod": "updateOrganizationGroup",
       "service": "groups"
     },
     "DELETE /organizations/{organizationId}/groups/{groupId}": {
-      "sdkMethod": "deleteOrganization",
+      "sdkMethod": "deleteOrganizationGroup",
       "service": "groups"
     },
     "GET /organizations/{organizationId}/groups/{groupId}/organization-memberships": {
-      "sdkMethod": "listGroupOrganizationMemberships",
+      "sdkMethod": "listOrganizationMemberships",
       "service": "groups"
     },
     "POST /organizations/{organizationId}/groups/{groupId}/organization-memberships": {
-      "sdkMethod": "createGroupOrganizationMembership",
+      "sdkMethod": "createOrganizationMembership",
       "service": "groups"
     },
     "DELETE /organizations/{organizationId}/groups/{groupId}/organization-memberships/{omId}": {
-      "sdkMethod": "deleteGroupOrganizationMembership",
+      "sdkMethod": "deleteOrganizationMembership",
       "service": "groups"
     },
     "POST /portal/generate_link": {
@@ -1427,7 +1425,7 @@
       "service": "userManagement"
     },
     "GET /user_management/users/external_id/{external_id}": {
-      "sdkMethod": "getUserByExternalId",
+      "sdkMethod": "getByExternalId",
       "service": "userManagement"
     },
     "GET /user_management/users/{id}": {
@@ -1459,7 +1457,7 @@
       "service": "userManagement"
     },
     "GET /user_management/users/{id}/identities": {
-      "sdkMethod": "getUserIdentities",
+      "sdkMethod": "getIdentities",
       "service": "userManagement"
     },
     "GET /user_management/users/{id}/sessions": {
@@ -1495,11 +1493,11 @@
       "service": "userManagement"
     },
     "GET /user_management/jwt_template": {
-      "sdkMethod": "listJwttemplate",
+      "sdkMethod": "listJWTTemplate",
       "service": "userManagement"
     },
     "PUT /user_management/jwt_template": {
-      "sdkMethod": "updateJwttemplate",
+      "sdkMethod": "updateJWTTemplate",
       "service": "userManagement"
     },
     "POST /user_management/magic_auth": {
@@ -1519,19 +1517,19 @@
       "service": "userManagement"
     },
     "GET /user_management/users/{user_id}/authorized_applications": {
-      "sdkMethod": "listUserAuthorizedApplications",
+      "sdkMethod": "listAuthorizedApplications",
       "service": "userManagement"
     },
     "DELETE /user_management/users/{user_id}/authorized_applications/{application_id}": {
-      "sdkMethod": "deleteUserAuthorizedApplication",
+      "sdkMethod": "deleteAuthorizedApplication",
       "service": "userManagement"
     },
     "GET /user_management/users/{userId}/api_keys": {
-      "sdkMethod": "listUserApiKeys",
+      "sdkMethod": "listApiKeys",
       "service": "userManagement"
     },
     "POST /user_management/users/{userId}/api_keys": {
-      "sdkMethod": "createUserApiKey",
+      "sdkMethod": "createApiKey",
       "service": "userManagement"
     },
     "GET /user_management/organization_memberships": {
@@ -1563,7 +1561,7 @@
       "service": "organizationMembership"
     },
     "GET /user_management/organization_memberships/{omId}/groups": {
-      "sdkMethod": "listOrganizationMembershipGroups",
+      "sdkMethod": "listGroups",
       "service": "organizationMembership"
     },
     "POST /vault/v1/keys/data-key": {
@@ -1611,19 +1609,19 @@
       "service": "vault"
     },
     "GET /webhook_endpoints": {
-      "sdkMethod": "listWebhookEndpoints",
+      "sdkMethod": "listEndpoints",
       "service": "webhooks"
     },
     "POST /webhook_endpoints": {
-      "sdkMethod": "createWebhookEndpoint",
+      "sdkMethod": "createEndpoint",
       "service": "webhooks"
     },
     "PATCH /webhook_endpoints/{id}": {
-      "sdkMethod": "updateWebhookEndpoint",
+      "sdkMethod": "updateEndpoint",
       "service": "webhooks"
     },
     "DELETE /webhook_endpoints/{id}": {
-      "sdkMethod": "deleteWebhookEndpoint",
+      "sdkMethod": "deleteEndpoint",
       "service": "webhooks"
     },
     "POST /widgets/token": {
