@@ -9,6 +9,8 @@ public struct DirectorySync: Sendable {
     /// List Directories
     ///
     /// Get a list of all of your existing directories matching the criteria specified.
+    ///
+    /// - Parameter domain: Deprecated. Filter Directories by their associated domain.
     public func list(
         before: String? = nil,
         after: String? = nil,

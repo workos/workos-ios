@@ -67,7 +67,7 @@ public struct Pipes: Sendable {
         description: String? = nil,
         enabled: Bool? = nil,
         scopes: [String]? = nil,
-        credentials: DataIntegrationCredentialsDto? = nil,
+        credentials: DataIntegrationCredentialsInput? = nil,
         customProvider: CustomProviderDefinition? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegration {
@@ -115,7 +115,7 @@ public struct Pipes: Sendable {
         description: String? = nil,
         enabled: Bool? = nil,
         scopes: [String]? = nil,
-        credentials: DataIntegrationCredentialsDto? = nil,
+        credentials: DataIntegrationCredentialsInput? = nil,
         customProvider: UpdateCustomProviderDefinition? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegration {
@@ -284,7 +284,7 @@ public struct Pipes: Sendable {
         refreshToken: String? = nil,
         expiresAt: Date? = nil,
         scopes: [String]? = nil,
-        state: ConnectedAccountState? = nil,
+        state: ConnectedAccountInputState? = nil,
         organizationId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
@@ -320,7 +320,7 @@ public struct Pipes: Sendable {
         refreshToken: String? = nil,
         expiresAt: Date? = nil,
         scopes: [String]? = nil,
-        state: ConnectedAccountState? = nil,
+        state: ConnectedAccountInputState? = nil,
         organizationId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {

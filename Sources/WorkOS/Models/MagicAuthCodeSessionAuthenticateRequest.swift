@@ -2,46 +2,49 @@
 
 import Foundation
 
-public struct UrnWorkosOAuthGrantTypeMfaTotpSessionAuthenticateRequest: Codable, Sendable, Equatable
-{
+public struct MagicAuthCodeSessionAuthenticateRequest: Codable, Sendable, Equatable {
     /// The client ID of the application.
     public let clientId: String
     /// The client secret of the application.
     public let clientSecret: String
     public let grantType: String
-    /// The TOTP code from the authenticator app.
+    /// The one-time code for Magic Auth authentication.
     public let code: String
-    /// The pending authentication token from a previous authentication attempt.
-    public let pendingAuthenticationToken: String
-    /// The ID of the MFA authentication challenge.
-    public let authenticationChallengeId: String
+    /// The user's email address.
+    public let email: String
+    /// An invitation token to accept during authentication.
+    public let invitationToken: String?
     /// The IP address of the user's request.
     public let ipAddress: String?
     /// A unique identifier for the device.
     public let deviceId: String?
     /// The user agent string from the user's browser.
     public let userAgent: String?
+    /// The ID of an existing Radar authentication attempt to associate with this authentication.
+    public let radarAuthAttemptId: String?
 
     public init(
         clientId: String,
         clientSecret: String,
         grantType: String,
         code: String,
-        pendingAuthenticationToken: String,
-        authenticationChallengeId: String,
+        email: String,
+        invitationToken: String? = nil,
         ipAddress: String? = nil,
         deviceId: String? = nil,
-        userAgent: String? = nil
+        userAgent: String? = nil,
+        radarAuthAttemptId: String? = nil
     ) {
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.grantType = grantType
         self.code = code
-        self.pendingAuthenticationToken = pendingAuthenticationToken
-        self.authenticationChallengeId = authenticationChallengeId
+        self.email = email
+        self.invitationToken = invitationToken
         self.ipAddress = ipAddress
         self.deviceId = deviceId
         self.userAgent = userAgent
+        self.radarAuthAttemptId = radarAuthAttemptId
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -49,10 +52,11 @@ public struct UrnWorkosOAuthGrantTypeMfaTotpSessionAuthenticateRequest: Codable,
         case clientSecret = "client_secret"
         case grantType = "grant_type"
         case code
-        case pendingAuthenticationToken = "pending_authentication_token"
-        case authenticationChallengeId = "authentication_challenge_id"
+        case email
+        case invitationToken = "invitation_token"
         case ipAddress = "ip_address"
         case deviceId = "device_id"
         case userAgent = "user_agent"
+        case radarAuthAttemptId = "radar_auth_attempt_id"
     }
 }

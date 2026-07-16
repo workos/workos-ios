@@ -2,11 +2,10 @@
 
 import Foundation
 
-/// Enumeration of valid ConnectedAccountState values.
-public enum ConnectedAccountState: RawRepresentable, Codable, Sendable, Hashable {
+/// Enumeration of valid ConnectedAccountInputState values.
+public enum ConnectedAccountInputState: RawRepresentable, Codable, Sendable, Hashable {
     case connected
     case needsReauthorization
-    case disconnected
     /// A value not known at SDK generation time.
     case unknown(String)
 
@@ -14,7 +13,6 @@ public enum ConnectedAccountState: RawRepresentable, Codable, Sendable, Hashable
         switch rawValue {
         case "connected": self = .connected
         case "needs_reauthorization": self = .needsReauthorization
-        case "disconnected": self = .disconnected
         default: self = .unknown(rawValue)
         }
     }
@@ -23,7 +21,6 @@ public enum ConnectedAccountState: RawRepresentable, Codable, Sendable, Hashable
         switch self {
         case .connected: return "connected"
         case .needsReauthorization: return "needs_reauthorization"
-        case .disconnected: return "disconnected"
         case .unknown(let value): return value
         }
     }
@@ -38,9 +35,8 @@ public enum ConnectedAccountState: RawRepresentable, Codable, Sendable, Hashable
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [ConnectedAccountState] = [
+    public static let allKnownCases: [ConnectedAccountInputState] = [
         .connected,
         .needsReauthorization,
-        .disconnected,
     ]
 }

@@ -2,18 +2,18 @@
 
 import Foundation
 
-public struct UrnWorkosOAuthGrantTypeEmailVerificationCodeSessionAuthenticateRequest: Codable,
-    Sendable, Equatable
-{
+public struct MfaTotpSessionAuthenticateRequest: Codable, Sendable, Equatable {
     /// The client ID of the application.
     public let clientId: String
     /// The client secret of the application.
     public let clientSecret: String
     public let grantType: String
-    /// The email verification code.
+    /// The TOTP code from the authenticator app.
     public let code: String
     /// The pending authentication token from a previous authentication attempt.
     public let pendingAuthenticationToken: String
+    /// The ID of the MFA authentication challenge.
+    public let authenticationChallengeId: String
     /// The IP address of the user's request.
     public let ipAddress: String?
     /// A unique identifier for the device.
@@ -27,6 +27,7 @@ public struct UrnWorkosOAuthGrantTypeEmailVerificationCodeSessionAuthenticateReq
         grantType: String,
         code: String,
         pendingAuthenticationToken: String,
+        authenticationChallengeId: String,
         ipAddress: String? = nil,
         deviceId: String? = nil,
         userAgent: String? = nil
@@ -36,6 +37,7 @@ public struct UrnWorkosOAuthGrantTypeEmailVerificationCodeSessionAuthenticateReq
         self.grantType = grantType
         self.code = code
         self.pendingAuthenticationToken = pendingAuthenticationToken
+        self.authenticationChallengeId = authenticationChallengeId
         self.ipAddress = ipAddress
         self.deviceId = deviceId
         self.userAgent = userAgent
@@ -47,6 +49,7 @@ public struct UrnWorkosOAuthGrantTypeEmailVerificationCodeSessionAuthenticateReq
         case grantType = "grant_type"
         case code
         case pendingAuthenticationToken = "pending_authentication_token"
+        case authenticationChallengeId = "authentication_challenge_id"
         case ipAddress = "ip_address"
         case deviceId = "device_id"
         case userAgent = "user_agent"

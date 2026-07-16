@@ -2,7 +2,7 @@
 
 import Foundation
 
-public struct ConnectedAccountDto: Codable, Sendable, Equatable {
+public struct ConnectedAccountInput: Codable, Sendable, Equatable {
     /// The OAuth access token for the connected account.
     public let accessToken: String?
     /// The OAuth refresh token for the connected account.
@@ -12,14 +12,14 @@ public struct ConnectedAccountDto: Codable, Sendable, Equatable {
     /// The OAuth scopes granted for this connection.
     public let scopes: [String]?
     /// Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
-    public let state: ConnectedAccountState?
+    public let state: ConnectedAccountInputState?
 
     public init(
         accessToken: String? = nil,
         refreshToken: String? = nil,
         expiresAt: Date? = nil,
         scopes: [String]? = nil,
-        state: ConnectedAccountState? = nil
+        state: ConnectedAccountInputState? = nil
     ) {
         self.accessToken = accessToken
         self.refreshToken = refreshToken

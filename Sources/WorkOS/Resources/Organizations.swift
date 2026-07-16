@@ -142,6 +142,8 @@ public struct Organizations: Sendable {
     /// Update an Organization
     ///
     /// Updates an organization in the current environment.
+    ///
+    /// - Parameter domains: Deprecated. The domains associated with the organization. Deprecated in favor of `domain_data`.
     public func update(
         id: String,
         name: String? = nil,

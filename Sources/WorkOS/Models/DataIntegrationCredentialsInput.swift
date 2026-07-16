@@ -2,16 +2,16 @@
 
 import Foundation
 
-public struct DataIntegrationCredentialsDto: Codable, Sendable, Equatable {
+public struct DataIntegrationCredentialsInput: Codable, Sendable, Equatable {
     /// The credentials type. `custom` uses your own OAuth app credentials; `organization` has each organization supply its own credentials (configured per-organization).
-    public let type: DataIntegrationCredentialsType
+    public let type: DataIntegrationCredentialsInputType
     /// OAuth client ID for the provider app. Required when `type` is `custom`; omit for `organization`.
     public let clientId: String?
     /// OAuth client secret for the provider app. Required when `type` is `custom`; omit for `organization`.
     public let clientSecret: String?
 
     public init(
-        type: DataIntegrationCredentialsType,
+        type: DataIntegrationCredentialsInputType,
         clientId: String? = nil,
         clientSecret: String? = nil
     ) {

@@ -2,20 +2,12 @@
 
 import Foundation
 
-public struct UrnWorkosOAuthGrantTypeRadarEmailChallengeCodeSessionAuthenticateRequest: Codable,
-    Sendable, Equatable
-{
+public struct DeviceCodeSessionAuthenticateRequest: Codable, Sendable, Equatable {
     /// The client ID of the application.
     public let clientId: String
-    /// The client secret of the application.
-    public let clientSecret: String
     public let grantType: String
-    /// The one-time code from the Radar email challenge.
-    public let code: String
-    /// The ID of the Radar email challenge being verified.
-    public let radarChallengeId: String
-    /// The pending authentication token from a previous authentication attempt.
-    public let pendingAuthenticationToken: String
+    /// The device verification code.
+    public let deviceCode: String
     /// The IP address of the user's request.
     public let ipAddress: String?
     /// A unique identifier for the device.
@@ -25,21 +17,15 @@ public struct UrnWorkosOAuthGrantTypeRadarEmailChallengeCodeSessionAuthenticateR
 
     public init(
         clientId: String,
-        clientSecret: String,
         grantType: String,
-        code: String,
-        radarChallengeId: String,
-        pendingAuthenticationToken: String,
+        deviceCode: String,
         ipAddress: String? = nil,
         deviceId: String? = nil,
         userAgent: String? = nil
     ) {
         self.clientId = clientId
-        self.clientSecret = clientSecret
         self.grantType = grantType
-        self.code = code
-        self.radarChallengeId = radarChallengeId
-        self.pendingAuthenticationToken = pendingAuthenticationToken
+        self.deviceCode = deviceCode
         self.ipAddress = ipAddress
         self.deviceId = deviceId
         self.userAgent = userAgent
@@ -47,11 +33,8 @@ public struct UrnWorkosOAuthGrantTypeRadarEmailChallengeCodeSessionAuthenticateR
 
     private enum CodingKeys: String, CodingKey {
         case clientId = "client_id"
-        case clientSecret = "client_secret"
         case grantType = "grant_type"
-        case code
-        case radarChallengeId = "radar_challenge_id"
-        case pendingAuthenticationToken = "pending_authentication_token"
+        case deviceCode = "device_code"
         case ipAddress = "ip_address"
         case deviceId = "device_id"
         case userAgent = "user_agent"

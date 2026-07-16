@@ -210,6 +210,8 @@ public struct AuditLogs: Sendable {
     /// Create Export
     ///
     /// Create an Audit Log Export. Exports are scoped to a single organization within a specified date range.
+    ///
+    /// - Parameter actors: Deprecated. Use `actor_names` instead.
     public func createExport(
         organizationId: String,
         rangeStart: Date,

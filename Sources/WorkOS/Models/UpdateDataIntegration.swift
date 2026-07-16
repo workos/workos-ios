@@ -10,7 +10,7 @@ public struct UpdateDataIntegration: Codable, Sendable, Equatable {
     /// The OAuth scopes to request for the Data Integration. Pass `null` to reset to the provider's configured scopes.
     public let scopes: [String]?
     /// New credentials for the Data Integration. When provided, rotates the stored client secret.
-    public let credentials: DataIntegrationCredentialsDto?
+    public let credentials: DataIntegrationCredentialsInput?
     /// Updates to a custom provider's OAuth definition. Only valid for custom-provider integrations.
     public let customProvider: UpdateCustomProviderDefinition?
 
@@ -18,7 +18,7 @@ public struct UpdateDataIntegration: Codable, Sendable, Equatable {
         description: String? = nil,
         enabled: Bool? = nil,
         scopes: [String]? = nil,
-        credentials: DataIntegrationCredentialsDto? = nil,
+        credentials: DataIntegrationCredentialsInput? = nil,
         customProvider: UpdateCustomProviderDefinition? = nil
     ) {
         self.description = description

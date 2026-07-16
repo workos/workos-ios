@@ -12,7 +12,7 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
     /// The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
     public let scopes: [String]?
     /// The credentials to configure for the Data Integration. Required for both built-in and custom providers.
-    public let credentials: DataIntegrationCredentialsDto?
+    public let credentials: DataIntegrationCredentialsInput?
     /// The OAuth definition for a custom provider. Supply this to define a custom provider; omit it to create an integration for a built-in provider.
     public let customProvider: CustomProviderDefinition?
 
@@ -21,7 +21,7 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
         description: String? = nil,
         enabled: Bool? = nil,
         scopes: [String]? = nil,
-        credentials: DataIntegrationCredentialsDto? = nil,
+        credentials: DataIntegrationCredentialsInput? = nil,
         customProvider: CustomProviderDefinition? = nil
     ) {
         self.provider = provider

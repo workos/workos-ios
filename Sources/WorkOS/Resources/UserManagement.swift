@@ -664,6 +664,8 @@ public struct UserManagement: Sendable {
     /// List users
     ///
     /// Get a list of all of your existing users matching the criteria specified.
+    ///
+    /// - Parameter organization: Deprecated. Filter users by the organization they are a member of. Deprecated in favor of `organization_id`.
     public func list(
         before: String? = nil,
         after: String? = nil,

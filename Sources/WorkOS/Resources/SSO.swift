@@ -121,6 +121,8 @@ public struct SSO: Sendable {
     /// Initiate SSO
     ///
     /// Initiates the single sign-on flow.
+    ///
+    /// - Parameter domain: Deprecated. Use `connection` or `organization` instead. Used to initiate SSO for a connection by domain. The domain must be associated with a connection in your WorkOS environment.
     public func getAuthorizationUrl(
         redirectUri: String,
         providerScopes: [String]? = nil,

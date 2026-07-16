@@ -2,8 +2,8 @@
 
 import Foundation
 
-/// Enumeration of valid DataIntegrationCredentialsType values.
-public enum DataIntegrationCredentialsType: RawRepresentable, Codable, Sendable, Hashable {
+/// Enumeration of valid DataIntegrationCredentialsInputType values.
+public enum DataIntegrationCredentialsInputType: RawRepresentable, Codable, Sendable, Hashable {
     case custom
     case organization
     /// A value not known at SDK generation time.
@@ -35,5 +35,8 @@ public enum DataIntegrationCredentialsType: RawRepresentable, Codable, Sendable,
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DataIntegrationCredentialsType] = [.custom, .organization]
+    public static let allKnownCases: [DataIntegrationCredentialsInputType] = [
+        .custom,
+        .organization,
+    ]
 }
