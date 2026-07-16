@@ -1,12 +1,9 @@
 {
   "version": 2,
   "language": "ios",
-  "generatedAt": "2026-07-16T16:50:11.903Z",
+  "generatedAt": "2026-07-16T17:01:22.125Z",
   "files": [
-    ".gitignore",
     ".oagen-ios-smoke.json",
-    ".swift-format",
-    "Package.swift",
     "Sources/WorkOS/Configuration.swift",
     "Sources/WorkOS/Enums/AgentAdminValidateCredentialRequestType.swift",
     "Sources/WorkOS/Enums/AgentRegistrationCreatedDataKind.swift",
@@ -770,8 +767,7 @@
     "Tests/WorkOSTests/UserManagementTests.swift",
     "Tests/WorkOSTests/VaultTests.swift",
     "Tests/WorkOSTests/WebhooksTests.swift",
-    "Tests/WorkOSTests/WidgetsTests.swift",
-    "script/ci"
+    "Tests/WorkOSTests/WidgetsTests.swift"
   ],
   "operations": {
     "POST /agents/credentials/validate": {
