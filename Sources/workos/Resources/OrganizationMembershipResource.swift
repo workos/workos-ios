@@ -54,6 +54,31 @@ public struct OrganizationMembershipResource: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``list``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        organizationId: String? = nil,
+        statuses: [UserManagementOrganizationMembershipStatuses]? = nil,
+        userId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<UserOrganizationMembership> {
+        AutoPagingSequence { cursor in
+            try await self.list(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                organizationId: organizationId,
+                statuses: statuses,
+                userId: userId,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Create an organization membership
     ///
     /// Creates a new `active` organization membership for the given organization and user.
@@ -219,5 +244,26 @@ public struct OrganizationMembershipResource: Sendable {
             options: requestOptions,
             as: Page<Group>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listOrganizationMembershipGroups``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listOrganizationMembershipGroupsAutoPaging(
+        omId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<Group> {
+        AutoPagingSequence { cursor in
+            try await self.listOrganizationMembershipGroups(
+                omId: omId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
     }
 }

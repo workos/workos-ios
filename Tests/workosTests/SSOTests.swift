@@ -5,10 +5,98 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the SSO resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct SSOTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.sso
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func listConnectionsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"connection","id":"conn_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","connection_type":"OktaSAML","name":"Foo Corp","state":"active","status":"linked","domains":[{"id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","object":"connection_domain","domain":"foo-corp.com"}],"callback_endpoint":"https://auth.workos.com/sso/saml/acs/conn_externalkey","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.sso.listConnections()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/connections")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "conn_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func getConnectionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connection","id":"conn_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","connection_type":"OktaSAML","name":"Foo Corp","state":"active","status":"linked","domains":[{"id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","object":"connection_domain","domain":"foo-corp.com"}],"callback_endpoint":"https://auth.workos.com/sso/saml/acs/conn_externalkey","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.sso.getConnection(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/connections/sample-id")
+        #expect(result.id == "conn_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func deleteConnectionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.sso.deleteConnection(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/connections/sample-id")
+    }
+
+    @Test func authorizeLogoutSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"logout_url":"https://auth.workos.com/sso/logout?token=eyJhbGciOiJSUzI1NiJ9","logout_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlX2lkIjoicHJvZl8wMUdXUTFHMEgyRk02QVNFRjBIUzEzSENXOS0zMDRrZzAzZyIsImV4cCI6IjE1MTYyMzkwMjIifQ.Wru9Qlnf5DpohtGCKhZU4cVOd3zpiu7QQ-XEX--5A_4"}"#
+        )
+        let result = try await client.sso.authorizeLogout(profileId: "test_profile_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/sso/logout/authorize")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["profile_id"] != nil)
+        _ = result
+    }
+
+    @Test func getProfileSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"profile","id":"prof_01DMC79VCBZ0NY2099737PSVF1","organization_id":"org_01EHQMYV6MBK39QC5PZXHY59C3","connection_id":"conn_01E4ZCR3C56J083X43JQXF3JK5","connection_type":"OktaSAML","idp_id":"103456789012345678901","email":"todd@example.com","first_name":"Todd","last_name":"Rundgren","name":"Todd Rundgren","role":{"slug":"admin"},"roles":[{"slug":"admin"}],"groups":["Engineering","Admins"],"custom_attributes":{"key":{}},"raw_attributes":{"key":{}}}"#
+        )
+        let result = try await client.sso.getProfile()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/sso/profile")
+        #expect(result.id == "prof_01DMC79VCBZ0NY2099737PSVF1")
+    }
+
+    @Test func getProfileAndTokenSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"token_type":"Bearer","access_token":"eyJhbGciOiJSUzI1NiIsImtpZCI6InNzby...","expires_in":600,"profile":{"object":"profile","id":"prof_01DMC79VCBZ0NY2099737PSVF1","organization_id":"org_01EHQMYV6MBK39QC5PZXHY59C3","connection_id":"conn_01E4ZCR3C56J083X43JQXF3JK5","connection_type":"OktaSAML","idp_id":"103456789012345678901","email":"todd@example.com","first_name":"Todd","last_name":"Rundgren","name":"Todd Rundgren","role":{"slug":"admin"},"roles":[{"slug":"admin"}],"groups":["Engineering","Admins"],"custom_attributes":{"key":{}},"raw_attributes":{"key":{}}},"oauth_tokens":{"provider":"GoogleOAuth","refresh_token":"1//04g...","access_token":"ya29.a0ARrdaM...","expires_at":1735141800,"scopes":["profile","email","openid"]}}"#
+        )
+        let result = try await client.sso.getProfileAndToken(code: "test_code", code2: "test_code")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/sso/token")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["code"] != nil)
+        let query =
+            URLComponents(url: try #require(request.url), resolvedAgainstBaseURL: false)?.queryItems
+            ?? []
+        #expect(query.contains(URLQueryItem(name: "code", value: "test_code")))
+        _ = result
     }
 }

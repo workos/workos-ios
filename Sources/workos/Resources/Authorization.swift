@@ -41,6 +41,27 @@ public struct Authorization: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listGroupRoleAssignments``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listGroupRoleAssignmentsAutoPaging(
+        groupId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<GroupRoleAssignment> {
+        AutoPagingSequence { cursor in
+            try await self.listGroupRoleAssignments(
+                groupId: groupId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Assign a role to a group
     ///
     /// Assign a role to a group on a specific resource.
@@ -236,6 +257,35 @@ public struct Authorization: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listResourcesForMembership``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listResourcesForMembershipAutoPaging(
+        organizationMembershipId: String,
+        permissionSlug: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        parentResourceId: String? = nil,
+        parentResourceTypeSlug: String? = nil,
+        parentResourceExternalId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AuthorizationResource> {
+        AutoPagingSequence { cursor in
+            try await self.listResourcesForMembership(
+                organizationMembershipId: organizationMembershipId,
+                permissionSlug: permissionSlug,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                parentResourceId: parentResourceId,
+                parentResourceTypeSlug: parentResourceTypeSlug,
+                parentResourceExternalId: parentResourceExternalId,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// List effective permissions for an organization membership on a resource
     ///
     /// Returns all permissions the organization membership effectively has on a resource, including permissions inherited through roles assigned to ancestor resources.
@@ -271,6 +321,29 @@ public struct Authorization: Sendable {
             options: requestOptions,
             as: Page<AuthorizationPermission>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listEffectivePermissions``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listEffectivePermissionsAutoPaging(
+        organizationMembershipId: String,
+        resourceId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AuthorizationPermission> {
+        AutoPagingSequence { cursor in
+            try await self.listEffectivePermissions(
+                organizationMembershipId: organizationMembershipId,
+                resourceId: resourceId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// List effective permissions for an organization membership on a resource by external ID
@@ -309,6 +382,31 @@ public struct Authorization: Sendable {
             options: requestOptions,
             as: Page<AuthorizationPermission>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listEffectivePermissionsByExternalId``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listEffectivePermissionsByExternalIdAutoPaging(
+        organizationMembershipId: String,
+        resourceTypeSlug: String,
+        externalId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AuthorizationPermission> {
+        AutoPagingSequence { cursor in
+            try await self.listEffectivePermissionsByExternalId(
+                organizationMembershipId: organizationMembershipId,
+                resourceTypeSlug: resourceTypeSlug,
+                externalId: externalId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// List role assignments
@@ -357,6 +455,33 @@ public struct Authorization: Sendable {
             options: requestOptions,
             as: Page<UserRoleAssignment>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listRoleAssignments``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listRoleAssignmentsAutoPaging(
+        organizationMembershipId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        resourceId: String? = nil,
+        resourceExternalId: String? = nil,
+        resourceTypeSlug: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<UserRoleAssignment> {
+        AutoPagingSequence { cursor in
+            try await self.listRoleAssignments(
+                organizationMembershipId: organizationMembershipId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                resourceId: resourceId,
+                resourceExternalId: resourceExternalId,
+                resourceTypeSlug: resourceTypeSlug,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// Assign a role
@@ -730,6 +855,35 @@ public struct Authorization: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listMembershipsForResourceByExternalId``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listMembershipsForResourceByExternalIdAutoPaging(
+        organizationId: String,
+        resourceTypeSlug: String,
+        externalId: String,
+        permissionSlug: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        assignment: AuthorizationAssignment? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<UserOrganizationMembershipBaseListData> {
+        AutoPagingSequence { cursor in
+            try await self.listMembershipsForResourceByExternalId(
+                organizationId: organizationId,
+                resourceTypeSlug: resourceTypeSlug,
+                externalId: externalId,
+                permissionSlug: permissionSlug,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                assignment: assignment,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// List role assignments for a resource by external ID
     ///
     /// List all role assignments granted on a resource, identified by its external ID. Each assignment includes the organization membership it was granted to.
@@ -770,6 +924,33 @@ public struct Authorization: Sendable {
             options: requestOptions,
             as: Page<UserRoleAssignment>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listRoleAssignmentsForResourceByExternalId``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listRoleAssignmentsForResourceByExternalIdAutoPaging(
+        organizationId: String,
+        resourceTypeSlug: String,
+        externalId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        roleSlug: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<UserRoleAssignment> {
+        AutoPagingSequence { cursor in
+            try await self.listRoleAssignmentsForResourceByExternalId(
+                organizationId: organizationId,
+                resourceTypeSlug: resourceTypeSlug,
+                externalId: externalId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                roleSlug: roleSlug,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// List resources
@@ -829,6 +1010,37 @@ public struct Authorization: Sendable {
             options: requestOptions,
             as: Page<AuthorizationResource>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listResources``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listResourcesAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        organizationId: String? = nil,
+        resourceTypeSlug: String? = nil,
+        resourceExternalId: String? = nil,
+        parentResourceId: String? = nil,
+        parentResourceTypeSlug: String? = nil,
+        parentExternalId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AuthorizationResource> {
+        AutoPagingSequence { cursor in
+            try await self.listResources(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                organizationId: organizationId,
+                resourceTypeSlug: resourceTypeSlug,
+                resourceExternalId: resourceExternalId,
+                parentResourceId: parentResourceId,
+                parentResourceTypeSlug: parentResourceTypeSlug,
+                parentExternalId: parentExternalId,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// Create an authorization resource
@@ -976,6 +1188,31 @@ public struct Authorization: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listMembershipsForResource``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listMembershipsForResourceAutoPaging(
+        resourceId: String,
+        permissionSlug: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        assignment: AuthorizationAssignment? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<UserOrganizationMembershipBaseListData> {
+        AutoPagingSequence { cursor in
+            try await self.listMembershipsForResource(
+                resourceId: resourceId,
+                permissionSlug: permissionSlug,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                assignment: assignment,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// List role assignments for a resource
     ///
     /// List all role assignments granted on a specific resource instance. Each assignment includes the organization membership it was granted to.
@@ -1013,6 +1250,29 @@ public struct Authorization: Sendable {
             options: requestOptions,
             as: Page<UserRoleAssignment>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listRoleAssignmentsForResource``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listRoleAssignmentsForResourceAutoPaging(
+        resourceId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        roleSlug: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<UserRoleAssignment> {
+        AutoPagingSequence { cursor in
+            try await self.listRoleAssignmentsForResource(
+                resourceId: resourceId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                roleSlug: roleSlug,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// List environment roles
@@ -1173,6 +1433,25 @@ public struct Authorization: Sendable {
             options: requestOptions,
             as: Page<AuthorizationPermission>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listPermissions``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listPermissionsAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AuthorizationPermission> {
+        AutoPagingSequence { cursor in
+            try await self.listPermissions(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// Create a permission

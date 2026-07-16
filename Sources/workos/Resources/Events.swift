@@ -57,4 +57,31 @@ public struct Events: Sendable {
             as: Page<EventSchema>.self
         )
     }
+
+    /// Auto-paginating variant of ``list``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        events: [String]? = nil,
+        rangeStart: String? = nil,
+        rangeEnd: String? = nil,
+        organizationId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<EventSchema> {
+        AutoPagingSequence { cursor in
+            try await self.list(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                events: events,
+                rangeStart: rangeStart,
+                rangeEnd: rangeEnd,
+                organizationId: organizationId,
+                requestOptions: requestOptions
+            )
+        }
+    }
 }

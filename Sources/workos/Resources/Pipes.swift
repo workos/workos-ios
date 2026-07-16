@@ -40,6 +40,25 @@ public struct Pipes: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listDataIntegrations``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listDataIntegrationsAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<DataIntegration> {
+        AutoPagingSequence { cursor in
+            try await self.listDataIntegrations(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Create a data integration
     ///
     /// Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials, or `organization` to have each organization supply its own. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.

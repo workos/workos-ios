@@ -5,10 +5,28 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the ClientApi resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct ClientApiTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.clientApi
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func createTokenSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding: #"{"token":"eyJhbGciOiJSUzI1NiIsImtpZCI6InNlc3Npb24..."}"#)
+        let result = try await client.clientApi.createToken(
+            organizationId: "test_organization_id", userId: "test_user_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/client/token")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["organization_id"] != nil)
+        _ = result
     }
 }

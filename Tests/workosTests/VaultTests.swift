@@ -5,10 +5,170 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the Vault resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct VaultTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.vault
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func createDataKeySendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"context":{"organization_id":"org_01K8ZYT4AWJ6XP0E0S8CTBHE3P"},"data_key":"DR9idtey9MpMrA1VRFrz30HB1yNgL2PoHZyjAkFeWgg=","encrypted_keys":"V09TLkVLTS52MQBiZjUxY2NlYy03OGI0LTUyMDAtYjM4My0zNTczMGU3MWVmNjEBATEBJGJmNjVlMzI2LTQzYTAtNGIyMC04OGM0LTA3ZmYzZGU1NDM0YwF0YmY2NWUzMjYtNDNhMC00YjIwLTg4YzQtMDdmZjNkZTU0MzRj","id":"bf51ccec-78b4-5200-b383-35730e71ef61"}"#
+        )
+        let result = try await client.vault.createDataKey(context: ["key": "test_context"])
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/vault/v1/keys/data-key")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["context"] != nil)
+        #expect(result.id == "bf51ccec-78b4-5200-b383-35730e71ef61")
+    }
+
+    @Test func createDecryptSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data_key":"DR9idtey9MpMrA1VRFrz30HB1yNgL2PoHZyjAkFeWgg=","id":"bf51ccec-78b4-5200-b383-35730e71ef61"}"#
+        )
+        let result = try await client.vault.createDecrypt(keys: "test_keys")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/vault/v1/keys/decrypt")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["keys"] != nil)
+        #expect(result.id == "bf51ccec-78b4-5200-b383-35730e71ef61")
+    }
+
+    @Test func createRekeySendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"context":{"organization_id":"org_01K8ZYT4AWJ6XP0E0S8CTBHE3P"},"data_key":"DR9idtey9MpMrA1VRFrz30HB1yNgL2PoHZyjAkFeWgg=","encrypted_keys":"V09TLkVLTS52MQBiZjUxY2NlYy03OGI0LTUyMDAtYjM4My0zNTczMGU3MWVmNjEBATEBJGJmNjVlMzI2LTQzYTAtNGIyMC04OGM0LTA3ZmYzZGU1NDM0YwF0YmY2NWUzMjYtNDNhMC00YjIwLTg4YzQtMDdmZjNkZTU0MzRj","id":"bf51ccec-78b4-5200-b383-35730e71ef61"}"#
+        )
+        let result = try await client.vault.createRekey(
+            context: ["key": "test_context"], encryptedKeys: "test_encrypted_keys")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/vault/v1/keys/rekey")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["context"] != nil)
+        #expect(result.id == "bf51ccec-78b4-5200-b383-35730e71ef61")
+    }
+
+    @Test func listKvSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","name":"my-secret","updated_at":"2024-06-15T10:30:00Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.vault.listKv()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/vault/v1/kv")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+    }
+
+    @Test func createKvSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"context":{"organization_id":"org_01K8ZYT4AWJ6XP0E0S8CTBHE3P"},"environment_id":"environment_01K8ZYT4AWJ6XP0E0S8CTBHE3P","id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","key_id":"bf65e326-43a0-4b20-88c4-07ff3de5434c","updated_at":"2024-06-15T10:30:00Z","updated_by":{"id":"key_01K8ZYT4AWJ6XP0E0S8CTBHE3P","name":"My API Key"},"version_id":"c3d4e5f6-7890-abcd-ef12-34567890abcd"}"#
+        )
+        let result = try await client.vault.createKv(
+            keyContext: ["key": "test_key_context"], name: "test_name", value: "test_value")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/vault/v1/kv")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["key_context"] != nil)
+        #expect(result.id == "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+    }
+
+    @Test func getKvSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","metadata":{"context":{"organization_id":"org_01K8ZYT4AWJ6XP0E0S8CTBHE3P"},"environment_id":"environment_01K8ZYT4AWJ6XP0E0S8CTBHE3P","id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","key_id":"bf65e326-43a0-4b20-88c4-07ff3de5434c","updated_at":"2024-06-15T10:30:00Z","updated_by":{"id":"key_01K8ZYT4AWJ6XP0E0S8CTBHE3P","name":"My API Key"},"version_id":"c3d4e5f6-7890-abcd-ef12-34567890abcd"},"name":"my-secret","value":"s3cr3t-v4lu3"}"#
+        )
+        let result = try await client.vault.getKv(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/vault/v1/kv/sample-id")
+        #expect(result.id == "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+    }
+
+    @Test func updateKvSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","metadata":{"context":{"organization_id":"org_01K8ZYT4AWJ6XP0E0S8CTBHE3P"},"environment_id":"environment_01K8ZYT4AWJ6XP0E0S8CTBHE3P","id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","key_id":"bf65e326-43a0-4b20-88c4-07ff3de5434c","updated_at":"2024-06-15T10:30:00Z","updated_by":{"id":"key_01K8ZYT4AWJ6XP0E0S8CTBHE3P","name":"My API Key"},"version_id":"c3d4e5f6-7890-abcd-ef12-34567890abcd"},"name":"my-secret"}"#
+        )
+        let result = try await client.vault.updateKv(id: "sample-id", value: "test_value")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/vault/v1/kv/sample-id")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["value"] != nil)
+        #expect(result.id == "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+    }
+
+    @Test func deleteKvSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.vault.deleteKv(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/vault/v1/kv/sample-id")
+    }
+
+    @Test func listKvMetadataSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","metadata":{"context":{"organization_id":"org_01K8ZYT4AWJ6XP0E0S8CTBHE3P"},"environment_id":"environment_01K8ZYT4AWJ6XP0E0S8CTBHE3P","id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","key_id":"bf65e326-43a0-4b20-88c4-07ff3de5434c","updated_at":"2024-06-15T10:30:00Z","updated_by":{"id":"key_01K8ZYT4AWJ6XP0E0S8CTBHE3P","name":"My API Key"},"version_id":"c3d4e5f6-7890-abcd-ef12-34567890abcd"},"name":"my-secret"}"#
+        )
+        let result = try await client.vault.listKvMetadata(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/vault/v1/kv/sample-id/metadata")
+        #expect(result.id == "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+    }
+
+    @Test func listKvVersionsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"created_at":"2024-06-15T10:30:00Z","current_version":true,"etag":"d41d8cd98f00b204e9800998ecf8427e","id":"c3d4e5f6-7890-abcd-ef12-34567890abcd","size":256}],"list_metadata":{"after":"b21f3a8c-7e4d-4b1a-9c5e-2d8f6a7b3c4e","before":"a10e2b7d-6c3f-4a2b-8d1e-3f9a5b8c7d6e"}}"#
+        )
+        let result = try await client.vault.listKvVersions(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/vault/v1/kv/sample-id/versions")
+        _ = result
+    }
+
+    @Test func getNameSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","metadata":{"context":{"organization_id":"org_01K8ZYT4AWJ6XP0E0S8CTBHE3P"},"environment_id":"environment_01K8ZYT4AWJ6XP0E0S8CTBHE3P","id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","key_id":"bf65e326-43a0-4b20-88c4-07ff3de5434c","updated_at":"2024-06-15T10:30:00Z","updated_by":{"id":"key_01K8ZYT4AWJ6XP0E0S8CTBHE3P","name":"My API Key"},"version_id":"c3d4e5f6-7890-abcd-ef12-34567890abcd"},"name":"my-secret","value":"s3cr3t-v4lu3"}"#
+        )
+        let result = try await client.vault.getName(name: "sample-name")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/vault/v1/kv/name/sample-name")
+        #expect(result.id == "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
     }
 }

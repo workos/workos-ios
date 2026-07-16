@@ -5,10 +5,27 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the Events resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct EventsTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.events
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func listSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"event","id":"event_01EHZNVPK3SFK441A1RGBFSHRT","event":"action.authentication.denied","data":{"id":"directory_user_01E1JG7J09H96KYP8HM9B0G5SJ","directory_id":"directory_01ECAZ4NV9QMV47GW873HDCX74","organization_id":"org_01EZTR6WYX1A0DSE2CYMGXQ24Y","state":"active","email":"veda@foo-corp.com","emails":[{"primary":true,"type":"work","value":"veda@foo-corp.com"}],"idp_id":"2836","object":"directory_user","username":"veda@foo-corp.com","last_name":"Torp","first_name":"Veda","raw_attributes":{},"custom_attributes":{},"created_at":"2021-06-25T19:07:33.155Z","updated_at":"2021-06-25T19:07:33.155Z"},"created_at":"2026-01-15T12:00:00.000Z","context":{"key":{}}}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.events.list()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/events")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "event_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 }

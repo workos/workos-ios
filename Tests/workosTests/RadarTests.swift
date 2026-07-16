@@ -5,10 +5,41 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the Radar resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct RadarTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.radar
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func createAttemptSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"verdict":"block","reason":"Detected enabled Radar control","attempt_id":"radar_att_01HZBC6N1EB1ZY7KG32X","control":"bot_detection","blocklist_type":"ip_address"}"#
+        )
+        let result = try await client.radar.createAttempt(
+            ipAddress: "test_ip_address", userAgent: "test_user_agent", email: "test_email",
+            authMethod: RadarStandaloneAssessRequestAuthMethod(rawValue: "Password"),
+            action: RadarStandaloneAssessRequestAction(rawValue: "sign-up"))
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/radar/attempts")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["ip_address"] != nil)
+        _ = result
+    }
+
+    @Test func updateAttemptSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.radar.updateAttempt(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/radar/attempts/sample-id")
     }
 }

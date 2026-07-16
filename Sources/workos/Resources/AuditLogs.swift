@@ -79,6 +79,25 @@ public struct AuditLogs: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listActions``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listActionsAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AuditLogAction> {
+        AutoPagingSequence { cursor in
+            try await self.listActions(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// List Schemas
     ///
     /// Get a list of all schemas for the Audit Logs action identified by `:name`.
@@ -112,6 +131,27 @@ public struct AuditLogs: Sendable {
             options: requestOptions,
             as: Page<AuditLogSchema>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listActionSchemas``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listActionSchemasAutoPaging(
+        actionName: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AuditLogSchema> {
+        AutoPagingSequence { cursor in
+            try await self.listActionSchemas(
+                actionName: actionName,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// Create Schema

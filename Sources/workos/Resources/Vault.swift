@@ -110,6 +110,29 @@ public struct Vault: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listKv``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listKvAutoPaging(
+        limit: Int? = nil,
+        before: String? = nil,
+        order: VaultOrder? = nil,
+        search: String? = nil,
+        updatedAfter: Date? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<ObjectSummary> {
+        AutoPagingSequence { cursor in
+            try await self.listKv(
+                limit: limit,
+                before: before,
+                after: cursor,
+                order: order,
+                search: search,
+                updatedAfter: updatedAfter,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Create an object
     ///
     /// Encrypt and store a new key-value object.

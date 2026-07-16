@@ -5,10 +5,586 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the UserManagement resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct UserManagementTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.userManagement
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func getJwksSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"keys":[{"alg":"RS256","kty":"RSA","use":"sig","x5c":["MIIDQjCCAiqgAwIBAgIGATz/FuLiMA0GCSqGSIb3DQEBCwUA..."],"n":"0vx7agoebGc...eKnNs","e":"AQAB","kid":"key_01HXYZ123456789ABCDEFGHIJ","x5t#S256":"ZjQzYjI0OT...NmNjU0"}]}"#
+        )
+        let result = try await client.userManagement.getJwks(clientId: "sample-clientId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/sso/jwks/sample-clientId")
+        _ = result
+    }
+
+    @Test func createDeviceSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"device_code":"CVE2wOfIFK4vhmiDBntpX9s8KT2f0qngpWYL0LGy9HxYgBRXUKIUkZB9BgIFho5h","user_code":"BCDF-GHJK","verification_uri":"https://authkit_domain/device","verification_uri_complete":"https://authkit_domain/device?user_code=BCDF-GHJK","expires_in":300,"interval":5}"#
+        )
+        let result = try await client.userManagement.createDevice(clientId: "test_client_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authorize/device")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["client_id"] != nil)
+        _ = result
+    }
+
+    @Test func listCorsOriginsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"cors_origin","id":"cors_origin_01HXYZ123456789ABCDEFGHIJ","origin":"https://example.com","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.userManagement.listCorsOrigins()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/cors_origins")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "cors_origin_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func createCorsOriginSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"cors_origin","id":"cors_origin_01HXYZ123456789ABCDEFGHIJ","origin":"https://example.com","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.userManagement.createCorsOrigin(origin: "test_origin")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/cors_origins")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["origin"] != nil)
+        #expect(result.id == "cors_origin_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func getEmailVerificationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"email_verification","id":"email_verification_01E4ZCR3C56J083X43JQXF3JK5","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","expires_at":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","code":"123456"}"#
+        )
+        let result = try await client.userManagement.getEmailVerification(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/email_verification/sample-id")
+        #expect(result.id == "email_verification_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func listInvitationsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"invitation","id":"invitation_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","state":"pending","accepted_at":null,"revoked_at":null,"expires_at":"2026-01-15T12:00:00.000Z","organization_id":"org_01E4ZCR3C56J083X43JQXF3JK5","inviter_user_id":"user_01HYGBX8ZGD19949T3BM4FW1C3","accepted_user_id":null,"role_slug":"admin","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","token":"Z1uX3RbwcIl5fIGJJJCXXisdI","accept_invitation_url":"https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.userManagement.listInvitations()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/invitations")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "invitation_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func sendInvitationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"invitation","id":"invitation_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","state":"pending","accepted_at":null,"revoked_at":null,"expires_at":"2026-01-15T12:00:00.000Z","organization_id":"org_01E4ZCR3C56J083X43JQXF3JK5","inviter_user_id":"user_01HYGBX8ZGD19949T3BM4FW1C3","accepted_user_id":null,"role_slug":"admin","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","token":"Z1uX3RbwcIl5fIGJJJCXXisdI","accept_invitation_url":"https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI"}"#
+        )
+        let result = try await client.userManagement.sendInvitation(email: "test_email")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/invitations")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["email"] != nil)
+        #expect(result.id == "invitation_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func getInvitationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"invitation","id":"invitation_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","state":"pending","accepted_at":null,"revoked_at":null,"expires_at":"2026-01-15T12:00:00.000Z","organization_id":"org_01E4ZCR3C56J083X43JQXF3JK5","inviter_user_id":"user_01HYGBX8ZGD19949T3BM4FW1C3","accepted_user_id":null,"role_slug":"admin","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","token":"Z1uX3RbwcIl5fIGJJJCXXisdI","accept_invitation_url":"https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI"}"#
+        )
+        let result = try await client.userManagement.getInvitation(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/invitations/sample-id")
+        #expect(result.id == "invitation_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func acceptInvitationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"invitation","id":"invitation_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","state":"accepted","accepted_at":"2026-01-15T12:00:00.000Z","revoked_at":null,"expires_at":"2026-01-15T12:00:00.000Z","organization_id":"org_01E4ZCR3C56J083X43JQXF3JK5","inviter_user_id":"user_01HYGBX8ZGD19949T3BM4FW1C3","accepted_user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","role_slug":"admin","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","token":"Z1uX3RbwcIl5fIGJJJCXXisdI","accept_invitation_url":"https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI"}"#
+        )
+        let result = try await client.userManagement.acceptInvitation(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/invitations/sample-id/accept")
+        #expect(result.id == "invitation_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func resendInvitationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"invitation","id":"invitation_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","state":"pending","accepted_at":null,"revoked_at":null,"expires_at":"2026-01-15T12:00:00.000Z","organization_id":"org_01E4ZCR3C56J083X43JQXF3JK5","inviter_user_id":"user_01HYGBX8ZGD19949T3BM4FW1C3","accepted_user_id":null,"role_slug":"admin","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","token":"Z1uX3RbwcIl5fIGJJJCXXisdI","accept_invitation_url":"https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI"}"#
+        )
+        let result = try await client.userManagement.resendInvitation(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/invitations/sample-id/resend")
+        #expect(result.id == "invitation_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func revokeInvitationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"invitation","id":"invitation_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","state":"accepted","accepted_at":"2026-01-15T12:00:00.000Z","revoked_at":null,"expires_at":"2026-01-15T12:00:00.000Z","organization_id":"org_01E4ZCR3C56J083X43JQXF3JK5","inviter_user_id":"user_01HYGBX8ZGD19949T3BM4FW1C3","accepted_user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","role_slug":"admin","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","token":"Z1uX3RbwcIl5fIGJJJCXXisdI","accept_invitation_url":"https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI"}"#
+        )
+        let result = try await client.userManagement.revokeInvitation(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/invitations/sample-id/revoke")
+        #expect(result.id == "invitation_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func findInvitationByTokenSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"invitation","id":"invitation_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","state":"pending","accepted_at":null,"revoked_at":null,"expires_at":"2026-01-15T12:00:00.000Z","organization_id":"org_01E4ZCR3C56J083X43JQXF3JK5","inviter_user_id":"user_01HYGBX8ZGD19949T3BM4FW1C3","accepted_user_id":null,"role_slug":"admin","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","token":"Z1uX3RbwcIl5fIGJJJCXXisdI","accept_invitation_url":"https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI"}"#
+        )
+        let result = try await client.userManagement.findInvitationByToken(token: "sample-token")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/invitations/by_token/sample-token")
+        #expect(result.id == "invitation_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func listJwttemplateSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"jwt_template","content":"{\"urn:myapp:full_name\": \"{{user.first_name}} {{user.last_name}}\", \"urn:myapp:email\": \"{{user.email}}\"}","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.userManagement.listJwttemplate()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/jwt_template")
+        _ = result
+    }
+
+    @Test func updateJwttemplateSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"jwt_template","content":"{\"urn:myapp:full_name\": \"{{user.first_name}} {{user.last_name}}\", \"urn:myapp:email\": \"{{user.email}}\"}","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.userManagement.updateJwttemplate(content: "test_content")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/user_management/jwt_template")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["content"] != nil)
+        _ = result
+    }
+
+    @Test func createMagicAuthSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"magic_auth","id":"magic_auth_01HWZBQZY2M3AMQW166Q22K88F","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","expires_at":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","code":"123456","radar_auth_attempt_id":"radar_auth_attempt_01HXYZ123456789ABCDEFGHIJ"}"#
+        )
+        let result = try await client.userManagement.createMagicAuth(email: "test_email")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/magic_auth")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["email"] != nil)
+        #expect(result.id == "magic_auth_01HWZBQZY2M3AMQW166Q22K88F")
+    }
+
+    @Test func getMagicAuthSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"magic_auth","id":"magic_auth_01HWZBQZY2M3AMQW166Q22K88F","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","expires_at":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","code":"123456"}"#
+        )
+        let result = try await client.userManagement.getMagicAuth(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/magic_auth/sample-id")
+        #expect(result.id == "magic_auth_01HWZBQZY2M3AMQW166Q22K88F")
+    }
+
+    @Test func resetPasswordSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"password_reset","id":"password_reset_01E4ZCR3C56J083X43JQXF3JK5","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","expires_at":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z","password_reset_token":"Z1uX3RbwcIl5fIGJJJCXXisdI","password_reset_url":"https://your-app.com/reset-password?token=Z1uX3RbwcIl5fIGJJJCXXisdI"}"#
+        )
+        let result = try await client.userManagement.resetPassword(email: "test_email")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/password_reset")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["email"] != nil)
+        #expect(result.id == "password_reset_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func getPasswordResetSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"password_reset","id":"password_reset_01E4ZCR3C56J083X43JQXF3JK5","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","expires_at":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z","password_reset_token":"Z1uX3RbwcIl5fIGJJJCXXisdI","password_reset_url":"https://your-app.com/reset-password?token=Z1uX3RbwcIl5fIGJJJCXXisdI"}"#
+        )
+        let result = try await client.userManagement.getPasswordReset(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/password_reset/sample-id")
+        #expect(result.id == "password_reset_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func confirmPasswordResetSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}}"#
+        )
+        let result = try await client.userManagement.confirmPasswordReset(
+            token: "test_token", newPassword: "test_new_password")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/password_reset/confirm")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["token"] != nil)
+        _ = result
+    }
+
+    @Test func createRadarChallengeSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"verification_id":"vrf_01HXYZ123456789ABCDEFGHIJ","phone_number":"+15555550123"}"#
+        )
+        let result = try await client.userManagement.createRadarChallenge(
+            userId: "test_user_id", pendingAuthenticationToken: "test_pending_authentication_token",
+            phoneNumber: "test_phone_number")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/radar_challenges")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["user_id"] != nil)
+        _ = result
+    }
+
+    @Test func getRadarChallengeSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"radar_challenge","id":"radar_challenge_01HWZBQZY2M3AMQW166Q22K88F","type":"email","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","expires_at":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","code":"123456"}"#
+        )
+        let result = try await client.userManagement.getRadarChallenge(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/radar_challenges/sample-id")
+        #expect(result.id == "radar_challenge_01HWZBQZY2M3AMQW166Q22K88F")
+    }
+
+    @Test func listRedirectUrisSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"redirect_uri","id":"ruri_01EHZNVPK3SFK441A1RGBFSHRT","uri":"https://example.com/callback","default":true,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.userManagement.listRedirectUris()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/redirect_uris")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "ruri_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func createRedirectUriSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"redirect_uri","id":"ruri_01EHZNVPK3SFK441A1RGBFSHRT","uri":"https://example.com/callback","default":true,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.userManagement.createRedirectUri(uri: "test_uri")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/redirect_uris")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["uri"] != nil)
+        #expect(result.id == "ruri_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func revokeSessionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.userManagement.revokeSession(sessionId: "test_session_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/sessions/revoke")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["session_id"] != nil)
+    }
+
+    @Test func listSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.userManagement.list()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/users")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "user_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func createSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","radar_auth_attempt_id":"radar_auth_attempt_01HXYZ123456789ABCDEFGHIJ"}"#
+        )
+        let result = try await client.userManagement.create(email: "test_email")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/users")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["email"] != nil)
+        #expect(result.id == "user_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func getSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.userManagement.get(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/users/sample-id")
+        #expect(result.id == "user_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func updateSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.userManagement.update(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/user_management/users/sample-id")
+        #expect(result.id == "user_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func deleteSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.userManagement.delete(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/user_management/users/sample-id")
+    }
+
+    @Test func confirmEmailChangeSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"email_change_confirmation","user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"new.email@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}}"#
+        )
+        let result = try await client.userManagement.confirmEmailChange(
+            id: "sample-id", code: "test_code")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/users/sample-id/email_change/confirm")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["code"] != nil)
+        _ = result
+    }
+
+    @Test func sendEmailChangeSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"email_change","user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"new_email":"new.email@example.com","expires_at":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.userManagement.sendEmailChange(
+            id: "sample-id", newEmail: "test_new_email")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/users/sample-id/email_change/send")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["new_email"] != nil)
+        _ = result
+    }
+
+    @Test func verifyEmailSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}}"#
+        )
+        let result = try await client.userManagement.verifyEmail(id: "sample-id", code: "test_code")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/users/sample-id/email_verification/confirm")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["code"] != nil)
+        _ = result
+    }
+
+    @Test func sendVerificationEmailSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}}"#
+        )
+        let result = try await client.userManagement.sendVerificationEmail(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/users/sample-id/email_verification/send")
+        _ = result
+    }
+
+    @Test func getUserIdentitiesSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"[{"idp_id":"4F42ABDE-1E44-4B66-824A-5F733C037A6D","type":"OAuth","provider":"MicrosoftOAuth"}]"#
+        )
+        let result = try await client.userManagement.getUserIdentities(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/users/sample-id/identities")
+        #expect(result.count == 1)
+    }
+
+    @Test func listSessionsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"session","id":"session_01H93ZY4F80QPBEZ1R5B2SHQG8","impersonator":{"email":"admin@foocorp.com","reason":"Investigating an issue with the customer's account."},"ip_address":"198.51.100.42","organization_id":"org_01H945H0YD4F97JN9MATX7BYAG","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","auth_method":"sso","status":"active","expires_at":"2026-01-15T12:00:00.000Z","ended_at":null,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.userManagement.listSessions(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/users/sample-id/sessions")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "session_01H93ZY4F80QPBEZ1R5B2SHQG8")
+    }
+
+    @Test func listUserAuthorizedApplicationsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"authorized_connect_application","id":"authorized_connect_app_01HXYZ123456789ABCDEFGHIJ","granted_scopes":["openid","profile","email"],"oauth_resource":"https://api.example.com/resource","application":{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.userManagement.listUserAuthorizedApplications(
+            userId: "sample-user-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path == "/user_management/users/sample-user-id/authorized_applications")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "authorized_connect_app_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func deleteUserAuthorizedApplicationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.userManagement.deleteUserAuthorizedApplication(
+            userId: "sample-user-id", applicationId: "sample-application-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/user_management/users/sample-user-id/authorized_applications/sample-application-id"
+        )
+    }
+
+    @Test func listUserApiKeysSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"user","id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":null,"permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.userManagement.listUserApiKeys(userId: "sample-userId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/users/sample-userId/api_keys")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "api_key_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func createUserApiKeySendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"user","id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":"2030-01-01T00:00:00.000Z","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","value":"sk_abcdefghijklmnop123456"}"#
+        )
+        let result = try await client.userManagement.createUserApiKey(
+            userId: "sample-userId", name: "test_name", organizationId: "test_organization_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/users/sample-userId/api_keys")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["name"] != nil)
+        #expect(result.id == "api_key_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func getUserByExternalIdSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.userManagement.getUserByExternalId(
+            externalId: "sample-external-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/users/external_id/sample-external-id")
+        #expect(result.id == "user_01E4ZCR3C56J083X43JQXF3JK5")
     }
 }

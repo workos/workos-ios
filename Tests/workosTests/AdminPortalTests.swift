@@ -5,10 +5,29 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the AdminPortal resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct AdminPortalTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.adminPortal
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func generateLinkSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"link":"https://setup.workos.com?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}"#
+        )
+        let result = try await client.adminPortal.generateLink(organization: "test_organization")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/portal/generate_link")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["organization"] != nil)
+        _ = result
     }
 }

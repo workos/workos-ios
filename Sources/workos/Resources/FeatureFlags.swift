@@ -40,6 +40,25 @@ public struct FeatureFlags: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``list``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<Flag> {
+        AutoPagingSequence { cursor in
+            try await self.list(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Get a feature flag
     ///
     /// Get the details of an existing feature flag by its slug.
@@ -167,6 +186,27 @@ public struct FeatureFlags: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listOrganization``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listOrganizationAutoPaging(
+        organizationId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<Flag> {
+        AutoPagingSequence { cursor in
+            try await self.listOrganization(
+                organizationId: organizationId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// List enabled feature flags for a user
     ///
     /// Get a list of all enabled feature flags for the provided user. This includes feature flags enabled specifically for the user as well as any organizations that the user is a member of.
@@ -200,5 +240,26 @@ public struct FeatureFlags: Sendable {
             options: requestOptions,
             as: Page<Flag>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listUser``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listUserAutoPaging(
+        userId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<Flag> {
+        AutoPagingSequence { cursor in
+            try await self.listUser(
+                userId: userId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
     }
 }

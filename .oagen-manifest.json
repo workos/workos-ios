@@ -1,7 +1,7 @@
 {
   "version": 2,
   "language": "ios",
-  "generatedAt": "2026-07-16T16:31:49.464Z",
+  "generatedAt": "2026-07-16T16:50:11.903Z",
   "files": [
     ".gitignore",
     ".oagen-ios-smoke.json",
@@ -766,6 +766,7 @@
     "Tests/WorkOSTests/SSOTests.swift",
     "Tests/WorkOSTests/Support/MockURLProtocol.swift",
     "Tests/WorkOSTests/Support/TestClient.swift",
+    "Tests/WorkOSTests/TransportBehaviorTests.swift",
     "Tests/WorkOSTests/UserManagementTests.swift",
     "Tests/WorkOSTests/VaultTests.swift",
     "Tests/WorkOSTests/WebhooksTests.swift",

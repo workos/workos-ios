@@ -41,6 +41,27 @@ public struct Groups: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listOrganization``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listOrganizationAutoPaging(
+        organizationId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<Group> {
+        AutoPagingSequence { cursor in
+            try await self.listOrganization(
+                organizationId: organizationId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Create a group
     ///
     /// Create a new group within an organization.
@@ -163,6 +184,29 @@ public struct Groups: Sendable {
             options: requestOptions,
             as: Page<UserOrganizationMembershipBaseListData>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listGroupOrganizationMemberships``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listGroupOrganizationMembershipsAutoPaging(
+        organizationId: String,
+        groupId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<UserOrganizationMembershipBaseListData> {
+        AutoPagingSequence { cursor in
+            try await self.listGroupOrganizationMemberships(
+                organizationId: organizationId,
+                groupId: groupId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// Add a member to a Group

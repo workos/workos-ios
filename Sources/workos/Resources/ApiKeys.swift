@@ -41,6 +41,27 @@ public struct ApiKeys: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listOrganization``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listOrganizationAutoPaging(
+        organizationId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<OrganizationApiKey> {
+        AutoPagingSequence { cursor in
+            try await self.listOrganization(
+                organizationId: organizationId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Create an API key for an organization
     ///
     /// Create a new API key for an organization.

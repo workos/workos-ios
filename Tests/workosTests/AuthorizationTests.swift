@@ -5,10 +5,721 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the Authorization resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct AuthorizationTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.authorization
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func listGroupRoleAssignmentsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"group_role_assignment","id":"gra_01HXYZ123456789ABCDEFGH","group_id":"group_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.authorization.listGroupRoleAssignments(
+            groupId: "sample-group-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/authorization/groups/sample-group-id/role_assignments")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "gra_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func createGroupRoleAssignmentSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"group_role_assignment","id":"gra_01HXYZ123456789ABCDEFGH","group_id":"group_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.createGroupRoleAssignment(
+            groupId: "sample-group-id", roleSlug: "test_role_slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/authorization/groups/sample-group-id/role_assignments")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["role_slug"] != nil)
+        #expect(result.id == "gra_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func deleteGroupRoleAssignmentsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.authorization.deleteGroupRoleAssignments(
+            groupId: "sample-group-id", roleSlug: "test_role_slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/authorization/groups/sample-group-id/role_assignments")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["role_slug"] != nil)
+    }
+
+    @Test func getGroupRoleAssignmentSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"group_role_assignment","id":"gra_01HXYZ123456789ABCDEFGH","group_id":"group_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.getGroupRoleAssignment(
+            groupId: "sample-group-id", roleAssignmentId: "sample-role-assignment-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path
+                == "/authorization/groups/sample-group-id/role_assignments/sample-role-assignment-id"
+        )
+        #expect(result.id == "gra_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func deleteGroupRoleAssignmentSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.authorization.deleteGroupRoleAssignment(
+            groupId: "sample-group-id", roleAssignmentId: "sample-role-assignment-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/authorization/groups/sample-group-id/role_assignments/sample-role-assignment-id"
+        )
+    }
+
+    @Test func checkSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{"authorized":true}"#)
+        let result = try await client.authorization.check(
+            organizationMembershipId: "sample-organization-membership-id",
+            permissionSlug: "test_permission_slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(
+            request.url?.path
+                == "/authorization/organization_memberships/sample-organization-membership-id/check"
+        )
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["permission_slug"] != nil)
+        _ = result
+    }
+
+    @Test func listResourcesForMembershipSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"authorization_resource","name":"Website Redesign","description":"Company website redesign project","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","parent_resource_id":"authz_resource_01HXYZ123456789ABCDEFGHIJ","id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.authorization.listResourcesForMembership(
+            organizationMembershipId: "sample-organization-membership-id",
+            permissionSlug: "test_permission_slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path
+                == "/authorization/organization_memberships/sample-organization-membership-id/resources"
+        )
+        let query =
+            URLComponents(url: try #require(request.url), resolvedAgainstBaseURL: false)?.queryItems
+            ?? []
+        #expect(
+            query.contains(URLQueryItem(name: "permission_slug", value: "test_permission_slug")))
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "authz_resource_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func listEffectivePermissionsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"permission","id":"perm_01HXYZ123456789ABCDEFGHIJ","slug":"documents:read","name":"View Documents","description":"Allows viewing document contents","system":false,"resource_type_slug":"workspace","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.authorization.listEffectivePermissions(
+            organizationMembershipId: "sample-organization-membership-id",
+            resourceId: "sample-resource-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path
+                == "/authorization/organization_memberships/sample-organization-membership-id/resources/sample-resource-id/permissions"
+        )
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "perm_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func listEffectivePermissionsByExternalIdSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"permission","id":"perm_01HXYZ123456789ABCDEFGHIJ","slug":"documents:read","name":"View Documents","description":"Allows viewing document contents","system":false,"resource_type_slug":"workspace","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.authorization.listEffectivePermissionsByExternalId(
+            organizationMembershipId: "sample-organization-membership-id",
+            resourceTypeSlug: "sample-resource-type-slug", externalId: "sample-external-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path
+                == "/authorization/organization_memberships/sample-organization-membership-id/resources/sample-resource-type-slug/sample-external-id/permissions"
+        )
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "perm_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func listRoleAssignmentsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"role_assignment","id":"role_assignment_01HXYZ123456789ABCDEFGH","organization_membership_id":"om_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"source":{"type":"direct","group_role_assignment_id":null},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.authorization.listRoleAssignments(
+            organizationMembershipId: "sample-organization-membership-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path
+                == "/authorization/organization_memberships/sample-organization-membership-id/role_assignments"
+        )
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "role_assignment_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func assignRoleSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"role_assignment","id":"role_assignment_01HXYZ123456789ABCDEFGH","organization_membership_id":"om_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"source":{"type":"direct","group_role_assignment_id":null},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.assignRole(
+            organizationMembershipId: "sample-organization-membership-id",
+            roleSlug: "test_role_slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(
+            request.url?.path
+                == "/authorization/organization_memberships/sample-organization-membership-id/role_assignments"
+        )
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["role_slug"] != nil)
+        #expect(result.id == "role_assignment_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func removeRoleSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.authorization.removeRole(
+            organizationMembershipId: "sample-organization-membership-id",
+            roleSlug: "test_role_slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/authorization/organization_memberships/sample-organization-membership-id/role_assignments"
+        )
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["role_slug"] != nil)
+    }
+
+    @Test func removeRoleAssignmentSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.authorization.removeRoleAssignment(
+            organizationMembershipId: "sample-organization-membership-id",
+            roleAssignmentId: "sample-role-assignment-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/authorization/organization_memberships/sample-organization-membership-id/role_assignments/sample-role-assignment-id"
+        )
+    }
+
+    @Test func getResourceByExternalIdSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"authorization_resource","name":"Website Redesign","description":"Company website redesign project","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","parent_resource_id":"authz_resource_01HXYZ123456789ABCDEFGHIJ","id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.getResourceByExternalId(
+            organizationId: "sample-organization-id", resourceTypeSlug: "sample-resource-type-slug",
+            externalId: "sample-external-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path
+                == "/authorization/organizations/sample-organization-id/resources/sample-resource-type-slug/sample-external-id"
+        )
+        #expect(result.id == "authz_resource_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func updateResourceByExternalIdSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"authorization_resource","name":"Website Redesign","description":"Company website redesign project","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","parent_resource_id":"authz_resource_01HXYZ123456789ABCDEFGHIJ","id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.updateResourceByExternalId(
+            organizationId: "sample-organization-id", resourceTypeSlug: "sample-resource-type-slug",
+            externalId: "sample-external-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PATCH")
+        #expect(
+            request.url?.path
+                == "/authorization/organizations/sample-organization-id/resources/sample-resource-type-slug/sample-external-id"
+        )
+        #expect(result.id == "authz_resource_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func deleteResourceByExternalIdSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.authorization.deleteResourceByExternalId(
+            organizationId: "sample-organization-id", resourceTypeSlug: "sample-resource-type-slug",
+            externalId: "sample-external-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/authorization/organizations/sample-organization-id/resources/sample-resource-type-slug/sample-external-id"
+        )
+    }
+
+    @Test func listMembershipsForResourceByExternalIdSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"organization_membership","id":"om_01HXYZ123456789ABCDEFGHIJ","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","status":"active","directory_managed":false,"organization_name":"Acme Corp","custom_attributes":{"department":"Engineering","title":"Developer Experience Engineer","location":"Brooklyn"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.authorization.listMembershipsForResourceByExternalId(
+            organizationId: "sample-organization-id", resourceTypeSlug: "sample-resource-type-slug",
+            externalId: "sample-external-id", permissionSlug: "test_permission_slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path
+                == "/authorization/organizations/sample-organization-id/resources/sample-resource-type-slug/sample-external-id/organization_memberships"
+        )
+        let query =
+            URLComponents(url: try #require(request.url), resolvedAgainstBaseURL: false)?.queryItems
+            ?? []
+        #expect(
+            query.contains(URLQueryItem(name: "permission_slug", value: "test_permission_slug")))
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "om_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func listRoleAssignmentsForResourceByExternalIdSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"role_assignment","id":"role_assignment_01HXYZ123456789ABCDEFGH","organization_membership_id":"om_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"source":{"type":"direct","group_role_assignment_id":null},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.authorization.listRoleAssignmentsForResourceByExternalId(
+            organizationId: "sample-organization-id", resourceTypeSlug: "sample-resource-type-slug",
+            externalId: "sample-external-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path
+                == "/authorization/organizations/sample-organization-id/resources/sample-resource-type-slug/sample-external-id/role_assignments"
+        )
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "role_assignment_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func listOrganizationRolesSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"list","data":[{"slug":"admin","object":"role","id":"role_01EHQMYV6MBK39QC5PZXHY59C3","name":"Admin","description":"Can manage all resources","type":"EnvironmentRole","resource_type_slug":"organization","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}]}"#
+        )
+        let result = try await client.authorization.listOrganizationRoles(
+            organizationId: "sample-organizationId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/authorization/organizations/sample-organizationId/roles")
+        _ = result
+    }
+
+    @Test func createOrganizationRoleSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"slug":"admin","object":"role","id":"role_01EHQMYV6MBK39QC5PZXHY59C3","name":"Admin","description":"Can manage all resources","type":"EnvironmentRole","resource_type_slug":"organization","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.createOrganizationRole(
+            organizationId: "sample-organizationId", name: "test_name")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/authorization/organizations/sample-organizationId/roles")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["name"] != nil)
+        #expect(result.id == "role_01EHQMYV6MBK39QC5PZXHY59C3")
+    }
+
+    @Test func getOrganizationRoleSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"slug":"admin","object":"role","id":"role_01EHQMYV6MBK39QC5PZXHY59C3","name":"Admin","description":"Can manage all resources","type":"EnvironmentRole","resource_type_slug":"organization","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.getOrganizationRole(
+            organizationId: "sample-organizationId", slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path
+                == "/authorization/organizations/sample-organizationId/roles/sample-slug")
+        #expect(result.id == "role_01EHQMYV6MBK39QC5PZXHY59C3")
+    }
+
+    @Test func updateOrganizationRoleSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"slug":"admin","object":"role","id":"role_01EHQMYV6MBK39QC5PZXHY59C3","name":"Admin","description":"Can manage all resources","type":"EnvironmentRole","resource_type_slug":"organization","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.updateOrganizationRole(
+            organizationId: "sample-organizationId", slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PATCH")
+        #expect(
+            request.url?.path
+                == "/authorization/organizations/sample-organizationId/roles/sample-slug")
+        #expect(result.id == "role_01EHQMYV6MBK39QC5PZXHY59C3")
+    }
+
+    @Test func deleteOrganizationRoleSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.authorization.deleteOrganizationRole(
+            organizationId: "sample-organizationId", slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/authorization/organizations/sample-organizationId/roles/sample-slug")
+    }
+
+    @Test func addOrganizationRolePermissionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"slug":"admin","object":"role","id":"role_01EHQMYV6MBK39QC5PZXHY59C3","name":"Admin","description":"Can manage all resources","type":"EnvironmentRole","resource_type_slug":"organization","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.addOrganizationRolePermission(
+            organizationId: "sample-organizationId", slug: "sample-slug", slug2: "test_slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(
+            request.url?.path
+                == "/authorization/organizations/sample-organizationId/roles/sample-slug/permissions"
+        )
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["slug"] != nil)
+        #expect(result.id == "role_01EHQMYV6MBK39QC5PZXHY59C3")
+    }
+
+    @Test func setOrganizationRolePermissionsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"slug":"admin","object":"role","id":"role_01EHQMYV6MBK39QC5PZXHY59C3","name":"Admin","description":"Can manage all resources","type":"EnvironmentRole","resource_type_slug":"organization","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.setOrganizationRolePermissions(
+            organizationId: "sample-organizationId", slug: "sample-slug",
+            permissions: ["test_permissions"])
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(
+            request.url?.path
+                == "/authorization/organizations/sample-organizationId/roles/sample-slug/permissions"
+        )
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["permissions"] != nil)
+        #expect(result.id == "role_01EHQMYV6MBK39QC5PZXHY59C3")
+    }
+
+    @Test func removeOrganizationRolePermissionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.authorization.removeOrganizationRolePermission(
+            organizationId: "sample-organizationId", slug: "sample-slug",
+            permissionSlug: "sample-permissionSlug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/authorization/organizations/sample-organizationId/roles/sample-slug/permissions/sample-permissionSlug"
+        )
+    }
+
+    @Test func listPermissionsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"permission","id":"perm_01HXYZ123456789ABCDEFGHIJ","slug":"documents:read","name":"View Documents","description":"Allows viewing document contents","system":false,"resource_type_slug":"workspace","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.authorization.listPermissions()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/authorization/permissions")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "perm_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func createPermissionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"permission","id":"perm_01HXYZ123456789ABCDEFGHIJ","slug":"documents:read","name":"View Documents","description":"Allows viewing document contents","system":false,"resource_type_slug":"document","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.createPermission(
+            slug: "test_slug", name: "test_name")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/authorization/permissions")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["slug"] != nil)
+        #expect(result.id == "perm_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func getPermissionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"permission","id":"perm_01HXYZ123456789ABCDEFGHIJ","slug":"documents:read","name":"View Documents","description":"Allows viewing document contents","system":false,"resource_type_slug":"workspace","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.getPermission(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/authorization/permissions/sample-slug")
+        #expect(result.id == "perm_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func updatePermissionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"permission","id":"perm_01HXYZ123456789ABCDEFGHIJ","slug":"documents:read","name":"View Documents","description":"Allows viewing document contents","system":false,"resource_type_slug":"workspace","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.updatePermission(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PATCH")
+        #expect(request.url?.path == "/authorization/permissions/sample-slug")
+        #expect(result.id == "perm_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func deletePermissionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.authorization.deletePermission(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/authorization/permissions/sample-slug")
+    }
+
+    @Test func listResourcesSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"authorization_resource","name":"Website Redesign","description":"Company website redesign project","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","parent_resource_id":"authz_resource_01HXYZ123456789ABCDEFGHIJ","id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.authorization.listResources()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/authorization/resources")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "authz_resource_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func createResourceSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"authorization_resource","name":"Website Redesign","description":"Company website redesign project","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","parent_resource_id":"authz_resource_01HXYZ123456789ABCDEFGHIJ","id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.createResource(
+            externalId: "test_external_id", name: "test_name",
+            resourceTypeSlug: "test_resource_type_slug", organizationId: "test_organization_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/authorization/resources")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["external_id"] != nil)
+        #expect(result.id == "authz_resource_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func getResourceSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"authorization_resource","name":"Website Redesign","description":"Company website redesign project","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","parent_resource_id":"authz_resource_01HXYZ123456789ABCDEFGHIJ","id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.getResource(resourceId: "sample-resource-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/authorization/resources/sample-resource-id")
+        #expect(result.id == "authz_resource_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func updateResourceSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"authorization_resource","name":"Website Redesign","description":"Company website redesign project","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","parent_resource_id":"authz_resource_01HXYZ123456789ABCDEFGHIJ","id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.updateResource(resourceId: "sample-resource-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PATCH")
+        #expect(request.url?.path == "/authorization/resources/sample-resource-id")
+        #expect(result.id == "authz_resource_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func deleteResourceSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.authorization.deleteResource(resourceId: "sample-resource-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/authorization/resources/sample-resource-id")
+    }
+
+    @Test func listMembershipsForResourceSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"organization_membership","id":"om_01HXYZ123456789ABCDEFGHIJ","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","status":"active","directory_managed":false,"organization_name":"Acme Corp","custom_attributes":{"department":"Engineering","title":"Developer Experience Engineer","location":"Brooklyn"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.authorization.listMembershipsForResource(
+            resourceId: "sample-resource-id", permissionSlug: "test_permission_slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path
+                == "/authorization/resources/sample-resource-id/organization_memberships")
+        let query =
+            URLComponents(url: try #require(request.url), resolvedAgainstBaseURL: false)?.queryItems
+            ?? []
+        #expect(
+            query.contains(URLQueryItem(name: "permission_slug", value: "test_permission_slug")))
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "om_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func listRoleAssignmentsForResourceSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"role_assignment","id":"role_assignment_01HXYZ123456789ABCDEFGH","organization_membership_id":"om_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"source":{"type":"direct","group_role_assignment_id":null},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.authorization.listRoleAssignmentsForResource(
+            resourceId: "sample-resource-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/authorization/resources/sample-resource-id/role_assignments")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "role_assignment_01HXYZ123456789ABCDEFGH")
+    }
+
+    @Test func listEnvironmentRolesSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"list","data":[{"slug":"admin","object":"role","id":"role_01EHQMYV6MBK39QC5PZXHY59C3","name":"Admin","description":"Can manage all resources","type":"EnvironmentRole","resource_type_slug":"organization","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}]}"#
+        )
+        let result = try await client.authorization.listEnvironmentRoles()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/authorization/roles")
+        _ = result
+    }
+
+    @Test func createEnvironmentRoleSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"slug":"admin","object":"role","id":"role_01EHQMYV6MBK39QC5PZXHY59C3","name":"Admin","description":"Can manage all resources","type":"EnvironmentRole","resource_type_slug":"organization","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.createEnvironmentRole(
+            slug: "test_slug", name: "test_name")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/authorization/roles")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["slug"] != nil)
+        #expect(result.id == "role_01EHQMYV6MBK39QC5PZXHY59C3")
+    }
+
+    @Test func getEnvironmentRoleSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"slug":"admin","object":"role","id":"role_01EHQMYV6MBK39QC5PZXHY59C3","name":"Admin","description":"Can manage all resources","type":"EnvironmentRole","resource_type_slug":"organization","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.getEnvironmentRole(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/authorization/roles/sample-slug")
+        #expect(result.id == "role_01EHQMYV6MBK39QC5PZXHY59C3")
+    }
+
+    @Test func updateEnvironmentRoleSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"slug":"admin","object":"role","id":"role_01EHQMYV6MBK39QC5PZXHY59C3","name":"Admin","description":"Can manage all resources","type":"EnvironmentRole","resource_type_slug":"organization","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.updateEnvironmentRole(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PATCH")
+        #expect(request.url?.path == "/authorization/roles/sample-slug")
+        #expect(result.id == "role_01EHQMYV6MBK39QC5PZXHY59C3")
+    }
+
+    @Test func addEnvironmentRolePermissionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"slug":"admin","object":"role","id":"role_01EHQMYV6MBK39QC5PZXHY59C3","name":"Admin","description":"Can manage all resources","type":"EnvironmentRole","resource_type_slug":"organization","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.addEnvironmentRolePermission(
+            slug: "sample-slug", slug2: "test_slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/authorization/roles/sample-slug/permissions")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["slug"] != nil)
+        #expect(result.id == "role_01EHQMYV6MBK39QC5PZXHY59C3")
+    }
+
+    @Test func setEnvironmentRolePermissionsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"slug":"admin","object":"role","id":"role_01EHQMYV6MBK39QC5PZXHY59C3","name":"Admin","description":"Can manage all resources","type":"EnvironmentRole","resource_type_slug":"organization","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.authorization.setEnvironmentRolePermissions(
+            slug: "sample-slug", permissions: ["test_permissions"])
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/authorization/roles/sample-slug/permissions")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["permissions"] != nil)
+        #expect(result.id == "role_01EHQMYV6MBK39QC5PZXHY59C3")
     }
 }

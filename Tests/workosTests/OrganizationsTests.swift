@@ -5,10 +5,105 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the Organizations resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct OrganizationsTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.organizations
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func listSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"organization","id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Acme Inc.","domains":[{"object":"organization_domain","id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","organization_id":"org_01HE8GSH8FQPASKSY27THRKRBP","domain":"foo-corp.com","state":"pending","verification_prefix":"superapp-domain-verification-z3kjny","verification_token":"m5Oztg3jdK4NJLgs8uIlIprMw","verification_strategy":"dns","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"metadata":{"tier":"diamond"},"external_id":"2fe01467-f7ea-4dd2-8b79-c2b4f56d0191","stripe_customer_id":"cus_R9qWAGMQ6nGE7V","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","allow_profiles_outside_organization":false}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.organizations.list()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/organizations")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "org_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func createSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"organization","id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Acme Inc.","domains":[{"object":"organization_domain","id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","organization_id":"org_01HE8GSH8FQPASKSY27THRKRBP","domain":"foo-corp.com","state":"pending","verification_prefix":"superapp-domain-verification-z3kjny","verification_token":"m5Oztg3jdK4NJLgs8uIlIprMw","verification_strategy":"dns","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"metadata":{"tier":"diamond"},"external_id":"2fe01467-f7ea-4dd2-8b79-c2b4f56d0191","stripe_customer_id":"cus_R9qWAGMQ6nGE7V","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","allow_profiles_outside_organization":false}"#
+        )
+        let result = try await client.organizations.create(name: "test_name")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/organizations")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["name"] != nil)
+        #expect(result.id == "org_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func getSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"organization","id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Acme Inc.","domains":[{"object":"organization_domain","id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","organization_id":"org_01HE8GSH8FQPASKSY27THRKRBP","domain":"foo-corp.com","state":"pending","verification_prefix":"superapp-domain-verification-z3kjny","verification_token":"m5Oztg3jdK4NJLgs8uIlIprMw","verification_strategy":"dns","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"metadata":{"tier":"diamond"},"external_id":"2fe01467-f7ea-4dd2-8b79-c2b4f56d0191","stripe_customer_id":"cus_R9qWAGMQ6nGE7V","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","allow_profiles_outside_organization":false}"#
+        )
+        let result = try await client.organizations.get(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/organizations/sample-id")
+        #expect(result.id == "org_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func updateSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"organization","id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Acme Inc.","domains":[{"object":"organization_domain","id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","organization_id":"org_01HE8GSH8FQPASKSY27THRKRBP","domain":"foo-corp.com","state":"pending","verification_prefix":"superapp-domain-verification-z3kjny","verification_token":"m5Oztg3jdK4NJLgs8uIlIprMw","verification_strategy":"dns","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"metadata":{"tier":"diamond"},"external_id":"2fe01467-f7ea-4dd2-8b79-c2b4f56d0191","stripe_customer_id":"cus_R9qWAGMQ6nGE7V","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","allow_profiles_outside_organization":false}"#
+        )
+        let result = try await client.organizations.update(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/organizations/sample-id")
+        #expect(result.id == "org_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func deleteSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.organizations.delete(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/organizations/sample-id")
+    }
+
+    @Test func getAuditLogConfigurationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","retention_period_in_days":30,"state":"active","log_stream":{"id":"als_01EHZNVPK3SFK441A1RGBFSHRT","type":"Datadog","state":"active","last_synced_at":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z"}}"#
+        )
+        let result = try await client.organizations.getAuditLogConfiguration(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/organizations/sample-id/audit_log_configuration")
+        _ = result
+    }
+
+    @Test func getOrganizationByExternalIdSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"organization","id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Acme Inc.","domains":[{"object":"organization_domain","id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","organization_id":"org_01HE8GSH8FQPASKSY27THRKRBP","domain":"foo-corp.com","state":"pending","verification_prefix":"superapp-domain-verification-z3kjny","verification_token":"m5Oztg3jdK4NJLgs8uIlIprMw","verification_strategy":"dns","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"metadata":{"tier":"diamond"},"external_id":"2fe01467-f7ea-4dd2-8b79-c2b4f56d0191","stripe_customer_id":"cus_R9qWAGMQ6nGE7V","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","allow_profiles_outside_organization":false}"#
+        )
+        let result = try await client.organizations.getOrganizationByExternalId(
+            externalId: "sample-external-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/organizations/external_id/sample-external-id")
+        #expect(result.id == "org_01EHWNCE74X7JSDV0X3SZ3KJNY")
     }
 }

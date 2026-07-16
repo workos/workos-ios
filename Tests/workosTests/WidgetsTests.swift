@@ -5,10 +5,24 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the Widgets resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct WidgetsTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.widgets
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func createTokenSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding: #"{"token":"eyJhbGciOiJSUzI1NiIsImtpZCI6InNlc3Npb24..."}"#)
+        let result = try await client.widgets.createToken()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/widgets/token")
+        _ = result
     }
 }

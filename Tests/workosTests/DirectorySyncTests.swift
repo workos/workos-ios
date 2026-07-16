@@ -5,10 +5,103 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the DirectorySync resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct DirectorySyncTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.directorySync
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func listSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"directory","id":"directory_01ECAZ4NV9QMV47GW873HDCX74","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","external_key":"sPa12dwRQ","type":"gsuite directory","state":"linked","name":"Foo Corp","domain":"foo-corp.com","metadata":{"users":{"active":42,"inactive":3},"groups":5},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.directorySync.list()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/directories")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "directory_01ECAZ4NV9QMV47GW873HDCX74")
+    }
+
+    @Test func getSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"directory","id":"directory_01ECAZ4NV9QMV47GW873HDCX74","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","external_key":"sPa12dwRQ","type":"gsuite directory","state":"linked","name":"Foo Corp","domain":"foo-corp.com","metadata":{"users":{"active":42,"inactive":3},"groups":5},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.directorySync.get(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/directories/sample-id")
+        #expect(result.id == "directory_01ECAZ4NV9QMV47GW873HDCX74")
+    }
+
+    @Test func deleteSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.directorySync.delete(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/directories/sample-id")
+    }
+
+    @Test func listGroupsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"directory_group","id":"directory_group_01E1JJS84MFPPQ3G655FHTKX6Z","idp_id":"02grqrue4294w24","directory_id":"directory_01ECAZ4NV9QMV47GW873HDCX74","organization_id":"org_01EZTR6WYX1A0DSE2CYMGXQ24Y","name":"Developers","raw_attributes":{"key":{}},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.directorySync.listGroups()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/directory_groups")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z")
+    }
+
+    @Test func getGroupSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"directory_group","id":"directory_group_01E1JJS84MFPPQ3G655FHTKX6Z","idp_id":"02grqrue4294w24","directory_id":"directory_01ECAZ4NV9QMV47GW873HDCX74","organization_id":"org_01EZTR6WYX1A0DSE2CYMGXQ24Y","name":"Developers","raw_attributes":{"key":{}},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.directorySync.getGroup(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/directory_groups/sample-id")
+        #expect(result.id == "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z")
+    }
+
+    @Test func listUsersSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"directory_user","id":"directory_user_01E1JG7J09H96KYP8HM9B0G5SJ","directory_id":"directory_01ECAZ4NV9QMV47GW873HDCX74","organization_id":"org_01EZTR6WYX1A0DSE2CYMGXQ24Y","idp_id":"2836","email":"marcelina.davis@example.com","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","emails":[{"primary":true,"type":"work","value":"marcelina.davis@example.com"}],"job_title":"Software Engineer","username":"mdavis","state":"active","raw_attributes":{"key":{}},"custom_attributes":{"department":"Engineering","job_title":"Software Engineer"},"role":{"slug":"admin"},"roles":[{"slug":"admin"}],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","groups":[{"object":"directory_group","id":"directory_group_01E1JJS84MFPPQ3G655FHTKX6Z","idp_id":"02grqrue4294w24","directory_id":"directory_01ECAZ4NV9QMV47GW873HDCX74","organization_id":"org_01EZTR6WYX1A0DSE2CYMGXQ24Y","name":"Developers","raw_attributes":{"key":{}},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}]}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.directorySync.listUsers()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/directory_users")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "directory_user_01E1JG7J09H96KYP8HM9B0G5SJ")
+    }
+
+    @Test func getUserSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"directory_user","id":"directory_user_01E1JG7J09H96KYP8HM9B0G5SJ","directory_id":"directory_01ECAZ4NV9QMV47GW873HDCX74","organization_id":"org_01EZTR6WYX1A0DSE2CYMGXQ24Y","idp_id":"2836","email":"marcelina.davis@example.com","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","emails":[{"primary":true,"type":"work","value":"marcelina.davis@example.com"}],"job_title":"Software Engineer","username":"mdavis","state":"active","raw_attributes":{"key":{}},"custom_attributes":{"department":"Engineering","job_title":"Software Engineer"},"role":{"slug":"admin"},"roles":[{"slug":"admin"}],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","groups":[{"object":"directory_group","id":"directory_group_01E1JJS84MFPPQ3G655FHTKX6Z","idp_id":"02grqrue4294w24","directory_id":"directory_01ECAZ4NV9QMV47GW873HDCX74","organization_id":"org_01EZTR6WYX1A0DSE2CYMGXQ24Y","name":"Developers","raw_attributes":{"key":{}},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}]}"#
+        )
+        let result = try await client.directorySync.getUser(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/directory_users/sample-id")
+        #expect(result.id == "directory_user_01E1JG7J09H96KYP8HM9B0G5SJ")
     }
 }

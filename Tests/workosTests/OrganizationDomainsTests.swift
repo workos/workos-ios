@@ -5,10 +5,65 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the OrganizationDomains resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct OrganizationDomainsTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.organizationDomains
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func createSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"organization_domain","id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","organization_id":"org_01HE8GSH8FQPASKSY27THRKRBP","domain":"foo-corp.com","state":"pending","verification_prefix":"superapp-domain-verification-z3kjny","verification_token":"m5Oztg3jdK4NJLgs8uIlIprMw","verification_strategy":"dns","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.organizationDomains.create(
+            domain: "test_domain", organizationId: "test_organization_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/organization_domains")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["domain"] != nil)
+        #expect(result.id == "org_domain_01EHZNVPK2QXHMVWCEDQEKY69A")
+    }
+
+    @Test func getSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"organization_domain","id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","organization_id":"org_01HE8GSH8FQPASKSY27THRKRBP","domain":"foo-corp.com","state":"pending","verification_prefix":"superapp-domain-verification-z3kjny","verification_token":"m5Oztg3jdK4NJLgs8uIlIprMw","verification_strategy":"dns","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.organizationDomains.get(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/organization_domains/sample-id")
+        #expect(result.id == "org_domain_01EHZNVPK2QXHMVWCEDQEKY69A")
+    }
+
+    @Test func deleteSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.organizationDomains.delete(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/organization_domains/sample-id")
+    }
+
+    @Test func verifySendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"organization_domain","id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","organization_id":"org_01HE8GSH8FQPASKSY27THRKRBP","domain":"foo-corp.com","state":"pending","verification_prefix":"superapp-domain-verification-z3kjny","verification_token":"m5Oztg3jdK4NJLgs8uIlIprMw","verification_strategy":"dns","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.organizationDomains.verify(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/organization_domains/sample-id/verify")
+        #expect(result.id == "org_domain_01EHZNVPK2QXHMVWCEDQEKY69A")
     }
 }

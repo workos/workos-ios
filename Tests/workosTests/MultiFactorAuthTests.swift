@@ -5,10 +5,114 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the MultiFactorAuth resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct MultiFactorAuthTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.multiFactorAuth
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func verifyChallengeSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"challenge":{"object":"authentication_challenge","id":"auth_challenge_01FVYZ5QM8N98T9ME5BCB2BBMJ","expires_at":"2026-01-15T12:00:00.000Z","code":"123456","authentication_factor_id":"auth_factor_01FVYZ5QM8N98T9ME5BCB2BBMJ","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"valid":true}"#
+        )
+        let result = try await client.multiFactorAuth.verifyChallenge(
+            id: "sample-id", code: "test_code")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/auth/challenges/sample-id/verify")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["code"] != nil)
+        _ = result
+    }
+
+    @Test func getSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"authentication_factor","id":"auth_factor_01FVYZ5QM8N98T9ME5BCB2BBMJ","type":"totp","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","sms":{"phone_number":"+15005550006"},"totp":{"issuer":"WorkOS","user":"user@example.com"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.multiFactorAuth.get(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/auth/factors/sample-id")
+        #expect(result.id == "auth_factor_01FVYZ5QM8N98T9ME5BCB2BBMJ")
+    }
+
+    @Test func deleteSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.multiFactorAuth.delete(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/auth/factors/sample-id")
+    }
+
+    @Test func challengeSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"authentication_challenge","id":"auth_challenge_01FVYZ5QM8N98T9ME5BCB2BBMJ","expires_at":"2026-01-15T12:00:00.000Z","code":"123456","authentication_factor_id":"auth_factor_01FVYZ5QM8N98T9ME5BCB2BBMJ","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.multiFactorAuth.challenge(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/auth/factors/sample-id/challenge")
+        #expect(result.id == "auth_challenge_01FVYZ5QM8N98T9ME5BCB2BBMJ")
+    }
+
+    @Test func enrollSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"authentication_factor","id":"auth_factor_01FVYZ5QM8N98T9ME5BCB2BBMJ","type":"totp","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","sms":{"phone_number":"+15005550006"},"totp":{"issuer":"WorkOS","user":"user@example.com","secret":"JBSWY3DPEHPK3PXP","qr_code":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...","uri":"otpauth://totp/WorkOS:user@example.com?secret=JBSWY3DPEHPK3PXP&issuer=WorkOS"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.multiFactorAuth.enroll(
+            type: AuthenticationFactorsCreateRequestType(rawValue: "generic_otp"))
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/auth/factors/enroll")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["type"] != nil)
+        #expect(result.id == "auth_factor_01FVYZ5QM8N98T9ME5BCB2BBMJ")
+    }
+
+    @Test func listUserSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"authentication_factor","id":"auth_factor_01FVYZ5QM8N98T9ME5BCB2BBMJ","type":"totp","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","sms":{"phone_number":"+15005550006"},"totp":{"issuer":"WorkOS","user":"user@example.com"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.multiFactorAuth.listUser(
+            userlandUserId: "sample-userlandUserId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/users/sample-userlandUserId/auth_factors")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "auth_factor_01FVYZ5QM8N98T9ME5BCB2BBMJ")
+    }
+
+    @Test func createUserSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"authentication_factor":{"object":"authentication_factor","id":"auth_factor_01FVYZ5QM8N98T9ME5BCB2BBMJ","type":"totp","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","sms":{"phone_number":"+15005550006"},"totp":{"issuer":"WorkOS","user":"user@example.com","secret":"JBSWY3DPEHPK3PXP","qr_code":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...","uri":"otpauth://totp/WorkOS:user@example.com?secret=JBSWY3DPEHPK3PXP&issuer=WorkOS"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"authentication_challenge":{"object":"authentication_challenge","id":"auth_challenge_01FVYZ5QM8N98T9ME5BCB2BBMJ","expires_at":"2026-01-15T12:00:00.000Z","code":"123456","authentication_factor_id":"auth_factor_01FVYZ5QM8N98T9ME5BCB2BBMJ","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}}"#
+        )
+        let result = try await client.multiFactorAuth.createUser(
+            userlandUserId: "sample-userlandUserId", type: "totp")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/users/sample-userlandUserId/auth_factors")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["type"] != nil)
+        _ = result
     }
 }

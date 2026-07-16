@@ -52,6 +52,31 @@ public struct DirectorySync: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``list``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        organizationId: String? = nil,
+        search: String? = nil,
+        domain: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<Directory> {
+        AutoPagingSequence { cursor in
+            try await self.list(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                organizationId: organizationId,
+                search: search,
+                domain: domain,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Get a Directory
     ///
     /// Get the details of an existing directory.
@@ -129,6 +154,29 @@ public struct DirectorySync: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listGroups``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listGroupsAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        directory: String? = nil,
+        user: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<DirectoryGroup> {
+        AutoPagingSequence { cursor in
+            try await self.listGroups(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                directory: directory,
+                user: user,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Get a Directory Group
     ///
     /// Get the details of an existing Directory Group.
@@ -195,6 +243,33 @@ public struct DirectorySync: Sendable {
             options: requestOptions,
             as: Page<DirectoryUserWithGroups>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listUsers``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listUsersAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        directory: String? = nil,
+        group: String? = nil,
+        idpId: String? = nil,
+        email: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<DirectoryUserWithGroups> {
+        AutoPagingSequence { cursor in
+            try await self.listUsers(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                directory: directory,
+                group: group,
+                idpId: idpId,
+                email: email,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// Get a Directory User

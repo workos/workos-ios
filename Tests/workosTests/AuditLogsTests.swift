@@ -5,10 +5,123 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the AuditLogs resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct AuditLogsTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.auditLogs
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func listActionsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"audit_log_action","name":"user.viewed_invoice","schema":{"object":"audit_log_schema","version":1,"actor":{"metadata":{"type":"object","properties":{"role":{"type":"string"}}}},"targets":[{"type":"invoice","metadata":{"type":"object","properties":{"cost":{"type":"number"}}}}],"metadata":{"type":"object","properties":{"transactionId":{"type":"string"}}},"created_at":"2026-01-15T12:00:00.000Z"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.auditLogs.listActions()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/audit_logs/actions")
+        #expect(result.data.count == 1)
+        _ = result.data.first
+    }
+
+    @Test func listActionsAutoPagingFetchesAllPages() async throws {
+        let (client, recorder) = makeTestClient(stubs: [
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"audit_log_action","name":"user.viewed_invoice","schema":{"object":"audit_log_schema","version":1,"actor":{"metadata":{"type":"object","properties":{"role":{"type":"string"}}}},"targets":[{"type":"invoice","metadata":{"type":"object","properties":{"cost":{"type":"number"}}}}],"metadata":{"type":"object","properties":{"transactionId":{"type":"string"}}},"created_at":"2026-01-15T12:00:00.000Z"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":"cursor_2"}}"#
+                        .utf8), headers: [:]),
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"audit_log_action","name":"user.viewed_invoice","schema":{"object":"audit_log_schema","version":1,"actor":{"metadata":{"type":"object","properties":{"role":{"type":"string"}}}},"targets":[{"type":"invoice","metadata":{"type":"object","properties":{"cost":{"type":"number"}}}}],"metadata":{"type":"object","properties":{"transactionId":{"type":"string"}}},"created_at":"2026-01-15T12:00:00.000Z"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                        .utf8), headers: [:]),
+        ])
+        var items: [AuditLogAction] = []
+        for try await item in client.auditLogs.listActionsAutoPaging() {
+            items.append(item)
+        }
+
+        #expect(items.count == 2)
+        #expect(recorder.allRequests.count == 2)
+        let second = try #require(recorder.allRequests.last?.url)
+        let query = URLComponents(url: second, resolvedAgainstBaseURL: false)?.queryItems ?? []
+        #expect(query.contains(URLQueryItem(name: "after", value: "cursor_2")))
+    }
+
+    @Test func listActionSchemasSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"audit_log_schema","version":1,"actor":{"metadata":{"type":"object","properties":{"role":{"type":"string"}}}},"targets":[{"type":"invoice","metadata":{"type":"object","properties":{"cost":{"type":"number"}}}}],"metadata":{"type":"object","properties":{"transactionId":{"type":"string"}}},"created_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.auditLogs.listActionSchemas(actionName: "sample-actionName")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/audit_logs/actions/sample-actionName/schemas")
+        #expect(result.data.count == 1)
+        _ = result.data.first
+    }
+
+    @Test func createExportSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"audit_log_export","id":"audit_log_export_01GBZK5MP7TD1YCFQHFR22180V","state":"ready","url":"https://exports.audit-logs.com/audit-log-exports/export.csv","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.auditLogs.createExport(
+            organizationId: "test_organization_id",
+            rangeStart: Date(timeIntervalSince1970: 1_672_531_200),
+            rangeEnd: Date(timeIntervalSince1970: 1_672_531_200))
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/audit_logs/exports")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["organization_id"] != nil)
+        #expect(result.id == "audit_log_export_01GBZK5MP7TD1YCFQHFR22180V")
+    }
+
+    @Test func getExportSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"audit_log_export","id":"audit_log_export_01GBZK5MP7TD1YCFQHFR22180V","state":"ready","url":"https://exports.audit-logs.com/audit-log-exports/export.csv","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.auditLogs.getExport(
+            auditLogExportId: "sample-auditLogExportId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/audit_logs/exports/sample-auditLogExportId")
+        #expect(result.id == "audit_log_export_01GBZK5MP7TD1YCFQHFR22180V")
+    }
+
+    @Test func getOrganizationAuditLogsRetentionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{"retention_period_in_days":30}"#)
+        let result = try await client.auditLogs.getOrganizationAuditLogsRetention(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/organizations/sample-id/audit_logs_retention")
+        _ = result
+    }
+
+    @Test func updateOrganizationAuditLogsRetentionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{"retention_period_in_days":30}"#)
+        let result = try await client.auditLogs.updateOrganizationAuditLogsRetention(
+            id: "sample-id", retentionPeriodInDays: 1)
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/organizations/sample-id/audit_logs_retention")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["retention_period_in_days"] != nil)
+        _ = result
     }
 }

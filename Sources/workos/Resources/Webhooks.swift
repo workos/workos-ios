@@ -40,6 +40,25 @@ public struct Webhooks: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listWebhookEndpoints``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listWebhookEndpointsAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<WebhookEndpoint> {
+        AutoPagingSequence { cursor in
+            try await self.listWebhookEndpoints(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Create a Webhook Endpoint
     ///
     /// Create a new webhook endpoint to receive event notifications.

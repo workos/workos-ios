@@ -5,10 +5,83 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the ApiKeys resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct ApiKeysTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.apiKeys
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func deleteSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.apiKeys.delete(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/api_keys/sample-id")
+    }
+
+    @Test func createApiKeyExpireSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"organization","id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":null,"permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.apiKeys.createApiKeyExpire(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/api_keys/sample-id/expire")
+        #expect(result.id == "api_key_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func createValidationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"api_key":{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"organization","id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":null,"permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"agent_registration_id":"agent_reg_01EHZNVPK3SFK441A1RGBFSHRT"}"#
+        )
+        let result = try await client.apiKeys.createValidation(value: "test_value")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/api_keys/validations")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["value"] != nil)
+        _ = result
+    }
+
+    @Test func listOrganizationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"organization","id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":null,"permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.apiKeys.listOrganization(
+            organizationId: "sample-organizationId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/organizations/sample-organizationId/api_keys")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "api_key_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func createOrganizationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"organization","id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":"2030-01-01T00:00:00.000Z","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","value":"sk_abcdefghijklmnop123456"}"#
+        )
+        let result = try await client.apiKeys.createOrganization(
+            organizationId: "sample-organizationId", name: "test_name")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/organizations/sample-organizationId/api_keys")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["name"] != nil)
+        #expect(result.id == "api_key_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 }

@@ -83,6 +83,29 @@ public struct Connect: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listApplications``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listApplicationsAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        registrationTypes: [ApplicationsRegistrationTypes]? = nil,
+        organizationId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<ConnectApplication> {
+        AutoPagingSequence { cursor in
+            try await self.listApplications(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                registrationTypes: registrationTypes,
+                organizationId: organizationId,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Create oauth application.
     public func createOAuthApplication(
         name: String,

@@ -50,6 +50,29 @@ public struct Organizations: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``list``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        domains: [String]? = nil,
+        search: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<Organization> {
+        AutoPagingSequence { cursor in
+            try await self.list(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                domains: domains,
+                search: search,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Create an Organization
     ///
     /// Creates a new organization in the current environment.

@@ -56,6 +56,33 @@ public struct SSO: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listConnections``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listConnectionsAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        connectionType: ConnectionsConnectionType? = nil,
+        domain: String? = nil,
+        organizationId: String? = nil,
+        search: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<Connection> {
+        AutoPagingSequence { cursor in
+            try await self.listConnections(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                connectionType: connectionType,
+                domain: domain,
+                organizationId: organizationId,
+                search: search,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Get a Connection
     ///
     /// Get the details of an existing connection.

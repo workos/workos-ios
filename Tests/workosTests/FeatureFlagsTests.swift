@@ -5,10 +5,115 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the FeatureFlags resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct FeatureFlagsTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.featureFlags
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func listSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"feature_flag","id":"flag_01EHZNVPK3SFK441A1RGBFSHRT","slug":"advanced-analytics","name":"Advanced Analytics","description":"Enable advanced analytics dashboard feature","owner":{"email":"jane@example.com","first_name":"Jane","last_name":"Doe"},"tags":["reports"],"enabled":true,"default_value":false,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.featureFlags.list()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/feature-flags")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "flag_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func getSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"feature_flag","id":"flag_01EHZNVPK3SFK441A1RGBFSHRT","slug":"advanced-analytics","name":"Advanced Analytics","description":"Enable advanced analytics dashboard feature","owner":{"email":"jane@example.com","first_name":"Jane","last_name":"Doe"},"tags":["reports"],"enabled":true,"default_value":false,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.featureFlags.get(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/feature-flags/sample-slug")
+        #expect(result.id == "flag_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func disableSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"feature_flag","id":"flag_01EHZNVPK3SFK441A1RGBFSHRT","slug":"advanced-analytics","name":"Advanced Analytics","description":"Enable advanced analytics dashboard feature","owner":{"email":"jane@example.com","first_name":"Jane","last_name":"Doe"},"tags":["reports"],"enabled":false,"default_value":false,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.featureFlags.disable(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/feature-flags/sample-slug/disable")
+        #expect(result.id == "flag_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func enableSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"feature_flag","id":"flag_01EHZNVPK3SFK441A1RGBFSHRT","slug":"advanced-analytics","name":"Advanced Analytics","description":"Enable advanced analytics dashboard feature","owner":{"email":"jane@example.com","first_name":"Jane","last_name":"Doe"},"tags":["reports"],"enabled":false,"default_value":false,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.featureFlags.enable(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/feature-flags/sample-slug/enable")
+        #expect(result.id == "flag_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func addFlagTargetSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.featureFlags.addFlagTarget(
+            slug: "sample-slug", resourceId: "sample-resourceId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/feature-flags/sample-slug/targets/sample-resourceId")
+    }
+
+    @Test func removeFlagTargetSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.featureFlags.removeFlagTarget(
+            slug: "sample-slug", resourceId: "sample-resourceId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/feature-flags/sample-slug/targets/sample-resourceId")
+    }
+
+    @Test func listOrganizationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"feature_flag","id":"flag_01EHZNVPK3SFK441A1RGBFSHRT","slug":"advanced-analytics","name":"Advanced Analytics","description":"Enable advanced analytics dashboard feature","owner":{"email":"jane@example.com","first_name":"Jane","last_name":"Doe"},"tags":["reports"],"enabled":true,"default_value":false,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.featureFlags.listOrganization(
+            organizationId: "sample-organizationId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/organizations/sample-organizationId/feature-flags")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "flag_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func listUserSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"feature_flag","id":"flag_01EHZNVPK3SFK441A1RGBFSHRT","slug":"advanced-analytics","name":"Advanced Analytics","description":"Enable advanced analytics dashboard feature","owner":{"email":"jane@example.com","first_name":"Jane","last_name":"Doe"},"tags":["reports"],"enabled":true,"default_value":false,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.featureFlags.listUser(userId: "sample-userId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/users/sample-userId/feature-flags")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "flag_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 }

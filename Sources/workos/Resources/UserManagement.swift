@@ -452,6 +452,25 @@ public struct UserManagement: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listCorsOrigins``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listCorsOriginsAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<CorsOriginResponse> {
+        AutoPagingSequence { cursor in
+            try await self.listCorsOrigins(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Create a CORS origin
     ///
     /// Creates a new CORS origin for the current environment. CORS origins allow browser-based applications to make requests to the WorkOS API.
@@ -594,6 +613,31 @@ public struct UserManagement: Sendable {
             options: requestOptions,
             as: Page<User>.self
         )
+    }
+
+    /// Auto-paginating variant of ``list``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        organization: String? = nil,
+        organizationId: String? = nil,
+        email: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<User> {
+        AutoPagingSequence { cursor in
+            try await self.list(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                organization: organization,
+                organizationId: organizationId,
+                email: email,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// Create a user
@@ -868,6 +912,27 @@ public struct UserManagement: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listSessions``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listSessionsAutoPaging(
+        id: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<UserSessionsListItem> {
+        AutoPagingSequence { cursor in
+            try await self.listSessions(
+                id: id,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// List invitations
     ///
     /// Get a list of all of invitations matching the criteria specified.
@@ -908,6 +973,29 @@ public struct UserManagement: Sendable {
             options: requestOptions,
             as: Page<UserInvite>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listInvitations``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listInvitationsAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        organizationId: String? = nil,
+        email: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<UserInvite> {
+        AutoPagingSequence { cursor in
+            try await self.listInvitations(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                organizationId: organizationId,
+                email: email,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// Send an invitation
@@ -1152,6 +1240,25 @@ public struct UserManagement: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listRedirectUris``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listRedirectUrisAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<RedirectUri> {
+        AutoPagingSequence { cursor in
+            try await self.listRedirectUris(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Create a redirect URI
     ///
     /// Creates a new redirect URI for an application.
@@ -1205,6 +1312,27 @@ public struct UserManagement: Sendable {
             options: requestOptions,
             as: Page<AuthorizedConnectApplicationListData>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listUserAuthorizedApplications``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listUserAuthorizedApplicationsAutoPaging(
+        userId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AuthorizedConnectApplicationListData> {
+        AutoPagingSequence { cursor in
+            try await self.listUserAuthorizedApplications(
+                userId: userId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// Delete an authorized application
@@ -1263,6 +1391,29 @@ public struct UserManagement: Sendable {
             options: requestOptions,
             as: Page<UserApiKey>.self
         )
+    }
+
+    /// Auto-paginating variant of ``listUserApiKeys``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listUserApiKeysAutoPaging(
+        userId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        organizationId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<UserApiKey> {
+        AutoPagingSequence { cursor in
+            try await self.listUserApiKeys(
+                userId: userId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                organizationId: organizationId,
+                requestOptions: requestOptions
+            )
+        }
     }
 
     /// Create an API key for a user

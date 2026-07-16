@@ -146,6 +146,27 @@ public struct MultiFactorAuth: Sendable {
         )
     }
 
+    /// Auto-paginating variant of ``listUser``: fetches successive
+    /// pages as the sequence is iterated.
+    public func listUserAutoPaging(
+        userlandUserId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AuthenticationFactor> {
+        AutoPagingSequence { cursor in
+            try await self.listUser(
+                userlandUserId: userlandUserId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
     /// Enroll an authentication factor
     ///
     /// Enrolls a user in a new [authentication factor](https://workos.com/docs/reference/authkit/mfa/authentication-factor).

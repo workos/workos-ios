@@ -5,10 +5,44 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the Agents resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct AgentsTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.agents
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func createValidateSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"valid":true,"registration_id":"agent_reg_01EHWNCE74X7JSDV0X3SZ3KJNY","expires_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.agents.createValidate(
+            type: AgentAdminValidateCredentialRequestType(rawValue: "api_key"),
+            credential: "test_credential")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/agents/credentials/validate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["type"] != nil)
+        _ = result
+    }
+
+    @Test func getRegistrationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"id":"agent_reg_01EHWNCE74X7JSDV0X3SZ3KJNY","agent_identity":{"id":"agent_identity_01EHWNCE74X7JSDV0X3SZ3KJNY","userland_user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"organization_id":"org_01EHQMYV6MBK39QC5PZXHY59C3","status":"verified","kind":"service_auth","claim":{"id":"agent_reg_claim_01EHWNCE74X7JSDV0X3SZ3KJNY","claim_completion":{"id":"agent_reg_claim_attempt_01EHWNCE74X7JSDV0X3SZ3KJNY","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","expires_at":"2026-01-15T12:00:00.000Z","claimed_at":"2026-01-15T12:00:00.000Z"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","expires_at":"2026-01-15T12:00:00.000Z"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.agents.getRegistration(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/agents/registrations/sample-id")
+        #expect(result.id == "agent_reg_01EHWNCE74X7JSDV0X3SZ3KJNY")
     }
 }

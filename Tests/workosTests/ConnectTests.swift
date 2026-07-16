@@ -5,10 +5,84 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the Connect resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct ConnectTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.connect
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func listApplicationsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.connect.listApplications()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/connect/applications")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "conn_app_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func getApplicationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}"#
+        )
+        let result = try await client.connect.getApplication(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/connect/applications/sample-id")
+        #expect(result.id == "conn_app_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func updateApplicationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}"#
+        )
+        let result = try await client.connect.updateApplication(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/connect/applications/sample-id")
+        #expect(result.id == "conn_app_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func deleteApplicationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.connect.deleteApplication(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/connect/applications/sample-id")
+    }
+
+    @Test func listApplicationClientSecretsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"[{"object":"connect_application_secret","id":"secret_01J9Q2Z3X4Y5W6V7U8T9S0R1Q","secret_hint":"abc123","last_used_at":null,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}]"#
+        )
+        let result = try await client.connect.listApplicationClientSecrets(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/connect/applications/sample-id/client_secrets")
+        #expect(result.count == 1)
+    }
+
+    @Test func deleteClientSecretSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.connect.deleteClientSecret(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/connect/client_secrets/sample-id")
     }
 }

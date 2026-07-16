@@ -5,10 +5,219 @@ import Testing
 
 @testable import WorkOS
 
+/// Wire-level tests for the Pipes resource: each test performs a real
+/// call through the mocked transport and asserts the request that went out
+/// and the decoded response that came back.
 @Suite struct PipesTests {
     @Test func resourceIsReachable() {
-        let client = makeTestClient()
+        let (client, _) = makeTestClient()
         _ = client.pipes
         #expect(client.configuration.apiKey == "sk_test_123")
+    }
+
+    @Test func listDataIntegrationsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.pipes.listDataIntegrations()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/data-integrations")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "data_integration_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func createDataIntegrationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.pipes.createDataIntegration(provider: "test_provider")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/data-integrations")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["provider"] != nil)
+        #expect(result.id == "data_integration_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func getAccessTokenSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"active":true,"access_token":{"object":"access_token","access_token":"gho_16C7e42F292c6912E7710c838347Ae178B4a","expires_at":"2025-12-31T23:59:59.000Z","scopes":["repo","user:email"],"missing_scopes":[]},"error":"not_installed"}"#
+        )
+        let result = try await client.pipes.getAccessToken(
+            provider: "sample-provider", userId: "test_user_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/data-integrations/sample-provider/token")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["user_id"] != nil)
+        _ = result
+    }
+
+    @Test func getDataIntegrationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.pipes.getDataIntegration(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/data-integrations/sample-slug")
+        #expect(result.id == "data_integration_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func updateDataIntegrationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.pipes.updateDataIntegration(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/data-integrations/sample-slug")
+        #expect(result.id == "data_integration_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func deleteDataIntegrationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.pipes.deleteDataIntegration(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/data-integrations/sample-slug")
+    }
+
+    @Test func updateDataIntegrationApiKeySendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+        )
+        let result = try await client.pipes.updateDataIntegrationApiKey(
+            slug: "sample-slug", userId: "test_user_id", secret: "test_secret")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/data-integrations/sample-slug/api-key")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["user_id"] != nil)
+        #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func authorizeDataIntegrationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"url":"https://api.workos.com/data-integrations/q2czJKmVAraSBg8xFpT7M9uR/authorize-redirect"}"#
+        )
+        let result = try await client.pipes.authorizeDataIntegration(
+            slug: "sample-slug", userId: "test_user_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/data-integrations/sample-slug/authorize")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["user_id"] != nil)
+        _ = result
+    }
+
+    @Test func createDataIntegrationCredentialSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"active":true,"credential":{"object":"credential","auth_method":"oauth","value":"gho_16C7e42F292c6912E7710c838347Ae178B4a","expires_at":"2025-12-31T23:59:59.000Z","scopes":["repo","user:email"],"missing_scopes":[]},"error":"not_installed"}"#
+        )
+        let result = try await client.pipes.createDataIntegrationCredential(
+            slug: "sample-slug", userId: "test_user_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/data-integrations/sample-slug/credentials")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["user_id"] != nil)
+        _ = result
+    }
+
+    @Test func getUserConnectedAccountSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+        )
+        let result = try await client.pipes.getUserConnectedAccount(
+            userId: "sample-user-id", slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path
+                == "/user_management/users/sample-user-id/connected_accounts/sample-slug")
+        #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func createUserConnectedAccountSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+        )
+        let result = try await client.pipes.createUserConnectedAccount(
+            userId: "sample-user-id", slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(
+            request.url?.path
+                == "/user_management/users/sample-user-id/connected_accounts/sample-slug")
+        #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func updateUserConnectedAccountSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+        )
+        let result = try await client.pipes.updateUserConnectedAccount(
+            userId: "sample-user-id", slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(
+            request.url?.path
+                == "/user_management/users/sample-user-id/connected_accounts/sample-slug")
+        #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func deleteUserConnectedAccountSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.pipes.deleteUserConnectedAccount(
+            userId: "sample-user-id", slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/user_management/users/sample-user-id/connected_accounts/sample-slug")
+    }
+
+    @Test func listUserDataProvidersSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"list","data":[{"object":"data_provider","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","name":"GitHub","description":"Connect your GitHub account to access repositories.","slug":"github","integration_type":"github","credentials_type":"oauth2","scopes":["repo","user:email"],"auth_methods":["oauth"],"ownership":"userland_user","created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","connected_account":{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"}}]}"#
+        )
+        let result = try await client.pipes.listUserDataProviders(userId: "sample-user-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/users/sample-user-id/data_providers")
+        _ = result
     }
 }
