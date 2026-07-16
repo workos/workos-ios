@@ -214,7 +214,7 @@ public struct OrganizationMembershipResource: Sendable {
     /// List groups
     ///
     /// Get a list of groups that an organization membership belongs to.
-    public func listOrganizationMembershipGroups(
+    public func listGroups(
         omId: String,
         before: String? = nil,
         after: String? = nil,
@@ -246,9 +246,9 @@ public struct OrganizationMembershipResource: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listOrganizationMembershipGroups``: fetches successive
+    /// Auto-paginating variant of ``listGroups``: fetches successive
     /// pages as the sequence is iterated.
-    public func listOrganizationMembershipGroupsAutoPaging(
+    public func listGroupsAutoPaging(
         omId: String,
         before: String? = nil,
         limit: Int? = nil,
@@ -256,7 +256,7 @@ public struct OrganizationMembershipResource: Sendable {
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<Group> {
         AutoPagingSequence { cursor in
-            try await self.listOrganizationMembershipGroups(
+            try await self.listGroups(
                 omId: omId,
                 before: before,
                 after: cursor,

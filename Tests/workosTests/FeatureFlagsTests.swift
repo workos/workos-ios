@@ -88,12 +88,12 @@ import Testing
         #expect(request.url?.path == "/feature-flags/sample-slug/targets/sample-resourceId")
     }
 
-    @Test func listOrganizationSendsExpectedRequest() async throws {
+    @Test func listOrganizationFeatureFlagsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"data":[{"object":"feature_flag","id":"flag_01EHZNVPK3SFK441A1RGBFSHRT","slug":"advanced-analytics","name":"Advanced Analytics","description":"Enable advanced analytics dashboard feature","owner":{"email":"jane@example.com","first_name":"Jane","last_name":"Doe"},"tags":["reports"],"enabled":true,"default_value":false,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
-        let result = try await client.featureFlags.listOrganization(
+        let result = try await client.featureFlags.listOrganizationFeatureFlags(
             organizationId: "sample-organizationId")
 
         let request = try #require(recorder.lastRequest)
@@ -103,12 +103,12 @@ import Testing
         #expect(result.data.first?.id == "flag_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
-    @Test func listUserSendsExpectedRequest() async throws {
+    @Test func listUserFeatureFlagsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"data":[{"object":"feature_flag","id":"flag_01EHZNVPK3SFK441A1RGBFSHRT","slug":"advanced-analytics","name":"Advanced Analytics","description":"Enable advanced analytics dashboard feature","owner":{"email":"jane@example.com","first_name":"Jane","last_name":"Doe"},"tags":["reports"],"enabled":true,"default_value":false,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
-        let result = try await client.featureFlags.listUser(userId: "sample-userId")
+        let result = try await client.featureFlags.listUserFeatureFlags(userId: "sample-userId")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "GET")

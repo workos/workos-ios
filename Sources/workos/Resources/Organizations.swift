@@ -106,7 +106,7 @@ public struct Organizations: Sendable {
     /// Get an Organization by External ID
     ///
     /// Get the details of an existing organization by an [external identifier](https://workos.com/docs/authkit/metadata/external-identifiers).
-    public func getOrganizationByExternalId(
+    public func getByExternalId(
         externalId: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> Organization {

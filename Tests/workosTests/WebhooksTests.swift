@@ -15,12 +15,12 @@ import Testing
         #expect(client.configuration.apiKey == "sk_test_123")
     }
 
-    @Test func listWebhookEndpointsSendsExpectedRequest() async throws {
+    @Test func listEndpointsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"data":[{"object":"webhook_endpoint","id":"we_0123456789","endpoint_url":"https://example.com/webhooks","secret":"whsec_0FWAiVGkEfGBqqsJH4aNAGBJ4","status":"enabled","events":["user.created","dsync.user.created"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
-        let result = try await client.webhooks.listWebhookEndpoints()
+        let result = try await client.webhooks.listEndpoints()
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "GET")
@@ -29,12 +29,12 @@ import Testing
         #expect(result.data.first?.id == "we_0123456789")
     }
 
-    @Test func createWebhookEndpointSendsExpectedRequest() async throws {
+    @Test func createEndpointSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"webhook_endpoint","id":"we_0123456789","endpoint_url":"https://example.com/webhooks","secret":"whsec_0FWAiVGkEfGBqqsJH4aNAGBJ4","status":"enabled","events":["user.created","dsync.user.created"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
-        let result = try await client.webhooks.createWebhookEndpoint(
+        let result = try await client.webhooks.createEndpoint(
             endpointUrl: "test_endpoint_url",
             events: [CreateWebhookEndpointEvents(rawValue: "agent.registration.created")])
 
@@ -47,12 +47,12 @@ import Testing
         #expect(result.id == "we_0123456789")
     }
 
-    @Test func updateWebhookEndpointSendsExpectedRequest() async throws {
+    @Test func updateEndpointSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"webhook_endpoint","id":"we_0123456789","endpoint_url":"https://example.com/webhooks","secret":"whsec_0FWAiVGkEfGBqqsJH4aNAGBJ4","status":"enabled","events":["user.created","dsync.user.created"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
-        let result = try await client.webhooks.updateWebhookEndpoint(id: "sample-id")
+        let result = try await client.webhooks.updateEndpoint(id: "sample-id")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "PATCH")
@@ -60,9 +60,9 @@ import Testing
         #expect(result.id == "we_0123456789")
     }
 
-    @Test func deleteWebhookEndpointSendsExpectedRequest() async throws {
+    @Test func deleteEndpointSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(responding: #"{}"#)
-        try await client.webhooks.deleteWebhookEndpoint(id: "sample-id")
+        try await client.webhooks.deleteEndpoint(id: "sample-id")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "DELETE")

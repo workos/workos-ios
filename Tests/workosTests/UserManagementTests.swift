@@ -28,6 +28,207 @@ import Testing
         _ = result
     }
 
+    @Test func authenticateWithPasswordSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"organization_id":"org_01H945H0YD4F97JN9MATX7BYAG","authkit_authorization_code":"authkit_authz_code_abc123","access_token":"eyJhb.nNzb19vaWRjX2tleV9.lc5Uk4yWVk5In0","refresh_token":"yAjhKk123NLIjdrBdGZPf8pLIDvK","authentication_method":"SSO","impersonator":{"email":"admin@foocorp.com","reason":"Investigating an issue with the customer's account."},"oauth_tokens":{"provider":"GoogleOAuth","refresh_token":"1//04g...","access_token":"ya29.a0ARrdaM...","expires_at":1735141800,"scopes":["profile","email","openid"]}}"#
+        )
+        let result = try await client.userManagement.authenticateWithPassword(
+            email: "test_email", password: "test_password")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authenticate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["grant_type"] as? String == "password")
+        #expect(json?["email"] != nil)
+        _ = result
+    }
+
+    @Test func authenticateWithCodeSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"organization_id":"org_01H945H0YD4F97JN9MATX7BYAG","authkit_authorization_code":"authkit_authz_code_abc123","access_token":"eyJhb.nNzb19vaWRjX2tleV9.lc5Uk4yWVk5In0","refresh_token":"yAjhKk123NLIjdrBdGZPf8pLIDvK","authentication_method":"SSO","impersonator":{"email":"admin@foocorp.com","reason":"Investigating an issue with the customer's account."},"oauth_tokens":{"provider":"GoogleOAuth","refresh_token":"1//04g...","access_token":"ya29.a0ARrdaM...","expires_at":1735141800,"scopes":["profile","email","openid"]}}"#
+        )
+        let result = try await client.userManagement.authenticateWithCode(code: "test_code")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authenticate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["grant_type"] as? String == "authorization_code")
+        #expect(json?["code"] != nil)
+        _ = result
+    }
+
+    @Test func authenticateWithRefreshTokenSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"organization_id":"org_01H945H0YD4F97JN9MATX7BYAG","authkit_authorization_code":"authkit_authz_code_abc123","access_token":"eyJhb.nNzb19vaWRjX2tleV9.lc5Uk4yWVk5In0","refresh_token":"yAjhKk123NLIjdrBdGZPf8pLIDvK","authentication_method":"SSO","impersonator":{"email":"admin@foocorp.com","reason":"Investigating an issue with the customer's account."},"oauth_tokens":{"provider":"GoogleOAuth","refresh_token":"1//04g...","access_token":"ya29.a0ARrdaM...","expires_at":1735141800,"scopes":["profile","email","openid"]}}"#
+        )
+        let result = try await client.userManagement.authenticateWithRefreshToken(
+            refreshToken: "test_refresh_token")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authenticate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["grant_type"] as? String == "refresh_token")
+        #expect(json?["refresh_token"] != nil)
+        _ = result
+    }
+
+    @Test func authenticateWithMagicAuthSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"organization_id":"org_01H945H0YD4F97JN9MATX7BYAG","authkit_authorization_code":"authkit_authz_code_abc123","access_token":"eyJhb.nNzb19vaWRjX2tleV9.lc5Uk4yWVk5In0","refresh_token":"yAjhKk123NLIjdrBdGZPf8pLIDvK","authentication_method":"SSO","impersonator":{"email":"admin@foocorp.com","reason":"Investigating an issue with the customer's account."},"oauth_tokens":{"provider":"GoogleOAuth","refresh_token":"1//04g...","access_token":"ya29.a0ARrdaM...","expires_at":1735141800,"scopes":["profile","email","openid"]}}"#
+        )
+        let result = try await client.userManagement.authenticateWithMagicAuth(
+            code: "test_code", email: "test_email")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authenticate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["grant_type"] as? String == "urn:workos:oauth:grant-type:magic-auth:code")
+        #expect(json?["code"] != nil)
+        _ = result
+    }
+
+    @Test func authenticateWithEmailVerificationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"organization_id":"org_01H945H0YD4F97JN9MATX7BYAG","authkit_authorization_code":"authkit_authz_code_abc123","access_token":"eyJhb.nNzb19vaWRjX2tleV9.lc5Uk4yWVk5In0","refresh_token":"yAjhKk123NLIjdrBdGZPf8pLIDvK","authentication_method":"SSO","impersonator":{"email":"admin@foocorp.com","reason":"Investigating an issue with the customer's account."},"oauth_tokens":{"provider":"GoogleOAuth","refresh_token":"1//04g...","access_token":"ya29.a0ARrdaM...","expires_at":1735141800,"scopes":["profile","email","openid"]}}"#
+        )
+        let result = try await client.userManagement.authenticateWithEmailVerification(
+            code: "test_code", pendingAuthenticationToken: "test_pending_authentication_token")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authenticate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(
+            json?["grant_type"] as? String == "urn:workos:oauth:grant-type:email-verification:code")
+        #expect(json?["code"] != nil)
+        _ = result
+    }
+
+    @Test func authenticateWithTotpSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"organization_id":"org_01H945H0YD4F97JN9MATX7BYAG","authkit_authorization_code":"authkit_authz_code_abc123","access_token":"eyJhb.nNzb19vaWRjX2tleV9.lc5Uk4yWVk5In0","refresh_token":"yAjhKk123NLIjdrBdGZPf8pLIDvK","authentication_method":"SSO","impersonator":{"email":"admin@foocorp.com","reason":"Investigating an issue with the customer's account."},"oauth_tokens":{"provider":"GoogleOAuth","refresh_token":"1//04g...","access_token":"ya29.a0ARrdaM...","expires_at":1735141800,"scopes":["profile","email","openid"]}}"#
+        )
+        let result = try await client.userManagement.authenticateWithTotp(
+            code: "test_code", pendingAuthenticationToken: "test_pending_authentication_token",
+            authenticationChallengeId: "test_authentication_challenge_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authenticate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["grant_type"] as? String == "urn:workos:oauth:grant-type:mfa-totp")
+        #expect(json?["code"] != nil)
+        _ = result
+    }
+
+    @Test func authenticateWithOrganizationSelectionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"organization_id":"org_01H945H0YD4F97JN9MATX7BYAG","authkit_authorization_code":"authkit_authz_code_abc123","access_token":"eyJhb.nNzb19vaWRjX2tleV9.lc5Uk4yWVk5In0","refresh_token":"yAjhKk123NLIjdrBdGZPf8pLIDvK","authentication_method":"SSO","impersonator":{"email":"admin@foocorp.com","reason":"Investigating an issue with the customer's account."},"oauth_tokens":{"provider":"GoogleOAuth","refresh_token":"1//04g...","access_token":"ya29.a0ARrdaM...","expires_at":1735141800,"scopes":["profile","email","openid"]}}"#
+        )
+        let result = try await client.userManagement.authenticateWithOrganizationSelection(
+            pendingAuthenticationToken: "test_pending_authentication_token",
+            organizationId: "test_organization_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authenticate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(
+            json?["grant_type"] as? String == "urn:workos:oauth:grant-type:organization-selection")
+        #expect(json?["pending_authentication_token"] != nil)
+        _ = result
+    }
+
+    @Test func authenticateWithDeviceCodeSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"organization_id":"org_01H945H0YD4F97JN9MATX7BYAG","authkit_authorization_code":"authkit_authz_code_abc123","access_token":"eyJhb.nNzb19vaWRjX2tleV9.lc5Uk4yWVk5In0","refresh_token":"yAjhKk123NLIjdrBdGZPf8pLIDvK","authentication_method":"SSO","impersonator":{"email":"admin@foocorp.com","reason":"Investigating an issue with the customer's account."},"oauth_tokens":{"provider":"GoogleOAuth","refresh_token":"1//04g...","access_token":"ya29.a0ARrdaM...","expires_at":1735141800,"scopes":["profile","email","openid"]}}"#
+        )
+        let result = try await client.userManagement.authenticateWithDeviceCode(
+            deviceCode: "test_device_code")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authenticate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["grant_type"] as? String == "urn:ietf:params:oauth:grant-type:device_code")
+        #expect(json?["device_code"] != nil)
+        _ = result
+    }
+
+    @Test func authenticateWithRadarEmailChallengeSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"organization_id":"org_01H945H0YD4F97JN9MATX7BYAG","authkit_authorization_code":"authkit_authz_code_abc123","access_token":"eyJhb.nNzb19vaWRjX2tleV9.lc5Uk4yWVk5In0","refresh_token":"yAjhKk123NLIjdrBdGZPf8pLIDvK","authentication_method":"SSO","impersonator":{"email":"admin@foocorp.com","reason":"Investigating an issue with the customer's account."},"oauth_tokens":{"provider":"GoogleOAuth","refresh_token":"1//04g...","access_token":"ya29.a0ARrdaM...","expires_at":1735141800,"scopes":["profile","email","openid"]}}"#
+        )
+        let result = try await client.userManagement.authenticateWithRadarEmailChallenge(
+            code: "test_code", radarChallengeId: "test_radar_challenge_id",
+            pendingAuthenticationToken: "test_pending_authentication_token")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authenticate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(
+            json?["grant_type"] as? String
+                == "urn:workos:oauth:grant-type:radar-email-challenge:code")
+        #expect(json?["code"] != nil)
+        _ = result
+    }
+
+    @Test func authenticateWithRadarSmsChallengeSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"organization_id":"org_01H945H0YD4F97JN9MATX7BYAG","authkit_authorization_code":"authkit_authz_code_abc123","access_token":"eyJhb.nNzb19vaWRjX2tleV9.lc5Uk4yWVk5In0","refresh_token":"yAjhKk123NLIjdrBdGZPf8pLIDvK","authentication_method":"SSO","impersonator":{"email":"admin@foocorp.com","reason":"Investigating an issue with the customer's account."},"oauth_tokens":{"provider":"GoogleOAuth","refresh_token":"1//04g...","access_token":"ya29.a0ARrdaM...","expires_at":1735141800,"scopes":["profile","email","openid"]}}"#
+        )
+        let result = try await client.userManagement.authenticateWithRadarSmsChallenge(
+            code: "test_code", verificationId: "test_verification_id",
+            phoneNumber: "test_phone_number",
+            pendingAuthenticationToken: "test_pending_authentication_token")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authenticate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(
+            json?["grant_type"] as? String == "urn:workos:oauth:grant-type:radar-sms-challenge:code"
+        )
+        #expect(json?["code"] != nil)
+        _ = result
+    }
+
+    @Test func getAuthorizationUrlBuildsExpectedUrl() throws {
+        let (client, _) = makeTestClient()
+        let url = client.userManagement.getAuthorizationUrl(redirectUri: "test_redirect_uri")
+
+        let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
+        #expect(components.path == "/user_management/authorize")
+        let query = components.queryItems ?? []
+        #expect(query.contains(URLQueryItem(name: "response_type", value: "code")))
+        #expect(query.contains(URLQueryItem(name: "redirect_uri", value: "test_redirect_uri")))
+    }
+
     @Test func createDeviceSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
@@ -182,12 +383,12 @@ import Testing
         #expect(result.id == "invitation_01E4ZCR3C56J083X43JQXF3JK5")
     }
 
-    @Test func listJwttemplateSendsExpectedRequest() async throws {
+    @Test func listJWTTemplateSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"jwt_template","content":"{\"urn:myapp:full_name\": \"{{user.first_name}} {{user.last_name}}\", \"urn:myapp:email\": \"{{user.email}}\"}","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
-        let result = try await client.userManagement.listJwttemplate()
+        let result = try await client.userManagement.listJWTTemplate()
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "GET")
@@ -195,12 +396,12 @@ import Testing
         _ = result
     }
 
-    @Test func updateJwttemplateSendsExpectedRequest() async throws {
+    @Test func updateJWTTemplateSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"jwt_template","content":"{\"urn:myapp:full_name\": \"{{user.first_name}} {{user.last_name}}\", \"urn:myapp:email\": \"{{user.email}}\"}","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
-        let result = try await client.userManagement.updateJwttemplate(content: "test_content")
+        let result = try await client.userManagement.updateJWTTemplate(content: "test_content")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "PUT")
@@ -347,6 +548,16 @@ import Testing
         #expect(result.id == "ruri_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
+    @Test func getLogoutUrlBuildsExpectedUrl() throws {
+        let (client, _) = makeTestClient()
+        let url = client.userManagement.getLogoutUrl(sessionId: "test_session_id")
+
+        let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
+        #expect(components.path == "/user_management/sessions/logout")
+        let query = components.queryItems ?? []
+        #expect(query.contains(URLQueryItem(name: "session_id", value: "test_session_id")))
+    }
+
     @Test func revokeSessionSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(responding: #"{}"#)
         try await client.userManagement.revokeSession(sessionId: "test_session_id")
@@ -487,12 +698,12 @@ import Testing
         _ = result
     }
 
-    @Test func getUserIdentitiesSendsExpectedRequest() async throws {
+    @Test func getIdentitiesSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"[{"idp_id":"4F42ABDE-1E44-4B66-824A-5F733C037A6D","type":"OAuth","provider":"MicrosoftOAuth"}]"#
         )
-        let result = try await client.userManagement.getUserIdentities(id: "sample-id")
+        let result = try await client.userManagement.getIdentities(id: "sample-id")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "GET")
@@ -514,12 +725,12 @@ import Testing
         #expect(result.data.first?.id == "session_01H93ZY4F80QPBEZ1R5B2SHQG8")
     }
 
-    @Test func listUserAuthorizedApplicationsSendsExpectedRequest() async throws {
+    @Test func listAuthorizedApplicationsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"data":[{"object":"authorized_connect_application","id":"authorized_connect_app_01HXYZ123456789ABCDEFGHIJ","granted_scopes":["openid","profile","email"],"oauth_resource":"https://api.example.com/resource","application":{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}}],"list_metadata":{"before":null,"after":null}}"#
         )
-        let result = try await client.userManagement.listUserAuthorizedApplications(
+        let result = try await client.userManagement.listAuthorizedApplications(
             userId: "sample-user-id")
 
         let request = try #require(recorder.lastRequest)
@@ -530,9 +741,9 @@ import Testing
         #expect(result.data.first?.id == "authorized_connect_app_01HXYZ123456789ABCDEFGHIJ")
     }
 
-    @Test func deleteUserAuthorizedApplicationSendsExpectedRequest() async throws {
+    @Test func deleteAuthorizedApplicationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(responding: #"{}"#)
-        try await client.userManagement.deleteUserAuthorizedApplication(
+        try await client.userManagement.deleteAuthorizedApplication(
             userId: "sample-user-id", applicationId: "sample-application-id")
 
         let request = try #require(recorder.lastRequest)
@@ -543,12 +754,12 @@ import Testing
         )
     }
 
-    @Test func listUserApiKeysSendsExpectedRequest() async throws {
+    @Test func listApiKeysSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"data":[{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"user","id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":null,"permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
-        let result = try await client.userManagement.listUserApiKeys(userId: "sample-userId")
+        let result = try await client.userManagement.listApiKeys(userId: "sample-userId")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "GET")
@@ -557,12 +768,12 @@ import Testing
         #expect(result.data.first?.id == "api_key_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
-    @Test func createUserApiKeySendsExpectedRequest() async throws {
+    @Test func createApiKeySendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"user","id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":"2030-01-01T00:00:00.000Z","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","value":"sk_abcdefghijklmnop123456"}"#
         )
-        let result = try await client.userManagement.createUserApiKey(
+        let result = try await client.userManagement.createApiKey(
             userId: "sample-userId", name: "test_name", organizationId: "test_organization_id")
 
         let request = try #require(recorder.lastRequest)
@@ -574,12 +785,12 @@ import Testing
         #expect(result.id == "api_key_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
-    @Test func getUserByExternalIdSendsExpectedRequest() async throws {
+    @Test func getByExternalIdSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
-        let result = try await client.userManagement.getUserByExternalId(
+        let result = try await client.userManagement.getByExternalId(
             externalId: "sample-external-id")
 
         let request = try #require(recorder.lastRequest)

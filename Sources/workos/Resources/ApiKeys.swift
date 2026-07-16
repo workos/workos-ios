@@ -9,7 +9,7 @@ public struct ApiKeys: Sendable {
     /// List API keys for an organization
     ///
     /// Get a list of all API keys for an organization.
-    public func listOrganization(
+    public func listOrganizationApiKeys(
         organizationId: String,
         before: String? = nil,
         after: String? = nil,
@@ -41,9 +41,9 @@ public struct ApiKeys: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listOrganization``: fetches successive
+    /// Auto-paginating variant of ``listOrganizationApiKeys``: fetches successive
     /// pages as the sequence is iterated.
-    public func listOrganizationAutoPaging(
+    public func listOrganizationApiKeysAutoPaging(
         organizationId: String,
         before: String? = nil,
         limit: Int? = nil,
@@ -51,7 +51,7 @@ public struct ApiKeys: Sendable {
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<OrganizationApiKey> {
         AutoPagingSequence { cursor in
-            try await self.listOrganization(
+            try await self.listOrganizationApiKeys(
                 organizationId: organizationId,
                 before: before,
                 after: cursor,
@@ -65,7 +65,7 @@ public struct ApiKeys: Sendable {
     /// Create an API key for an organization
     ///
     /// Create a new API key for an organization.
-    public func createOrganization(
+    public func createOrganizationApiKey(
         organizationId: String,
         name: String,
         permissions: [String]? = nil,
@@ -127,7 +127,7 @@ public struct ApiKeys: Sendable {
     /// Expire an API key
     ///
     /// Expire an API key immediately, schedule a future expiration, or clear a scheduled future expiration.
-    public func createApiKeyExpire(
+    public func createExpire(
         id: String,
         expiresAt: Date? = nil,
         requestOptions: RequestOptions? = nil

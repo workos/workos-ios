@@ -24,12 +24,12 @@ import Testing
         #expect(request.url?.path == "/api_keys/sample-id")
     }
 
-    @Test func createApiKeyExpireSendsExpectedRequest() async throws {
+    @Test func createExpireSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"organization","id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":null,"permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
-        let result = try await client.apiKeys.createApiKeyExpire(id: "sample-id")
+        let result = try await client.apiKeys.createExpire(id: "sample-id")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "POST")
@@ -53,12 +53,12 @@ import Testing
         _ = result
     }
 
-    @Test func listOrganizationSendsExpectedRequest() async throws {
+    @Test func listOrganizationApiKeysSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"data":[{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"organization","id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":null,"permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
-        let result = try await client.apiKeys.listOrganization(
+        let result = try await client.apiKeys.listOrganizationApiKeys(
             organizationId: "sample-organizationId")
 
         let request = try #require(recorder.lastRequest)
@@ -68,12 +68,12 @@ import Testing
         #expect(result.data.first?.id == "api_key_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
-    @Test func createOrganizationSendsExpectedRequest() async throws {
+    @Test func createOrganizationApiKeySendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"organization","id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":"2030-01-01T00:00:00.000Z","permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","value":"sk_abcdefghijklmnop123456"}"#
         )
-        let result = try await client.apiKeys.createOrganization(
+        let result = try await client.apiKeys.createOrganizationApiKey(
             organizationId: "sample-organizationId", name: "test_name")
 
         let request = try #require(recorder.lastRequest)

@@ -68,6 +68,43 @@ import Testing
         _ = result.data.first
     }
 
+    @Test func createSchemaSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"audit_log_schema","version":1,"actor":{"metadata":{"type":"object","properties":{"role":{"type":"string"}}}},"targets":[{"type":"invoice","metadata":{"type":"object","properties":{"cost":{"type":"number"}}}}],"metadata":{"type":"object","properties":{"transactionId":{"type":"string"}}},"created_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.auditLogs.createSchema(
+            actionName: "sample-actionName", targets: [AuditLogSchemaTargetInput(type: "test_type")]
+        )
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/audit_logs/actions/sample-actionName/schemas")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["targets"] != nil)
+        _ = result
+    }
+
+    @Test func createEventSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{"success":true}"#)
+        let result = try await client.auditLogs.createEvent(
+            organizationId: "test_organization_id",
+            event: AuditLogEvent(
+                action: "test_action", occurredAt: Date(timeIntervalSince1970: 1_672_531_200),
+                actor: AuditLogEventActor(id: "test_id", type: "test_type"),
+                targets: [AuditLogEventTarget(id: "test_id", type: "test_type")],
+                context: AuditLogEventContext(location: "test_location")))
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/audit_logs/events")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["organization_id"] != nil)
+        _ = result
+    }
+
     @Test func createExportSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:

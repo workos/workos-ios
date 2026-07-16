@@ -15,6 +15,24 @@ import Testing
         #expect(client.configuration.apiKey == "sk_test_123")
     }
 
+    @Test func completeOAuth2SendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"redirect_uri":"https://your-authkit-domain.workos.com/oauth/authorize/complete?state=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdGF0ZSI6InJhbmRvbV9zdGF0ZV9zdHJpbmciLCJpYXQiOjE3NDI2MDQ4NTN9.abc123def456ghi789"}"#
+        )
+        let result = try await client.connect.completeOAuth2(
+            externalAuthId: "test_external_auth_id",
+            user: UserObject(id: "test_id", email: "test_email"))
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/authkit/oauth2/complete")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["external_auth_id"] != nil)
+        _ = result
+    }
+
     @Test func listApplicationsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
@@ -27,6 +45,42 @@ import Testing
         #expect(request.url?.path == "/connect/applications")
         #expect(result.data.count == 1)
         #expect(result.data.first?.id == "conn_app_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func createOAuthApplicationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}"#
+        )
+        let result = try await client.connect.createOAuthApplication(
+            name: "test_name", isFirstParty: true)
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/connect/applications")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["application_type"] as? String == "oauth")
+        #expect(json?["name"] != nil)
+        #expect(result.id == "conn_app_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func createM2MApplicationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}"#
+        )
+        let result = try await client.connect.createM2MApplication(
+            name: "test_name", organizationId: "test_organization_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/connect/applications")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["application_type"] as? String == "m2m")
+        #expect(json?["name"] != nil)
+        #expect(result.id == "conn_app_01HXYZ123456789ABCDEFGHIJ")
     }
 
     @Test func getApplicationSendsExpectedRequest() async throws {

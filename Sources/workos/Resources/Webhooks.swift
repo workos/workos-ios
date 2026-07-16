@@ -9,7 +9,7 @@ public struct Webhooks: Sendable {
     /// List Webhook Endpoints
     ///
     /// Get a list of all of your existing webhook endpoints.
-    public func listWebhookEndpoints(
+    public func listEndpoints(
         before: String? = nil,
         after: String? = nil,
         limit: Int? = nil,
@@ -40,16 +40,16 @@ public struct Webhooks: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listWebhookEndpoints``: fetches successive
+    /// Auto-paginating variant of ``listEndpoints``: fetches successive
     /// pages as the sequence is iterated.
-    public func listWebhookEndpointsAutoPaging(
+    public func listEndpointsAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<WebhookEndpoint> {
         AutoPagingSequence { cursor in
-            try await self.listWebhookEndpoints(
+            try await self.listEndpoints(
                 before: before,
                 after: cursor,
                 limit: limit,
@@ -62,7 +62,7 @@ public struct Webhooks: Sendable {
     /// Create a Webhook Endpoint
     ///
     /// Create a new webhook endpoint to receive event notifications.
-    public func createWebhookEndpoint(
+    public func createEndpoint(
         endpointUrl: String,
         events: [CreateWebhookEndpointEvents],
         requestOptions: RequestOptions? = nil
@@ -84,7 +84,7 @@ public struct Webhooks: Sendable {
     /// Update a Webhook Endpoint
     ///
     /// Update the properties of an existing webhook endpoint.
-    public func updateWebhookEndpoint(
+    public func updateEndpoint(
         id: String,
         endpointUrl: String? = nil,
         status: UpdateWebhookEndpointStatus? = nil,
@@ -109,7 +109,7 @@ public struct Webhooks: Sendable {
     /// Delete a Webhook Endpoint
     ///
     /// Delete an existing webhook endpoint.
-    public func deleteWebhookEndpoint(
+    public func deleteEndpoint(
         id: String,
         requestOptions: RequestOptions? = nil
     ) async throws {

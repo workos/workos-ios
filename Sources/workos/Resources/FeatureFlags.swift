@@ -154,7 +154,7 @@ public struct FeatureFlags: Sendable {
     /// List enabled feature flags for an organization
     ///
     /// Get a list of all enabled feature flags for an organization.
-    public func listOrganization(
+    public func listOrganizationFeatureFlags(
         organizationId: String,
         before: String? = nil,
         after: String? = nil,
@@ -186,9 +186,9 @@ public struct FeatureFlags: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listOrganization``: fetches successive
+    /// Auto-paginating variant of ``listOrganizationFeatureFlags``: fetches successive
     /// pages as the sequence is iterated.
-    public func listOrganizationAutoPaging(
+    public func listOrganizationFeatureFlagsAutoPaging(
         organizationId: String,
         before: String? = nil,
         limit: Int? = nil,
@@ -196,7 +196,7 @@ public struct FeatureFlags: Sendable {
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<Flag> {
         AutoPagingSequence { cursor in
-            try await self.listOrganization(
+            try await self.listOrganizationFeatureFlags(
                 organizationId: organizationId,
                 before: before,
                 after: cursor,
@@ -210,7 +210,7 @@ public struct FeatureFlags: Sendable {
     /// List enabled feature flags for a user
     ///
     /// Get a list of all enabled feature flags for the provided user. This includes feature flags enabled specifically for the user as well as any organizations that the user is a member of.
-    public func listUser(
+    public func listUserFeatureFlags(
         userId: String,
         before: String? = nil,
         after: String? = nil,
@@ -242,9 +242,9 @@ public struct FeatureFlags: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listUser``: fetches successive
+    /// Auto-paginating variant of ``listUserFeatureFlags``: fetches successive
     /// pages as the sequence is iterated.
-    public func listUserAutoPaging(
+    public func listUserFeatureFlagsAutoPaging(
         userId: String,
         before: String? = nil,
         limit: Int? = nil,
@@ -252,7 +252,7 @@ public struct FeatureFlags: Sendable {
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<Flag> {
         AutoPagingSequence { cursor in
-            try await self.listUser(
+            try await self.listUserFeatureFlags(
                 userId: userId,
                 before: before,
                 after: cursor,

@@ -47,6 +47,24 @@ import Testing
         #expect(result.id == "gra_01HXYZ123456789ABCDEFGH")
     }
 
+    @Test func updateGroupRoleAssignmentsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"list","data":[{"object":"group_role_assignment","id":"gra_01HXYZ123456789ABCDEFGH","group_id":"group_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"after":"b21f3a8c-7e4d-4b1a-9c5e-2d8f6a7b3c4e","before":"a10e2b7d-6c3f-4a2b-8d1e-3f9a5b8c7d6e"}}"#
+        )
+        let result = try await client.authorization.updateGroupRoleAssignments(
+            groupId: "sample-group-id",
+            roleAssignments: [ReplaceGroupRoleAssignmentEntry(roleSlug: "test_role_slug")])
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/authorization/groups/sample-group-id/role_assignments")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["role_assignments"] != nil)
+        _ = result
+    }
+
     @Test func deleteGroupRoleAssignmentsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(responding: #"{}"#)
         try await client.authorization.deleteGroupRoleAssignments(

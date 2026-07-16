@@ -333,6 +333,82 @@ public struct UserManagement: Sendable {
         )
     }
 
+    /// Get an authorization URL
+    ///
+    /// Generates an OAuth 2.0 authorization URL to authenticate a user with AuthKit or SSO.
+    public func getAuthorizationUrl(
+        redirectUri: String,
+        codeChallengeMethod: String? = nil,
+        codeChallenge: String? = nil,
+        domainHint: String? = nil,
+        connectionId: String? = nil,
+        providerQueryParams: [String: String]? = nil,
+        providerScopes: [String]? = nil,
+        invitationToken: String? = nil,
+        maxAge: Int? = nil,
+        screenHint: UserManagementAuthenticationScreenHint? = nil,
+        loginHint: String? = nil,
+        provider: UserManagementAuthenticationProvider? = nil,
+        prompt: String? = nil,
+        state: String? = nil,
+        organizationId: String? = nil
+    ) -> URL {
+        let path = "user_management/authorize"
+        var query: [URLQueryItem] = []
+        query.append(URLQueryItem(name: "response_type", value: "code"))
+        if let value = transport.configuration.clientID {
+            query.append(URLQueryItem(name: "client_id", value: value))
+        }
+        if let codeChallengeMethod {
+            query.append(
+                URLQueryItem(name: "code_challenge_method", value: "\(codeChallengeMethod)"))
+        }
+        if let codeChallenge {
+            query.append(URLQueryItem(name: "code_challenge", value: codeChallenge))
+        }
+        if let domainHint {
+            query.append(URLQueryItem(name: "domain_hint", value: domainHint))
+        }
+        if let connectionId {
+            query.append(URLQueryItem(name: "connection_id", value: connectionId))
+        }
+        if let providerQueryParams {
+            query.append(
+                URLQueryItem(name: "provider_query_params", value: "\(providerQueryParams)"))
+        }
+        if let providerScopes {
+            for value in providerScopes {
+                query.append(URLQueryItem(name: "provider_scopes", value: value))
+            }
+        }
+        if let invitationToken {
+            query.append(URLQueryItem(name: "invitation_token", value: invitationToken))
+        }
+        if let maxAge {
+            query.append(URLQueryItem(name: "max_age", value: "\(maxAge)"))
+        }
+        if let screenHint {
+            query.append(URLQueryItem(name: "screen_hint", value: screenHint.rawValue))
+        }
+        if let loginHint {
+            query.append(URLQueryItem(name: "login_hint", value: loginHint))
+        }
+        if let provider {
+            query.append(URLQueryItem(name: "provider", value: provider.rawValue))
+        }
+        if let prompt {
+            query.append(URLQueryItem(name: "prompt", value: prompt))
+        }
+        if let state {
+            query.append(URLQueryItem(name: "state", value: state))
+        }
+        if let organizationId {
+            query.append(URLQueryItem(name: "organization_id", value: organizationId))
+        }
+        query.append(URLQueryItem(name: "redirect_uri", value: redirectUri))
+        return transport.buildURL(path: path, query: query)
+    }
+
     /// Get device authorization URL
     ///
     /// Initiates the CLI Auth flow by requesting a device code and verification URLs. This endpoint implements the OAuth 2.0 Device Authorization Flow ([RFC 8628](https://datatracker.ietf.org/doc/html/rfc8628)) and is designed for command-line applications or other devices with limited input capabilities.
@@ -397,6 +473,22 @@ public struct UserManagement: Sendable {
             options: requestOptions,
             as: RadarChallenge.self
         )
+    }
+
+    /// Logout
+    ///
+    /// Logout a user from the current [session](https://workos.com/docs/reference/authkit/session).
+    public func getLogoutUrl(
+        sessionId: String,
+        returnTo: String? = nil
+    ) -> URL {
+        let path = "user_management/sessions/logout"
+        var query: [URLQueryItem] = []
+        query.append(URLQueryItem(name: "session_id", value: sessionId))
+        if let returnTo {
+            query.append(URLQueryItem(name: "return_to", value: returnTo))
+        }
+        return transport.buildURL(path: path, query: query)
     }
 
     /// Revoke Session
@@ -687,7 +779,7 @@ public struct UserManagement: Sendable {
     /// Get a user by external ID
     ///
     /// Get the details of an existing user by an [external identifier](https://workos.com/docs/authkit/metadata/external-identifiers).
-    public func getUserByExternalId(
+    public func getByExternalId(
         externalId: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> User {
@@ -862,7 +954,7 @@ public struct UserManagement: Sendable {
     /// Get user identities
     ///
     /// Get a list of identities associated with the user. A user can have multiple associated identities after going through [identity linking](https://workos.com/docs/authkit/identity-linking). Currently only OAuth identities are supported. More provider types may be added in the future.
-    public func getUserIdentities(
+    public func getIdentities(
         id: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> [UserIdentitiesGetItem] {
@@ -1124,7 +1216,7 @@ public struct UserManagement: Sendable {
     /// Get JWT template
     ///
     /// Get the JWT template for the current environment.
-    public func listJwttemplate(
+    public func listJWTTemplate(
         requestOptions: RequestOptions? = nil
     ) async throws -> JWTTemplateResponse {
         let path = "user_management/jwt_template"
@@ -1141,7 +1233,7 @@ public struct UserManagement: Sendable {
     /// Update JWT template
     ///
     /// Update the JWT template for the current environment.
-    public func updateJwttemplate(
+    public func updateJWTTemplate(
         content: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> JWTTemplateResponse {
@@ -1282,7 +1374,7 @@ public struct UserManagement: Sendable {
     /// List authorized applications
     ///
     /// Get a list of all Connect applications that the user has authorized.
-    public func listUserAuthorizedApplications(
+    public func listAuthorizedApplications(
         userId: String,
         before: String? = nil,
         after: String? = nil,
@@ -1314,9 +1406,9 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listUserAuthorizedApplications``: fetches successive
+    /// Auto-paginating variant of ``listAuthorizedApplications``: fetches successive
     /// pages as the sequence is iterated.
-    public func listUserAuthorizedApplicationsAutoPaging(
+    public func listAuthorizedApplicationsAutoPaging(
         userId: String,
         before: String? = nil,
         limit: Int? = nil,
@@ -1324,7 +1416,7 @@ public struct UserManagement: Sendable {
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<AuthorizedConnectApplicationListData> {
         AutoPagingSequence { cursor in
-            try await self.listUserAuthorizedApplications(
+            try await self.listAuthorizedApplications(
                 userId: userId,
                 before: before,
                 after: cursor,
@@ -1338,7 +1430,7 @@ public struct UserManagement: Sendable {
     /// Delete an authorized application
     ///
     /// Delete an existing Authorized Connect Application.
-    public func deleteUserAuthorizedApplication(
+    public func deleteAuthorizedApplication(
         userId: String,
         applicationId: String,
         requestOptions: RequestOptions? = nil
@@ -1357,7 +1449,7 @@ public struct UserManagement: Sendable {
     /// List API keys for a user
     ///
     /// Get a list of API keys owned by a specific user.
-    public func listUserApiKeys(
+    public func listApiKeys(
         userId: String,
         before: String? = nil,
         after: String? = nil,
@@ -1393,9 +1485,9 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listUserApiKeys``: fetches successive
+    /// Auto-paginating variant of ``listApiKeys``: fetches successive
     /// pages as the sequence is iterated.
-    public func listUserApiKeysAutoPaging(
+    public func listApiKeysAutoPaging(
         userId: String,
         before: String? = nil,
         limit: Int? = nil,
@@ -1404,7 +1496,7 @@ public struct UserManagement: Sendable {
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<UserApiKey> {
         AutoPagingSequence { cursor in
-            try await self.listUserApiKeys(
+            try await self.listApiKeys(
                 userId: userId,
                 before: before,
                 after: cursor,
@@ -1419,7 +1511,7 @@ public struct UserManagement: Sendable {
     /// Create an API key for a user
     ///
     /// Create a new API key owned by a user. The user must have an active membership in the specified organization.
-    public func createUserApiKey(
+    public func createApiKey(
         userId: String,
         name: String,
         organizationId: String,

@@ -9,7 +9,7 @@ public struct Groups: Sendable {
     /// List groups
     ///
     /// Get a paginated list of groups within an organization.
-    public func listOrganization(
+    public func listOrganizationGroups(
         organizationId: String,
         before: String? = nil,
         after: String? = nil,
@@ -41,9 +41,9 @@ public struct Groups: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listOrganization``: fetches successive
+    /// Auto-paginating variant of ``listOrganizationGroups``: fetches successive
     /// pages as the sequence is iterated.
-    public func listOrganizationAutoPaging(
+    public func listOrganizationGroupsAutoPaging(
         organizationId: String,
         before: String? = nil,
         limit: Int? = nil,
@@ -51,7 +51,7 @@ public struct Groups: Sendable {
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<Group> {
         AutoPagingSequence { cursor in
-            try await self.listOrganization(
+            try await self.listOrganizationGroups(
                 organizationId: organizationId,
                 before: before,
                 after: cursor,
@@ -65,7 +65,7 @@ public struct Groups: Sendable {
     /// Create a group
     ///
     /// Create a new group within an organization.
-    public func createOrganization(
+    public func createOrganizationGroup(
         organizationId: String,
         name: String,
         description: String? = nil,
@@ -88,7 +88,7 @@ public struct Groups: Sendable {
     /// Get a group
     ///
     /// Retrieve a group by its ID within an organization.
-    public func getOrganization(
+    public func getOrganizationGroup(
         organizationId: String,
         groupId: String,
         requestOptions: RequestOptions? = nil
@@ -108,7 +108,7 @@ public struct Groups: Sendable {
     /// Update a group
     ///
     /// Update an existing group. Only the fields provided in the request body will be updated.
-    public func updateOrganization(
+    public func updateOrganizationGroup(
         organizationId: String,
         groupId: String,
         name: String? = nil,
@@ -133,7 +133,7 @@ public struct Groups: Sendable {
     /// Delete a group
     ///
     /// Delete a group from an organization.
-    public func deleteOrganization(
+    public func deleteOrganizationGroup(
         organizationId: String,
         groupId: String,
         requestOptions: RequestOptions? = nil
@@ -152,7 +152,7 @@ public struct Groups: Sendable {
     /// List Group members
     ///
     /// Get a list of organization memberships in a group.
-    public func listGroupOrganizationMemberships(
+    public func listOrganizationMemberships(
         organizationId: String,
         groupId: String,
         before: String? = nil,
@@ -186,9 +186,9 @@ public struct Groups: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listGroupOrganizationMemberships``: fetches successive
+    /// Auto-paginating variant of ``listOrganizationMemberships``: fetches successive
     /// pages as the sequence is iterated.
-    public func listGroupOrganizationMembershipsAutoPaging(
+    public func listOrganizationMembershipsAutoPaging(
         organizationId: String,
         groupId: String,
         before: String? = nil,
@@ -197,7 +197,7 @@ public struct Groups: Sendable {
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<UserOrganizationMembershipBaseListData> {
         AutoPagingSequence { cursor in
-            try await self.listGroupOrganizationMemberships(
+            try await self.listOrganizationMemberships(
                 organizationId: organizationId,
                 groupId: groupId,
                 before: before,
@@ -212,7 +212,7 @@ public struct Groups: Sendable {
     /// Add a member to a Group
     ///
     /// Add an organization membership to a group.
-    public func createGroupOrganizationMembership(
+    public func createOrganizationMembership(
         organizationId: String,
         groupId: String,
         organizationMembershipId: String,
@@ -235,7 +235,7 @@ public struct Groups: Sendable {
     /// Remove a member from a Group
     ///
     /// Remove an organization membership from a group.
-    public func deleteGroupOrganizationMembership(
+    public func deleteOrganizationMembership(
         organizationId: String,
         groupId: String,
         omId: String,

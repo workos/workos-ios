@@ -18,7 +18,7 @@ public struct Connect: Sendable {
     /// Users are automatically created or updated based on the `id` and `email` provided. If a user with the same `id` exists, their information is updated. Otherwise, a new user is created.
     ///
     /// If you provide a new `id` with an `email` that already belongs to an existing user, the request will fail with an error as email addresses are unique to a user.
-    public func completeOauth2(
+    public func completeOAuth2(
         externalAuthId: String,
         user: UserObject,
         userConsentOptions: [UserConsentOption]? = nil,

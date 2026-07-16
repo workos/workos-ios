@@ -15,12 +15,12 @@ import Testing
         #expect(client.configuration.apiKey == "sk_test_123")
     }
 
-    @Test func listOrganizationSendsExpectedRequest() async throws {
+    @Test func listOrganizationGroupsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"data":[{"object":"group","id":"group_01HXYZ123456789ABCDEFGHIJ","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Engineering","description":"The engineering team","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
-        let result = try await client.groups.listOrganization(
+        let result = try await client.groups.listOrganizationGroups(
             organizationId: "sample-organizationId")
 
         let request = try #require(recorder.lastRequest)
@@ -30,12 +30,12 @@ import Testing
         #expect(result.data.first?.id == "group_01HXYZ123456789ABCDEFGHIJ")
     }
 
-    @Test func createOrganizationSendsExpectedRequest() async throws {
+    @Test func createOrganizationGroupSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"group","id":"group_01HXYZ123456789ABCDEFGHIJ","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Engineering","description":"The engineering team","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
-        let result = try await client.groups.createOrganization(
+        let result = try await client.groups.createOrganizationGroup(
             organizationId: "sample-organizationId", name: "test_name")
 
         let request = try #require(recorder.lastRequest)
@@ -47,12 +47,12 @@ import Testing
         #expect(result.id == "group_01HXYZ123456789ABCDEFGHIJ")
     }
 
-    @Test func getOrganizationSendsExpectedRequest() async throws {
+    @Test func getOrganizationGroupSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"group","id":"group_01HXYZ123456789ABCDEFGHIJ","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Engineering","description":"The engineering team","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
-        let result = try await client.groups.getOrganization(
+        let result = try await client.groups.getOrganizationGroup(
             organizationId: "sample-organizationId", groupId: "sample-groupId")
 
         let request = try #require(recorder.lastRequest)
@@ -61,12 +61,12 @@ import Testing
         #expect(result.id == "group_01HXYZ123456789ABCDEFGHIJ")
     }
 
-    @Test func updateOrganizationSendsExpectedRequest() async throws {
+    @Test func updateOrganizationGroupSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"group","id":"group_01HXYZ123456789ABCDEFGHIJ","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Engineering","description":"The engineering team","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
-        let result = try await client.groups.updateOrganization(
+        let result = try await client.groups.updateOrganizationGroup(
             organizationId: "sample-organizationId", groupId: "sample-groupId")
 
         let request = try #require(recorder.lastRequest)
@@ -75,9 +75,9 @@ import Testing
         #expect(result.id == "group_01HXYZ123456789ABCDEFGHIJ")
     }
 
-    @Test func deleteOrganizationSendsExpectedRequest() async throws {
+    @Test func deleteOrganizationGroupSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(responding: #"{}"#)
-        try await client.groups.deleteOrganization(
+        try await client.groups.deleteOrganizationGroup(
             organizationId: "sample-organizationId", groupId: "sample-groupId")
 
         let request = try #require(recorder.lastRequest)
@@ -85,12 +85,12 @@ import Testing
         #expect(request.url?.path == "/organizations/sample-organizationId/groups/sample-groupId")
     }
 
-    @Test func listGroupOrganizationMembershipsSendsExpectedRequest() async throws {
+    @Test func listOrganizationMembershipsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"data":[{"object":"organization_membership","id":"om_01HXYZ123456789ABCDEFGHIJ","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","status":"active","directory_managed":false,"organization_name":"Acme Corp","custom_attributes":{"department":"Engineering","title":"Developer Experience Engineer","location":"Brooklyn"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","user":{"object":"user","id":"user_01E4ZCR3C56J083X43JQXF3JK5","first_name":"Marcelina","last_name":"Davis","name":"Marcelina Davis","profile_picture_url":"https://workoscdn.com/images/v1/123abc","email":"marcelina.davis@example.com","email_verified":true,"external_id":"f1ffa2b2-c20b-4d39-be5c-212726e11222","metadata":{"timezone":"America/New_York"},"last_sign_in_at":"2025-06-25T19:07:33.155Z","locale":"en-US","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}}],"list_metadata":{"before":null,"after":null}}"#
         )
-        let result = try await client.groups.listGroupOrganizationMemberships(
+        let result = try await client.groups.listOrganizationMemberships(
             organizationId: "sample-organizationId", groupId: "sample-groupId")
 
         let request = try #require(recorder.lastRequest)
@@ -103,12 +103,12 @@ import Testing
         #expect(result.data.first?.id == "om_01HXYZ123456789ABCDEFGHIJ")
     }
 
-    @Test func createGroupOrganizationMembershipSendsExpectedRequest() async throws {
+    @Test func createOrganizationMembershipSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"group","id":"group_01HXYZ123456789ABCDEFGHIJ","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Engineering","description":"The engineering team","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
-        let result = try await client.groups.createGroupOrganizationMembership(
+        let result = try await client.groups.createOrganizationMembership(
             organizationId: "sample-organizationId", groupId: "sample-groupId",
             organizationMembershipId: "test_organization_membership_id")
 
@@ -124,9 +124,9 @@ import Testing
         #expect(result.id == "group_01HXYZ123456789ABCDEFGHIJ")
     }
 
-    @Test func deleteGroupOrganizationMembershipSendsExpectedRequest() async throws {
+    @Test func deleteOrganizationMembershipSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(responding: #"{}"#)
-        try await client.groups.deleteGroupOrganizationMembership(
+        try await client.groups.deleteOrganizationMembership(
             organizationId: "sample-organizationId", groupId: "sample-groupId", omId: "sample-omId")
 
         let request = try #require(recorder.lastRequest)

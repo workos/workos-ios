@@ -118,6 +118,83 @@ public struct SSO: Sendable {
         )
     }
 
+    /// Initiate SSO
+    ///
+    /// Initiates the single sign-on flow.
+    public func getAuthorizationUrl(
+        redirectUri: String,
+        providerScopes: [String]? = nil,
+        providerQueryParams: [String: String]? = nil,
+        domain: String? = nil,
+        provider: SSOProvider? = nil,
+        state: String? = nil,
+        connection: String? = nil,
+        organization: String? = nil,
+        domainHint: String? = nil,
+        loginHint: String? = nil,
+        nonce: String? = nil,
+        prompt: String? = nil
+    ) -> URL {
+        let path = "sso/authorize"
+        var query: [URLQueryItem] = []
+        query.append(URLQueryItem(name: "response_type", value: "code"))
+        if let value = transport.configuration.clientID {
+            query.append(URLQueryItem(name: "client_id", value: value))
+        }
+        if let providerScopes {
+            for value in providerScopes {
+                query.append(URLQueryItem(name: "provider_scopes", value: value))
+            }
+        }
+        if let providerQueryParams {
+            query.append(
+                URLQueryItem(name: "provider_query_params", value: "\(providerQueryParams)"))
+        }
+        if let domain {
+            query.append(URLQueryItem(name: "domain", value: domain))
+        }
+        if let provider {
+            query.append(URLQueryItem(name: "provider", value: provider.rawValue))
+        }
+        query.append(URLQueryItem(name: "redirect_uri", value: redirectUri))
+        if let state {
+            query.append(URLQueryItem(name: "state", value: state))
+        }
+        if let connection {
+            query.append(URLQueryItem(name: "connection", value: connection))
+        }
+        if let organization {
+            query.append(URLQueryItem(name: "organization", value: organization))
+        }
+        if let domainHint {
+            query.append(URLQueryItem(name: "domain_hint", value: domainHint))
+        }
+        if let loginHint {
+            query.append(URLQueryItem(name: "login_hint", value: loginHint))
+        }
+        if let nonce {
+            query.append(URLQueryItem(name: "nonce", value: nonce))
+        }
+        if let prompt {
+            query.append(URLQueryItem(name: "prompt", value: "\(prompt)"))
+        }
+        return transport.buildURL(path: path, query: query)
+    }
+
+    /// Logout Redirect
+    ///
+    /// Logout allows to sign out a user from your application by triggering the identity provider sign out flow. This `GET` endpoint should be a redirection, since the identity provider user will be identified in the browser session.
+    ///
+    /// Before redirecting to this endpoint, you need to generate a short-lived logout token using the [Logout Authorize](https://workos.com/docs/reference/sso/logout/authorize) endpoint.
+    public func getLogoutUrl(
+        token: String
+    ) -> URL {
+        let path = "sso/logout"
+        var query: [URLQueryItem] = []
+        query.append(URLQueryItem(name: "token", value: token))
+        return transport.buildURL(path: path, query: query)
+    }
+
     /// Logout Authorize
     ///
     /// You should call this endpoint from your server to generate a logout token which is required for the [Logout Redirect](https://workos.com/docs/reference/sso/logout) endpoint.

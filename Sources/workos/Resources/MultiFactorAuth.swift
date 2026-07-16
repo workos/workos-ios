@@ -30,7 +30,7 @@ public struct MultiFactorAuth: Sendable {
     /// Enroll Factor
     ///
     /// Enrolls an Authentication Factor to be used as an additional factor of authentication. The returned ID should be used to create an authentication Challenge.
-    public func enroll(
+    public func enrollFactor(
         type: AuthenticationFactorsCreateRequestType,
         phoneNumber: String? = nil,
         totpIssuer: String? = nil,
@@ -58,7 +58,7 @@ public struct MultiFactorAuth: Sendable {
     /// Get Factor
     ///
     /// Gets an Authentication Factor.
-    public func get(
+    public func getFactor(
         id: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> AuthenticationFactor {
@@ -76,7 +76,7 @@ public struct MultiFactorAuth: Sendable {
     /// Delete Factor
     ///
     /// Permanently deletes an Authentication Factor. It cannot be undone.
-    public func delete(
+    public func deleteFactor(
         id: String,
         requestOptions: RequestOptions? = nil
     ) async throws {
@@ -93,7 +93,7 @@ public struct MultiFactorAuth: Sendable {
     /// Challenge Factor
     ///
     /// Creates a Challenge for an Authentication Factor.
-    public func challenge(
+    public func challengeFactor(
         id: String,
         smsTemplate: String? = nil,
         requestOptions: RequestOptions? = nil
@@ -114,7 +114,7 @@ public struct MultiFactorAuth: Sendable {
     /// List authentication factors
     ///
     /// Lists the [authentication factors](https://workos.com/docs/reference/authkit/mfa/authentication-factor) for a user.
-    public func listUser(
+    public func listUserAuthFactors(
         userlandUserId: String,
         before: String? = nil,
         after: String? = nil,
@@ -146,9 +146,9 @@ public struct MultiFactorAuth: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listUser``: fetches successive
+    /// Auto-paginating variant of ``listUserAuthFactors``: fetches successive
     /// pages as the sequence is iterated.
-    public func listUserAutoPaging(
+    public func listUserAuthFactorsAutoPaging(
         userlandUserId: String,
         before: String? = nil,
         limit: Int? = nil,
@@ -156,7 +156,7 @@ public struct MultiFactorAuth: Sendable {
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<AuthenticationFactor> {
         AutoPagingSequence { cursor in
-            try await self.listUser(
+            try await self.listUserAuthFactors(
                 userlandUserId: userlandUserId,
                 before: before,
                 after: cursor,
@@ -170,7 +170,7 @@ public struct MultiFactorAuth: Sendable {
     /// Enroll an authentication factor
     ///
     /// Enrolls a user in a new [authentication factor](https://workos.com/docs/reference/authkit/mfa/authentication-factor).
-    public func createUser(
+    public func createUserAuthFactor(
         userlandUserId: String,
         type: String,
         totpIssuer: String? = nil,

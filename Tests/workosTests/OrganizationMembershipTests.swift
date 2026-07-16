@@ -109,13 +109,12 @@ import Testing
         #expect(result.id == "om_01HXYZ123456789ABCDEFGHIJ")
     }
 
-    @Test func listOrganizationMembershipGroupsSendsExpectedRequest() async throws {
+    @Test func listGroupsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"data":[{"object":"group","id":"group_01HXYZ123456789ABCDEFGHIJ","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Engineering","description":"The engineering team","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
-        let result = try await client.organizationMembership.listOrganizationMembershipGroups(
-            omId: "sample-omId")
+        let result = try await client.organizationMembership.listGroups(omId: "sample-omId")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "GET")

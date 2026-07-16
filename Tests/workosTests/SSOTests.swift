@@ -51,6 +51,27 @@ import Testing
         #expect(request.url?.path == "/connections/sample-id")
     }
 
+    @Test func getAuthorizationUrlBuildsExpectedUrl() throws {
+        let (client, _) = makeTestClient()
+        let url = client.sso.getAuthorizationUrl(redirectUri: "test_redirect_uri")
+
+        let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
+        #expect(components.path == "/sso/authorize")
+        let query = components.queryItems ?? []
+        #expect(query.contains(URLQueryItem(name: "response_type", value: "code")))
+        #expect(query.contains(URLQueryItem(name: "redirect_uri", value: "test_redirect_uri")))
+    }
+
+    @Test func getLogoutUrlBuildsExpectedUrl() throws {
+        let (client, _) = makeTestClient()
+        let url = client.sso.getLogoutUrl(token: "test_token")
+
+        let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
+        #expect(components.path == "/sso/logout")
+        let query = components.queryItems ?? []
+        #expect(query.contains(URLQueryItem(name: "token", value: "test_token")))
+    }
+
     @Test func authorizeLogoutSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
