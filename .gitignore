@@ -1,3 +1,6 @@
+*.DS_Store
 .build/
 .swiftpm/
 DerivedData/
+
+.oagen-ios-smoke.json
