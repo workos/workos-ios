@@ -9,6 +9,10 @@ public struct ClientApi: Sendable {
     /// Generate a Client API token
     ///
     /// Generate a short-lived, session-bound token for the Client GraphQL API, scoped to an organization and user.
+    ///
+    /// - Parameter organizationId: The ID of the organization to scope the Client API token to.
+    /// - Parameter userId: The ID of the user to issue the Client API token for.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createToken(
         organizationId: String,
         userId: String,

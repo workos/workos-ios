@@ -17,7 +17,9 @@ private struct EmptyBody: Codable {}
 
         let request = try #require(recorder.lastRequest)
         #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer sk_test_123")
-        #expect(request.value(forHTTPHeaderField: "User-Agent")?.isEmpty == false)
+        #expect(
+            request.value(forHTTPHeaderField: "User-Agent")
+                == "WorkOS swift/\(WorkOSVersion.current)")
     }
 
     @Test func requestOptionsOverrideHeadersAndTimeout() async throws {

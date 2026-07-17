@@ -9,6 +9,9 @@ public struct Vault: Sendable {
     /// Create a data key
     ///
     /// Generate an isolated encryption key for local encryption operations.
+    ///
+    /// - Parameter context: Map of values used to determine the encryption key.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createDataKey(
         context: [String: String],
         requestOptions: RequestOptions? = nil
@@ -29,6 +32,9 @@ public struct Vault: Sendable {
     /// Decrypt a data key
     ///
     /// Decrypt a previously encrypted data key from WorkOS Vault.
+    ///
+    /// - Parameter keys: Base64-encoded encrypted data key to decrypt.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createDecrypt(
         keys: String,
         requestOptions: RequestOptions? = nil
@@ -49,6 +55,10 @@ public struct Vault: Sendable {
     /// Re-encrypt a data key
     ///
     /// Decrypt an existing data key and re-encrypt it under a new key context.
+    ///
+    /// - Parameter context: Map of values used to determine the new encryption key.
+    /// - Parameter encryptedKeys: Base64-encoded encrypted data key blob to re-encrypt.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createRekey(
         context: [String: String],
         encryptedKeys: String,
@@ -71,6 +81,14 @@ public struct Vault: Sendable {
     /// List objects
     ///
     /// List all encrypted objects with cursor-based pagination.
+    ///
+    /// - Parameter limit: Upper limit on the number of objects to return.
+    /// - Parameter before: Cursor for the previous page of results.
+    /// - Parameter after: Cursor for the next page of results.
+    /// - Parameter order: Sort direction for results.
+    /// - Parameter search: Filter results by name or structured search JSON.
+    /// - Parameter updatedAfter: ISO 8601 timestamp to filter by last modified time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listKv(
         limit: Int? = nil,
         before: String? = nil,
@@ -110,8 +128,15 @@ public struct Vault: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listKv``: fetches successive
+    /// Auto-paginating variant of `listKv`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter limit: Upper limit on the number of objects to return.
+    /// - Parameter before: Cursor for the previous page of results.
+    /// - Parameter order: Sort direction for results.
+    /// - Parameter search: Filter results by name or structured search JSON.
+    /// - Parameter updatedAfter: ISO 8601 timestamp to filter by last modified time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listKvAutoPaging(
         limit: Int? = nil,
         before: String? = nil,
@@ -136,6 +161,11 @@ public struct Vault: Sendable {
     /// Create an object
     ///
     /// Encrypt and store a new key-value object.
+    ///
+    /// - Parameter keyContext: Map of values used to determine the encryption key.
+    /// - Parameter name: Unique name for the object.
+    /// - Parameter value: Plaintext data to encrypt and store.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createKv(
         keyContext: [String: String],
         name: String,
@@ -160,6 +190,9 @@ public struct Vault: Sendable {
     /// Read an object by name
     ///
     /// Fetch and decrypt an object by its unique name.
+    ///
+    /// - Parameter name: Unique name of the object.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getName(
         name: String,
         requestOptions: RequestOptions? = nil
@@ -178,6 +211,9 @@ public struct Vault: Sendable {
     /// Read an object by ID
     ///
     /// Fetch and decrypt an object by its unique identifier.
+    ///
+    /// - Parameter id: Unique identifier of the object.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getKv(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -196,6 +232,11 @@ public struct Vault: Sendable {
     /// Update an object
     ///
     /// Update the value of an existing encrypted object.
+    ///
+    /// - Parameter id: Unique identifier of the object.
+    /// - Parameter value: New plaintext value.
+    /// - Parameter versionCheck: ID of the expected current version for optimistic locking.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateKv(
         id: String,
         value: String,
@@ -219,6 +260,10 @@ public struct Vault: Sendable {
     /// Delete an object
     ///
     /// Delete an encrypted object.
+    ///
+    /// - Parameter id: Unique identifier of the object.
+    /// - Parameter versionCheck: Expected current version for optimistic locking.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteKv(
         id: String,
         versionCheck: String? = nil,
@@ -241,6 +286,9 @@ public struct Vault: Sendable {
     /// Describe an object
     ///
     /// Fetch metadata for an object without decrypting it.
+    ///
+    /// - Parameter id: Unique identifier of the object.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listKvMetadata(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -259,6 +307,9 @@ public struct Vault: Sendable {
     /// List object versions
     ///
     /// Retrieve all versions for a specific object.
+    ///
+    /// - Parameter id: Unique identifier of the object.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listKvVersions(
         id: String,
         requestOptions: RequestOptions? = nil

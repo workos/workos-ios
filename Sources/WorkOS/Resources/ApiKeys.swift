@@ -9,6 +9,13 @@ public struct ApiKeys: Sendable {
     /// List API keys for an organization
     ///
     /// Get a list of all API keys for an organization.
+    ///
+    /// - Parameter organizationId: Unique identifier of the Organization.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listOrganizationApiKeys(
         organizationId: String,
         before: String? = nil,
@@ -41,8 +48,14 @@ public struct ApiKeys: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listOrganizationApiKeys``: fetches successive
+    /// Auto-paginating variant of `listOrganizationApiKeys`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter organizationId: Unique identifier of the Organization.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listOrganizationApiKeysAutoPaging(
         organizationId: String,
         before: String? = nil,
@@ -65,6 +78,12 @@ public struct ApiKeys: Sendable {
     /// Create an API key for an organization
     ///
     /// Create a new API key for an organization.
+    ///
+    /// - Parameter organizationId: Unique identifier of the Organization.
+    /// - Parameter name: The name for the API key.
+    /// - Parameter permissions: The permission slugs to assign to the API key.
+    /// - Parameter expiresAt: The timestamp when the API key should expire. Must be a future timestamp. If omitted, the key does not expire.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createOrganizationApiKey(
         organizationId: String,
         name: String,
@@ -90,6 +109,9 @@ public struct ApiKeys: Sendable {
     /// Validate API key
     ///
     /// Validate an API key value and return the API key object if valid.
+    ///
+    /// - Parameter value: The value for an API key.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createValidation(
         value: String,
         requestOptions: RequestOptions? = nil
@@ -110,6 +132,9 @@ public struct ApiKeys: Sendable {
     /// Delete an API key
     ///
     /// Permanently deletes an API key. This action cannot be undone. Once deleted, any requests using this API key will fail authentication.
+    ///
+    /// - Parameter id: The unique ID of the API key.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func delete(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -127,6 +152,10 @@ public struct ApiKeys: Sendable {
     /// Expire an API key
     ///
     /// Expire an API key immediately, schedule a future expiration, or clear a scheduled future expiration.
+    ///
+    /// - Parameter id: The unique ID of the API key.
+    /// - Parameter expiresAt: When the API key should expire. If omitted or in the past, the key expires immediately. Use null to clear a scheduled future expiration.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createExpire(
         id: String,
         expiresAt: Date? = nil,

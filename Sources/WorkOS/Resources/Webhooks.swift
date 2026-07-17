@@ -9,6 +9,12 @@ public struct Webhooks: Sendable {
     /// List Webhook Endpoints
     ///
     /// Get a list of all of your existing webhook endpoints.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listEndpoints(
         before: String? = nil,
         after: String? = nil,
@@ -40,8 +46,13 @@ public struct Webhooks: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listEndpoints``: fetches successive
+    /// Auto-paginating variant of `listEndpoints`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listEndpointsAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -62,6 +73,10 @@ public struct Webhooks: Sendable {
     /// Create a Webhook Endpoint
     ///
     /// Create a new webhook endpoint to receive event notifications.
+    ///
+    /// - Parameter endpointUrl: The HTTPS URL where webhooks will be sent.
+    /// - Parameter events: The events that the Webhook Endpoint is subscribed to.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createEndpoint(
         endpointUrl: String,
         events: [CreateWebhookEndpointEvents],
@@ -84,6 +99,12 @@ public struct Webhooks: Sendable {
     /// Update a Webhook Endpoint
     ///
     /// Update the properties of an existing webhook endpoint.
+    ///
+    /// - Parameter id: Unique identifier of the Webhook Endpoint.
+    /// - Parameter endpointUrl: The HTTPS URL where webhooks will be sent.
+    /// - Parameter status: Whether the Webhook Endpoint is enabled or disabled.
+    /// - Parameter events: The events that the Webhook Endpoint is subscribed to.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateEndpoint(
         id: String,
         endpointUrl: String? = nil,
@@ -109,6 +130,9 @@ public struct Webhooks: Sendable {
     /// Delete a Webhook Endpoint
     ///
     /// Delete an existing webhook endpoint.
+    ///
+    /// - Parameter id: Unique identifier of the Webhook Endpoint.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteEndpoint(
         id: String,
         requestOptions: RequestOptions? = nil

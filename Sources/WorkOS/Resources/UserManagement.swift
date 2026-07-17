@@ -9,6 +9,9 @@ public struct UserManagement: Sendable {
     /// Get JWKS
     ///
     /// Returns the JSON Web Key Set (JWKS) containing the public keys used for verifying access tokens.
+    ///
+    /// - Parameter clientId: Identifies the application making the request to the WorkOS server. You can obtain your client ID from the [API Keys](https://dashboard.workos.com/api-keys) page in the dashboard.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getJwks(
         clientId: String,
         requestOptions: RequestOptions? = nil
@@ -24,7 +27,17 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Authenticate with password.
+    /// Authenticate with password
+    ///
+    /// - Parameter email: The user's email address.
+    /// - Parameter password: The user's password.
+    /// - Parameter invitationToken: An invitation token to accept during authentication.
+    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter deviceId: A unique identifier for the device.
+    /// - Parameter userAgent: The user agent string from the user's browser.
+    /// - Parameter signalsId: An optional Radar signals ID to correlate client-side signals with this authentication attempt.
+    /// - Parameter radarAuthAttemptId: The ID of an existing Radar authentication attempt to associate with this authentication.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithPassword(
         email: String,
         password: String,
@@ -59,7 +72,16 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Authenticate with code.
+    /// Authenticate with code
+    ///
+    /// - Parameter code: The authorization code received from the redirect.
+    /// - Parameter codeVerifier: The PKCE code verifier used to derive the code challenge passed to the authorization URL.
+    /// - Parameter invitationToken: An invitation token to accept during authentication.
+    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter deviceId: A unique identifier for the device.
+    /// - Parameter userAgent: The user agent string from the user's browser.
+    /// - Parameter signalsId: An optional Radar signals ID to correlate client-side signals with this authentication attempt.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithCode(
         code: String,
         codeVerifier: String? = nil,
@@ -92,7 +114,14 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Authenticate with refresh token.
+    /// Authenticate with refresh token
+    ///
+    /// - Parameter refreshToken: The refresh token to exchange for new tokens.
+    /// - Parameter organizationId: The ID of the organization to scope the session to.
+    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter deviceId: A unique identifier for the device.
+    /// - Parameter userAgent: The user agent string from the user's browser.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithRefreshToken(
         refreshToken: String,
         organizationId: String? = nil,
@@ -121,7 +150,16 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Authenticate with magic auth.
+    /// Authenticate with magic auth
+    ///
+    /// - Parameter code: The code value.
+    /// - Parameter email: The email value.
+    /// - Parameter invitationToken: The invitation token value.
+    /// - Parameter ipAddress: The ip address value.
+    /// - Parameter deviceId: The device id value.
+    /// - Parameter userAgent: The user agent value.
+    /// - Parameter radarAuthAttemptId: The radar auth attempt id value.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithMagicAuth(
         code: String,
         email: String,
@@ -154,7 +192,14 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Authenticate with email verification.
+    /// Authenticate with email verification
+    ///
+    /// - Parameter code: The code value.
+    /// - Parameter pendingAuthenticationToken: The pending authentication token value.
+    /// - Parameter ipAddress: The ip address value.
+    /// - Parameter deviceId: The device id value.
+    /// - Parameter userAgent: The user agent value.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithEmailVerification(
         code: String,
         pendingAuthenticationToken: String,
@@ -183,7 +228,15 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Authenticate with totp.
+    /// Authenticate with totp
+    ///
+    /// - Parameter code: The code value.
+    /// - Parameter pendingAuthenticationToken: The pending authentication token value.
+    /// - Parameter authenticationChallengeId: The authentication challenge id value.
+    /// - Parameter ipAddress: The ip address value.
+    /// - Parameter deviceId: The device id value.
+    /// - Parameter userAgent: The user agent value.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithTotp(
         code: String,
         pendingAuthenticationToken: String,
@@ -214,7 +267,14 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Authenticate with organization selection.
+    /// Authenticate with organization selection
+    ///
+    /// - Parameter pendingAuthenticationToken: The pending authentication token value.
+    /// - Parameter organizationId: The organization id value.
+    /// - Parameter ipAddress: The ip address value.
+    /// - Parameter deviceId: The device id value.
+    /// - Parameter userAgent: The user agent value.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithOrganizationSelection(
         pendingAuthenticationToken: String,
         organizationId: String,
@@ -243,7 +303,13 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Authenticate with device code.
+    /// Authenticate with device code
+    ///
+    /// - Parameter deviceCode: The device code value.
+    /// - Parameter ipAddress: The ip address value.
+    /// - Parameter deviceId: The device id value.
+    /// - Parameter userAgent: The user agent value.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithDeviceCode(
         deviceCode: String,
         ipAddress: String? = nil,
@@ -269,7 +335,15 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Authenticate with radar email challenge.
+    /// Authenticate with radar email challenge
+    ///
+    /// - Parameter code: The code value.
+    /// - Parameter radarChallengeId: The radar challenge id value.
+    /// - Parameter pendingAuthenticationToken: The pending authentication token value.
+    /// - Parameter ipAddress: The ip address value.
+    /// - Parameter deviceId: The device id value.
+    /// - Parameter userAgent: The user agent value.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithRadarEmailChallenge(
         code: String,
         radarChallengeId: String,
@@ -300,7 +374,16 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Authenticate with radar sms challenge.
+    /// Authenticate with radar sms challenge
+    ///
+    /// - Parameter code: The code value.
+    /// - Parameter verificationId: The verification id value.
+    /// - Parameter phoneNumber: The phone number value.
+    /// - Parameter pendingAuthenticationToken: The pending authentication token value.
+    /// - Parameter ipAddress: The ip address value.
+    /// - Parameter deviceId: The device id value.
+    /// - Parameter userAgent: The user agent value.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithRadarSmsChallenge(
         code: String,
         verificationId: String,
@@ -336,6 +419,22 @@ public struct UserManagement: Sendable {
     /// Get an authorization URL
     ///
     /// Generates an OAuth 2.0 authorization URL to authenticate a user with AuthKit or SSO.
+    ///
+    /// - Parameter redirectUri: The callback URI where the authorization code will be sent after authentication.
+    /// - Parameter codeChallengeMethod: The only valid PKCE code challenge method is `"S256"`. Required when specifying a `code_challenge`.
+    /// - Parameter codeChallenge: Code challenge derived from the code verifier used for the PKCE flow.
+    /// - Parameter domainHint: A domain hint for SSO connection lookup.
+    /// - Parameter connectionId: The ID of an SSO connection to use for authentication.
+    /// - Parameter providerQueryParams: Key/value pairs of query parameters to pass to the OAuth provider.
+    /// - Parameter providerScopes: Additional OAuth scopes to request from the identity provider.
+    /// - Parameter invitationToken: A token representing a user invitation to redeem during authentication.
+    /// - Parameter maxAge: Maximum allowable elapsed time, in seconds, since the user last actively authenticated. If the last authentication is older than this value, the user is prompted to re-authenticate; a value of `0` forces re-authentication. Only supported when the provider is `authkit`.
+    /// - Parameter screenHint: Used to specify which screen to display when the provider is `authkit`.
+    /// - Parameter loginHint: A hint to the authorization server about the login identifier the user might use.
+    /// - Parameter provider: The OAuth provider to authenticate with (e.g., GoogleOAuth, MicrosoftOAuth, GitHubOAuth).
+    /// - Parameter prompt: Controls the authentication flow behavior for the user.
+    /// - Parameter state: An opaque value used to maintain state between the request and the callback.
+    /// - Parameter organizationId: The ID of the organization to authenticate the user against.
     public func getAuthorizationUrl(
         redirectUri: String,
         codeChallengeMethod: String? = nil,
@@ -412,6 +511,9 @@ public struct UserManagement: Sendable {
     /// Get device authorization URL
     ///
     /// Initiates the CLI Auth flow by requesting a device code and verification URLs. This endpoint implements the OAuth 2.0 Device Authorization Flow ([RFC 8628](https://datatracker.ietf.org/doc/html/rfc8628)) and is designed for command-line applications or other devices with limited input capabilities.
+    ///
+    /// - Parameter clientId: The WorkOS client ID for your application.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createDevice(
         clientId: String,
         requestOptions: RequestOptions? = nil
@@ -432,6 +534,13 @@ public struct UserManagement: Sendable {
     /// Send a Radar SMS challenge
     ///
     /// Sends a one-time verification code over SMS to a user as part of a Radar challenge. Use the returned `verification_id` to authenticate the user with the `urn:workos:oauth:grant-type:radar-sms-challenge:code` grant type.
+    ///
+    /// - Parameter userId: The ID of the user to send the SMS challenge to.
+    /// - Parameter pendingAuthenticationToken: The pending authentication token from a previous authentication attempt that triggered the Radar challenge.
+    /// - Parameter phoneNumber: The phone number to send the SMS verification code to.
+    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter userAgent: The user agent string from the user's request.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createRadarChallenge(
         userId: String,
         pendingAuthenticationToken: String,
@@ -460,6 +569,9 @@ public struct UserManagement: Sendable {
     /// Get Radar Challenge details
     ///
     /// Get the details of an existing Radar Challenge, including the OTP code.
+    ///
+    /// - Parameter id: The unique ID of the Radar Challenge.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getRadarChallenge(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -478,6 +590,9 @@ public struct UserManagement: Sendable {
     /// Logout
     ///
     /// Logout a user from the current [session](https://workos.com/docs/reference/authkit/session).
+    ///
+    /// - Parameter sessionId: The ID of the session. This can be extracted from the `sid` claim of the access token.
+    /// - Parameter returnTo: The URL to redirect the user to after logout.
     public func getLogoutUrl(
         sessionId: String,
         returnTo: String? = nil
@@ -494,6 +609,9 @@ public struct UserManagement: Sendable {
     /// Revoke Session
     ///
     /// Revoke a [user session](https://workos.com/docs/reference/authkit/session).
+    ///
+    /// - Parameter sessionId: The ID of the session to revoke. This can be extracted from the `sid` claim of the access token.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func revokeSession(
         sessionId: String,
         requestOptions: RequestOptions? = nil
@@ -513,6 +631,12 @@ public struct UserManagement: Sendable {
     /// List CORS origins
     ///
     /// Lists the CORS origins for the current environment.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listCorsOrigins(
         before: String? = nil,
         after: String? = nil,
@@ -544,8 +668,13 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listCorsOrigins``: fetches successive
+    /// Auto-paginating variant of `listCorsOrigins`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listCorsOriginsAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -566,6 +695,9 @@ public struct UserManagement: Sendable {
     /// Create a CORS origin
     ///
     /// Creates a new CORS origin for the current environment. CORS origins allow browser-based applications to make requests to the WorkOS API.
+    ///
+    /// - Parameter origin: The origin URL to allow for CORS requests.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createCorsOrigin(
         origin: String,
         requestOptions: RequestOptions? = nil
@@ -586,6 +718,9 @@ public struct UserManagement: Sendable {
     /// Get an email verification code
     ///
     /// Get the details of an existing email verification code that can be used to send an email to a user for verification.
+    ///
+    /// - Parameter id: The ID of the email verification code.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getEmailVerification(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -604,6 +739,9 @@ public struct UserManagement: Sendable {
     /// Create a password reset token
     ///
     /// Creates a one-time token that can be used to reset a user's password.
+    ///
+    /// - Parameter email: The email address of the user requesting a password reset.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func resetPassword(
         email: String,
         requestOptions: RequestOptions? = nil
@@ -624,6 +762,10 @@ public struct UserManagement: Sendable {
     /// Reset the password
     ///
     /// Sets a new password using the `token` query parameter from the link that the user received. Successfully resetting the password will verify a user's email, if it hasn't been verified yet.
+    ///
+    /// - Parameter token: The password reset token.
+    /// - Parameter newPassword: The new password to set for the user.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func confirmPasswordReset(
         token: String,
         newPassword: String,
@@ -646,6 +788,9 @@ public struct UserManagement: Sendable {
     /// Get a password reset token
     ///
     /// Get the details of an existing password reset token that can be used to reset a user's password.
+    ///
+    /// - Parameter id: The ID of the password reset token.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getPasswordReset(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -665,7 +810,14 @@ public struct UserManagement: Sendable {
     ///
     /// Get a list of all of your existing users matching the criteria specified.
     ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
     /// - Parameter organization: Deprecated. Filter users by the organization they are a member of. Deprecated in favor of `organization_id`.
+    /// - Parameter organizationId: Filter users by the organization they are a member of.
+    /// - Parameter email: Filter users by their email address.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func list(
         before: String? = nil,
         after: String? = nil,
@@ -709,8 +861,16 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``list``: fetches successive
+    /// Auto-paginating variant of `list`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter organization: Deprecated. Filter users by the organization they are a member of. Deprecated in favor of `organization_id`.
+    /// - Parameter organizationId: Filter users by the organization they are a member of.
+    /// - Parameter email: Filter users by their email address.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -737,6 +897,21 @@ public struct UserManagement: Sendable {
     /// Create a user
     ///
     /// Create a new user in the current environment.
+    ///
+    /// - Parameter email: The email address of the user.
+    /// - Parameter firstName: The first name of the user.
+    /// - Parameter lastName: The last name of the user.
+    /// - Parameter name: The user's full name.
+    /// - Parameter emailVerified: Whether the user's email has been verified.
+    /// - Parameter metadata: Object containing metadata key/value pairs associated with the user.
+    /// - Parameter externalId: The external ID of the user.
+    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter userAgent: The user agent string from the user's request.
+    /// - Parameter signalsId: An optional Radar signals ID to correlate client-side signals with this request.
+    /// - Parameter password: The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`.
+    /// - Parameter passwordHash: The hashed password to set for the user. Required with `password_hash_type`. Mutually exclusive with `password`.
+    /// - Parameter passwordHashType: The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func create(
         email: String,
         firstName: String? = nil,
@@ -781,6 +956,9 @@ public struct UserManagement: Sendable {
     /// Get a user by external ID
     ///
     /// Get the details of an existing user by an [external identifier](https://workos.com/docs/authkit/metadata/external-identifiers).
+    ///
+    /// - Parameter externalId: The external ID of the user.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getByExternalId(
         externalId: String,
         requestOptions: RequestOptions? = nil
@@ -799,6 +977,9 @@ public struct UserManagement: Sendable {
     /// Get a user
     ///
     /// Get the details of an existing user.
+    ///
+    /// - Parameter id: The unique ID of the user.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func get(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -817,6 +998,20 @@ public struct UserManagement: Sendable {
     /// Update a user
     ///
     /// Updates properties of a user. The omitted properties will be left unchanged.
+    ///
+    /// - Parameter id: The unique ID of the user.
+    /// - Parameter email: The email address of the user.
+    /// - Parameter firstName: The first name of the user.
+    /// - Parameter lastName: The last name of the user.
+    /// - Parameter name: The user's full name.
+    /// - Parameter emailVerified: Whether the user's email has been verified.
+    /// - Parameter metadata: Object containing metadata key/value pairs associated with the user.
+    /// - Parameter externalId: The external ID of the user.
+    /// - Parameter locale: The user's preferred locale.
+    /// - Parameter password: The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`.
+    /// - Parameter passwordHash: The hashed password to set for the user. Required with `password_hash_type`. Mutually exclusive with `password`.
+    /// - Parameter passwordHashType: The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func update(
         id: String,
         email: String? = nil,
@@ -858,6 +1053,9 @@ public struct UserManagement: Sendable {
     /// Delete a user
     ///
     /// Permanently deletes a user in the current environment. It cannot be undone.
+    ///
+    /// - Parameter id: The unique ID of the user.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func delete(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -875,6 +1073,10 @@ public struct UserManagement: Sendable {
     /// Confirm email change
     ///
     /// Confirms an email change using the one-time code received by the user.
+    ///
+    /// - Parameter id: The unique ID of the user.
+    /// - Parameter code: The one-time code used to confirm the email change.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func confirmEmailChange(
         id: String,
         code: String,
@@ -896,6 +1098,10 @@ public struct UserManagement: Sendable {
     /// Send email change code
     ///
     /// Sends an email that contains a one-time code used to change a user's email address.
+    ///
+    /// - Parameter id: The unique ID of the user.
+    /// - Parameter newEmail: The new email address to change to.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func sendEmailChange(
         id: String,
         newEmail: String,
@@ -917,6 +1123,10 @@ public struct UserManagement: Sendable {
     /// Verify email
     ///
     /// Verifies an email address using the one-time code received by the user.
+    ///
+    /// - Parameter id: The ID of the user.
+    /// - Parameter code: The one-time email verification code.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func verifyEmail(
         id: String,
         code: String,
@@ -938,6 +1148,9 @@ public struct UserManagement: Sendable {
     /// Send verification email
     ///
     /// Sends an email that contains a one-time code used to verify a user's email address.
+    ///
+    /// - Parameter id: The ID of the user.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func sendVerificationEmail(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -956,6 +1169,9 @@ public struct UserManagement: Sendable {
     /// Get user identities
     ///
     /// Get a list of identities associated with the user. A user can have multiple associated identities after going through [identity linking](https://workos.com/docs/authkit/identity-linking). Currently only OAuth identities are supported. More provider types may be added in the future.
+    ///
+    /// - Parameter id: The unique ID of the user.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getIdentities(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -974,6 +1190,13 @@ public struct UserManagement: Sendable {
     /// List sessions
     ///
     /// Get a list of all active sessions for a specific user.
+    ///
+    /// - Parameter id: The ID of the user.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listSessions(
         id: String,
         before: String? = nil,
@@ -1006,8 +1229,14 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listSessions``: fetches successive
+    /// Auto-paginating variant of `listSessions`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter id: The ID of the user.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listSessionsAutoPaging(
         id: String,
         before: String? = nil,
@@ -1030,6 +1259,14 @@ public struct UserManagement: Sendable {
     /// List invitations
     ///
     /// Get a list of all of invitations matching the criteria specified.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter organizationId: The ID of the [organization](https://workos.com/docs/reference/organization) that the recipient will join.
+    /// - Parameter email: The email address of the recipient.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listInvitations(
         before: String? = nil,
         after: String? = nil,
@@ -1069,8 +1306,15 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listInvitations``: fetches successive
+    /// Auto-paginating variant of `listInvitations`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter organizationId: The ID of the [organization](https://workos.com/docs/reference/organization) that the recipient will join.
+    /// - Parameter email: The email address of the recipient.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listInvitationsAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -1095,6 +1339,14 @@ public struct UserManagement: Sendable {
     /// Send an invitation
     ///
     /// Sends an invitation email to the recipient.
+    ///
+    /// - Parameter email: The email address of the recipient.
+    /// - Parameter organizationId: The ID of the [organization](https://workos.com/docs/reference/organization) that the recipient will join.
+    /// - Parameter roleSlug: The [role](https://workos.com/docs/authkit/roles) that the recipient will receive when they join the organization in the invitation.
+    /// - Parameter expiresInDays: How many days the invitations will be valid for. Must be between 1 and 30 days. Defaults to 7 days if not specified.
+    /// - Parameter inviterUserId: The ID of the [user](https://workos.com/docs/reference/authkit/user) who invites the recipient. The invitation email will mention the name of this user.
+    /// - Parameter locale: The locale to use when rendering the invitation email. See [supported locales](https://workos.com/docs/authkit/hosted-ui/localization).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func sendInvitation(
         email: String,
         organizationId: String? = nil,
@@ -1125,6 +1377,9 @@ public struct UserManagement: Sendable {
     /// Find an invitation by token
     ///
     /// Retrieve an existing invitation using the token.
+    ///
+    /// - Parameter token: The token used to accept the invitation.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func findInvitationByToken(
         token: String,
         requestOptions: RequestOptions? = nil
@@ -1143,6 +1398,9 @@ public struct UserManagement: Sendable {
     /// Get an invitation
     ///
     /// Get the details of an existing invitation.
+    ///
+    /// - Parameter id: The unique ID of the invitation.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getInvitation(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -1161,6 +1419,9 @@ public struct UserManagement: Sendable {
     /// Accept an invitation
     ///
     /// Accepts an invitation and, if linked to an organization, activates the user's membership in that organization.
+    ///
+    /// - Parameter id: The unique ID of the invitation.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func acceptInvitation(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -1179,6 +1440,10 @@ public struct UserManagement: Sendable {
     /// Resend an invitation
     ///
     /// Resends an invitation email to the recipient. The invitation must be in a pending state.
+    ///
+    /// - Parameter id: The unique ID of the invitation.
+    /// - Parameter locale: The locale to use when rendering the invitation email. See [supported locales](https://workos.com/docs/authkit/hosted-ui/localization).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func resendInvitation(
         id: String,
         locale: ResendUserInviteOptionsLocale? = nil,
@@ -1200,6 +1465,9 @@ public struct UserManagement: Sendable {
     /// Revoke an invitation
     ///
     /// Revokes an existing invitation.
+    ///
+    /// - Parameter id: The unique ID of the invitation.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func revokeInvitation(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -1218,6 +1486,8 @@ public struct UserManagement: Sendable {
     /// Get JWT template
     ///
     /// Get the JWT template for the current environment.
+    ///
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listJWTTemplate(
         requestOptions: RequestOptions? = nil
     ) async throws -> JWTTemplateResponse {
@@ -1235,6 +1505,9 @@ public struct UserManagement: Sendable {
     /// Update JWT template
     ///
     /// Update the JWT template for the current environment.
+    ///
+    /// - Parameter content: The JWT template content as a Liquid template string.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateJWTTemplate(
         content: String,
         requestOptions: RequestOptions? = nil
@@ -1255,6 +1528,14 @@ public struct UserManagement: Sendable {
     /// Create a Magic Auth code
     ///
     /// Creates a one-time authentication code that can be sent to the user's email address. The code expires in 10 minutes. To verify the code, [authenticate the user with Magic Auth](https://workos.com/docs/reference/authkit/authentication/magic-auth).
+    ///
+    /// - Parameter email: The email address to send the magic code to.
+    /// - Parameter invitationToken: The invitation token to associate with this magic code.
+    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter userAgent: The user agent string from the user's request.
+    /// - Parameter radarAuthAttemptId: The ID of an existing Radar authentication attempt to associate with this request.
+    /// - Parameter signalsId: An optional Radar signals ID to correlate client-side signals with this request.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createMagicAuth(
         email: String,
         invitationToken: String? = nil,
@@ -1285,6 +1566,9 @@ public struct UserManagement: Sendable {
     /// Get Magic Auth code details
     ///
     /// Get the details of an existing [Magic Auth](https://workos.com/docs/reference/authkit/magic-auth) code that can be used to send an email to a user for authentication.
+    ///
+    /// - Parameter id: The unique ID of the Magic Auth code.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getMagicAuth(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -1303,6 +1587,12 @@ public struct UserManagement: Sendable {
     /// List redirect URIs
     ///
     /// Lists the redirect URIs for an environment.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listRedirectUris(
         before: String? = nil,
         after: String? = nil,
@@ -1334,8 +1624,13 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listRedirectUris``: fetches successive
+    /// Auto-paginating variant of `listRedirectUris`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listRedirectUrisAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -1356,6 +1651,9 @@ public struct UserManagement: Sendable {
     /// Create a redirect URI
     ///
     /// Creates a new redirect URI for an application.
+    ///
+    /// - Parameter uri: The redirect URI to create.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createRedirectUri(
         uri: String,
         requestOptions: RequestOptions? = nil
@@ -1373,9 +1671,36 @@ public struct UserManagement: Sendable {
         )
     }
 
+    /// Delete a redirect URI
+    ///
+    /// Deletes a redirect URI from an application.
+    ///
+    /// - Parameter id: The ID of the redirect URI to delete.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func deleteRedirectUris(
+        id: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path = "user_management/redirect_uris/\(PathEncoding.segment(id))"
+        try await transport.requestVoid(
+            method: "DELETE",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions
+        )
+    }
+
     /// List authorized applications
     ///
     /// Get a list of all Connect applications that the user has authorized.
+    ///
+    /// - Parameter userId: The ID of the user.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listAuthorizedApplications(
         userId: String,
         before: String? = nil,
@@ -1408,8 +1733,14 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listAuthorizedApplications``: fetches successive
+    /// Auto-paginating variant of `listAuthorizedApplications`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter userId: The ID of the user.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listAuthorizedApplicationsAutoPaging(
         userId: String,
         before: String? = nil,
@@ -1432,6 +1763,10 @@ public struct UserManagement: Sendable {
     /// Delete an authorized application
     ///
     /// Delete an existing Authorized Connect Application.
+    ///
+    /// - Parameter userId: The ID of the user.
+    /// - Parameter applicationId: The ID or client ID of the application.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteAuthorizedApplication(
         userId: String,
         applicationId: String,
@@ -1451,6 +1786,14 @@ public struct UserManagement: Sendable {
     /// List API keys for a user
     ///
     /// Get a list of API keys owned by a specific user.
+    ///
+    /// - Parameter userId: Unique identifier of the user.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter organizationId: The ID of the organization to filter user API keys by. When provided, only API keys created against that organization membership are returned.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listApiKeys(
         userId: String,
         before: String? = nil,
@@ -1487,8 +1830,15 @@ public struct UserManagement: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listApiKeys``: fetches successive
+    /// Auto-paginating variant of `listApiKeys`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter userId: Unique identifier of the user.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter organizationId: The ID of the organization to filter user API keys by. When provided, only API keys created against that organization membership are returned.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listApiKeysAutoPaging(
         userId: String,
         before: String? = nil,
@@ -1513,6 +1863,13 @@ public struct UserManagement: Sendable {
     /// Create an API key for a user
     ///
     /// Create a new API key owned by a user. The user must have an active membership in the specified organization.
+    ///
+    /// - Parameter userId: Unique identifier of the user.
+    /// - Parameter name: A descriptive name for the API key.
+    /// - Parameter organizationId: The ID of the organization the user API key is associated with. The user must have an active membership in this organization.
+    /// - Parameter permissions: The permission slugs to assign to the API key. Each permission must be enabled for user API keys.
+    /// - Parameter expiresAt: The timestamp when the API key should expire. Must be a future timestamp. If omitted, the key does not expire.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createApiKey(
         userId: String,
         name: String,

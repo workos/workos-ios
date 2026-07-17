@@ -2,5 +2,6 @@
 .build/
 .swiftpm/
 DerivedData/
+docs/_site/
 
 .oagen-ios-smoke.json

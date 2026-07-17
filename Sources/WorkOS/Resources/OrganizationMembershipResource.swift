@@ -9,6 +9,15 @@ public struct OrganizationMembershipResource: Sendable {
     /// List organization memberships
     ///
     /// Get a list of all organization memberships matching the criteria specified. At least one of `user_id` or `organization_id` must be provided. By default only active memberships are returned. Use the `statuses` parameter to filter by other statuses.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter organizationId: The ID of the [organization](https://workos.com/docs/reference/organization) which the user belongs to.
+    /// - Parameter statuses: Filter by the status of the organization membership. Array including any of `active`, `inactive`, or `pending`.
+    /// - Parameter userId: The ID of the [user](https://workos.com/docs/reference/authkit/user).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func list(
         before: String? = nil,
         after: String? = nil,
@@ -54,8 +63,16 @@ public struct OrganizationMembershipResource: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``list``: fetches successive
+    /// Auto-paginating variant of `list`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter organizationId: The ID of the [organization](https://workos.com/docs/reference/organization) which the user belongs to.
+    /// - Parameter statuses: Filter by the status of the organization membership. Array including any of `active`, `inactive`, or `pending`.
+    /// - Parameter userId: The ID of the [user](https://workos.com/docs/reference/authkit/user).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -84,6 +101,12 @@ public struct OrganizationMembershipResource: Sendable {
     /// Creates a new `active` organization membership for the given organization and user.
     ///
     /// Calling this API with an organization and user that match an `inactive` organization membership will activate the membership with the specified role(s).
+    ///
+    /// - Parameter userId: The ID of the [user](https://workos.com/docs/reference/authkit/user).
+    /// - Parameter organizationId: The ID of the [organization](https://workos.com/docs/reference/organization) which the user belongs to.
+    /// - Parameter roleSlug: A single role identifier. Defaults to `member` or the explicit default role. Mutually exclusive with `role_slugs`.
+    /// - Parameter roleSlugs: An array of role identifiers. Limited to one role when Multiple Roles is disabled. Mutually exclusive with `role_slug`.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func create(
         userId: String,
         organizationId: String,
@@ -110,6 +133,9 @@ public struct OrganizationMembershipResource: Sendable {
     /// Get an organization membership
     ///
     /// Get the details of an existing organization membership.
+    ///
+    /// - Parameter id: The unique ID of the organization membership.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func get(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -128,6 +154,11 @@ public struct OrganizationMembershipResource: Sendable {
     /// Update an organization membership
     ///
     /// Update the details of an existing organization membership.
+    ///
+    /// - Parameter id: The unique ID of the organization membership.
+    /// - Parameter roleSlug: A single role identifier. Defaults to `member` or the explicit default role. Mutually exclusive with `role_slugs`.
+    /// - Parameter roleSlugs: An array of role identifiers. Limited to one role when Multiple Roles is disabled. Mutually exclusive with `role_slug`.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func update(
         id: String,
         roleSlug: String? = nil,
@@ -151,6 +182,9 @@ public struct OrganizationMembershipResource: Sendable {
     /// Delete an organization membership
     ///
     /// Permanently deletes an existing organization membership. It cannot be undone.
+    ///
+    /// - Parameter id: The unique ID of the organization membership.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func delete(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -173,6 +207,9 @@ public struct OrganizationMembershipResource: Sendable {
     /// - Deactivating a `pending` membership returns an error. This membership should be [deleted](https://workos.com/docs/reference/authkit/organization-membership/delete) instead.
     ///
     /// See the [membership management documentation](https://workos.com/docs/authkit/users-organizations/organizations/membership-management) for additional details.
+    ///
+    /// - Parameter id: The unique ID of the organization membership.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deactivate(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -196,6 +233,9 @@ public struct OrganizationMembershipResource: Sendable {
     /// - Reactivating a `pending` membership returns an error. The user needs to [accept the invitation](https://workos.com/docs/authkit/invitations) instead.
     ///
     /// See the [membership management documentation](https://workos.com/docs/authkit/users-organizations/organizations/membership-management) for additional details.
+    ///
+    /// - Parameter id: The unique ID of the organization membership.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func reactivate(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -214,6 +254,13 @@ public struct OrganizationMembershipResource: Sendable {
     /// List groups
     ///
     /// Get a list of groups that an organization membership belongs to.
+    ///
+    /// - Parameter omId: Unique identifier of the Organization Membership.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listGroups(
         omId: String,
         before: String? = nil,
@@ -246,8 +293,14 @@ public struct OrganizationMembershipResource: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listGroups``: fetches successive
+    /// Auto-paginating variant of `listGroups`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter omId: Unique identifier of the Organization Membership.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listGroupsAutoPaging(
         omId: String,
         before: String? = nil,

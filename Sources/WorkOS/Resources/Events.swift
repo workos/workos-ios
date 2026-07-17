@@ -9,6 +9,16 @@ public struct Events: Sendable {
     /// List events
     ///
     /// List events for the current environment.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter events: Filter events by one or more event types (e.g. `dsync.user.created`).
+    /// - Parameter rangeStart: ISO-8601 date string to filter events created after this date.
+    /// - Parameter rangeEnd: ISO-8601 date string to filter events created before this date.
+    /// - Parameter organizationId: Filter events by the [Organization](https://workos.com/docs/reference/organization) that the event is associated with.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func list(
         before: String? = nil,
         after: String? = nil,
@@ -58,8 +68,17 @@ public struct Events: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``list``: fetches successive
+    /// Auto-paginating variant of `list`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter events: Filter events by one or more event types (e.g. `dsync.user.created`).
+    /// - Parameter rangeStart: ISO-8601 date string to filter events created after this date.
+    /// - Parameter rangeEnd: ISO-8601 date string to filter events created before this date.
+    /// - Parameter organizationId: Filter events by the [Organization](https://workos.com/docs/reference/organization) that the event is associated with.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listAutoPaging(
         before: String? = nil,
         limit: Int? = nil,

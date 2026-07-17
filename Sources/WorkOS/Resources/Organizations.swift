@@ -9,6 +9,14 @@ public struct Organizations: Sendable {
     /// List Organizations
     ///
     /// Get a list of all of your existing organizations matching the criteria specified.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter domains: The domains of an Organization. Any Organization with a matching domain will be returned.
+    /// - Parameter search: Searchable text for an Organization. Matches against the organization name.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func list(
         before: String? = nil,
         after: String? = nil,
@@ -50,8 +58,15 @@ public struct Organizations: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``list``: fetches successive
+    /// Auto-paginating variant of `list`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter domains: The domains of an Organization. Any Organization with a matching domain will be returned.
+    /// - Parameter search: Searchable text for an Organization. Matches against the organization name.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -76,6 +91,14 @@ public struct Organizations: Sendable {
     /// Create an Organization
     ///
     /// Creates a new organization in the current environment.
+    ///
+    /// - Parameter name: The name of the organization.
+    /// - Parameter allowProfilesOutsideOrganization: Whether the organization allows profiles from outside the organization to sign in.
+    /// - Parameter domains: The domains associated with the organization. Deprecated in favor of `domain_data`.
+    /// - Parameter domainData: The domains associated with the organization, including verification state.
+    /// - Parameter metadata: Object containing [metadata](https://workos.com/docs/authkit/metadata) key/value pairs associated with the Organization.
+    /// - Parameter externalId: An external identifier for the Organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func create(
         name: String,
         allowProfilesOutsideOrganization: Bool? = nil,
@@ -106,6 +129,9 @@ public struct Organizations: Sendable {
     /// Get an Organization by External ID
     ///
     /// Get the details of an existing organization by an [external identifier](https://workos.com/docs/authkit/metadata/external-identifiers).
+    ///
+    /// - Parameter externalId: The external ID of the Organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getByExternalId(
         externalId: String,
         requestOptions: RequestOptions? = nil
@@ -124,6 +150,9 @@ public struct Organizations: Sendable {
     /// Get an Organization
     ///
     /// Get the details of an existing organization.
+    ///
+    /// - Parameter id: Unique identifier of the Organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func get(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -143,7 +172,15 @@ public struct Organizations: Sendable {
     ///
     /// Updates an organization in the current environment.
     ///
+    /// - Parameter id: Unique identifier of the Organization.
+    /// - Parameter name: The name of the organization.
+    /// - Parameter allowProfilesOutsideOrganization: Whether the organization allows profiles from outside the organization to sign in.
     /// - Parameter domains: Deprecated. The domains associated with the organization. Deprecated in favor of `domain_data`.
+    /// - Parameter domainData: The domains associated with the organization, including verification state.
+    /// - Parameter stripeCustomerId: The Stripe customer ID associated with the organization.
+    /// - Parameter metadata: Object containing [metadata](https://workos.com/docs/authkit/metadata) key/value pairs associated with the Organization.
+    /// - Parameter externalId: An external identifier for the Organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func update(
         id: String,
         name: String? = nil,
@@ -177,6 +214,9 @@ public struct Organizations: Sendable {
     /// Delete an Organization
     ///
     /// Permanently deletes an organization in the current environment. It cannot be undone.
+    ///
+    /// - Parameter id: Unique identifier of the Organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func delete(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -194,6 +234,9 @@ public struct Organizations: Sendable {
     /// Get Audit Log Configuration
     ///
     /// Get the unified view of audit log trail and stream configuration for an organization.
+    ///
+    /// - Parameter id: Unique identifier of the Organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getAuditLogConfiguration(
         id: String,
         requestOptions: RequestOptions? = nil

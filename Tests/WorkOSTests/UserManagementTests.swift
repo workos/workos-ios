@@ -521,7 +521,7 @@ import Testing
     @Test func listRedirectUrisSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"data":[{"object":"redirect_uri","id":"ruri_01EHZNVPK3SFK441A1RGBFSHRT","uri":"https://example.com/callback","default":true,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                #"{"data":[{"object":"redirect_uri","id":"redir_01EHZNVPK3SFK441A1RGBFSHRT","uri":"https://example.com/callback","default":true,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
         let result = try await client.userManagement.listRedirectUris()
 
@@ -529,13 +529,13 @@ import Testing
         #expect(request.httpMethod == "GET")
         #expect(request.url?.path == "/user_management/redirect_uris")
         #expect(result.data.count == 1)
-        #expect(result.data.first?.id == "ruri_01EHZNVPK3SFK441A1RGBFSHRT")
+        #expect(result.data.first?.id == "redir_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
     @Test func createRedirectUriSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"redirect_uri","id":"ruri_01EHZNVPK3SFK441A1RGBFSHRT","uri":"https://example.com/callback","default":true,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"redirect_uri","id":"redir_01EHZNVPK3SFK441A1RGBFSHRT","uri":"https://example.com/callback","default":true,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.userManagement.createRedirectUri(uri: "test_uri")
 
@@ -545,7 +545,16 @@ import Testing
         let body = try #require(recorder.lastBody)
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
         #expect(json?["uri"] != nil)
-        #expect(result.id == "ruri_01EHZNVPK3SFK441A1RGBFSHRT")
+        #expect(result.id == "redir_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func deleteRedirectUrisSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.userManagement.deleteRedirectUris(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/user_management/redirect_uris/sample-id")
     }
 
     @Test func getLogoutUrlBuildsExpectedUrl() throws {

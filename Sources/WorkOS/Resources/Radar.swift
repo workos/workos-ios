@@ -9,6 +9,14 @@ public struct Radar: Sendable {
     /// Create an attempt
     ///
     /// Assess a request for risk using the Radar engine and receive a verdict.
+    ///
+    /// - Parameter ipAddress: The IP address of the request to assess.
+    /// - Parameter userAgent: The user agent string of the request to assess.
+    /// - Parameter email: The email address of the user making the request.
+    /// - Parameter authMethod: The authentication method being used.
+    /// - Parameter action: The action being performed.
+    /// - Parameter signalsId: An optional Radar signals ID for the request.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createAttempt(
         ipAddress: String,
         userAgent: String,
@@ -39,6 +47,11 @@ public struct Radar: Sendable {
     /// Update a Radar attempt
     ///
     /// You may optionally inform Radar that an authentication attempt or challenge was successful using this endpoint. Some Radar controls depend on tracking recent successful attempts, such as impossible travel.
+    ///
+    /// - Parameter id: The unique identifier of the Radar attempt to update.
+    /// - Parameter challengeStatus: Set to `"success"` to mark the challenge as completed.
+    /// - Parameter attemptStatus: Set to `"success"` to mark the authentication attempt as successful.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateAttempt(
         id: String,
         challengeStatus: String? = nil,
@@ -61,6 +74,11 @@ public struct Radar: Sendable {
     /// Add an entry to a Radar list
     ///
     /// Add an entry to a Radar list.
+    ///
+    /// - Parameter type: The type of the Radar list (e.g. ip_address, domain, email).
+    /// - Parameter action: The list action indicating whether to add the entry to the allow or block list.
+    /// - Parameter entry: The value to add to the list. Must match the format of the list type (e.g. a valid IP address for `ip_address`, a valid email for `email`).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func addListEntry(
         type: RadarListType,
         action: RadarListAction,
@@ -84,6 +102,11 @@ public struct Radar: Sendable {
     /// Remove an entry from a Radar list
     ///
     /// Remove an entry from a Radar list.
+    ///
+    /// - Parameter type: The type of the Radar list (e.g. ip_address, domain, email).
+    /// - Parameter action: The list action indicating whether to remove the entry from the allow or block list.
+    /// - Parameter entry: The value to remove from the list. Must match an existing entry.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func removeListEntry(
         type: RadarListType,
         action: RadarListAction,

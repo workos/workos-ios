@@ -9,6 +9,12 @@ public struct FeatureFlags: Sendable {
     /// List feature flags
     ///
     /// Get a list of all of your existing feature flags matching the criteria specified.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func list(
         before: String? = nil,
         after: String? = nil,
@@ -40,8 +46,13 @@ public struct FeatureFlags: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``list``: fetches successive
+    /// Auto-paginating variant of `list`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -62,6 +73,9 @@ public struct FeatureFlags: Sendable {
     /// Get a feature flag
     ///
     /// Get the details of an existing feature flag by its slug.
+    ///
+    /// - Parameter slug: A unique key to reference the Feature Flag.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func get(
         slug: String,
         requestOptions: RequestOptions? = nil
@@ -80,6 +94,9 @@ public struct FeatureFlags: Sendable {
     /// Disable a feature flag
     ///
     /// Disables a feature flag in the current environment.
+    ///
+    /// - Parameter slug: A unique key to reference the Feature Flag.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func disable(
         slug: String,
         requestOptions: RequestOptions? = nil
@@ -98,6 +115,9 @@ public struct FeatureFlags: Sendable {
     /// Enable a feature flag
     ///
     /// Enables a feature flag in the current environment.
+    ///
+    /// - Parameter slug: A unique key to reference the Feature Flag.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func enable(
         slug: String,
         requestOptions: RequestOptions? = nil
@@ -116,6 +136,10 @@ public struct FeatureFlags: Sendable {
     /// Add a feature flag target
     ///
     /// Enables a feature flag for a specific target in the current environment. Currently, supported targets include users and organizations.
+    ///
+    /// - Parameter slug: The unique slug identifier of the feature flag.
+    /// - Parameter resourceId: The resource ID in format "user_<id>" or "org_<id>".
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func addFlagTarget(
         slug: String,
         resourceId: String,
@@ -135,6 +159,10 @@ public struct FeatureFlags: Sendable {
     /// Remove a feature flag target
     ///
     /// Removes a target from the feature flag's target list in the current environment. Currently, supported targets include users and organizations.
+    ///
+    /// - Parameter slug: The unique slug identifier of the feature flag.
+    /// - Parameter resourceId: The resource ID in format "user_<id>" or "org_<id>".
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func removeFlagTarget(
         slug: String,
         resourceId: String,
@@ -154,6 +182,13 @@ public struct FeatureFlags: Sendable {
     /// List enabled feature flags for an organization
     ///
     /// Get a list of all enabled feature flags for an organization.
+    ///
+    /// - Parameter organizationId: Unique identifier of the Organization.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listOrganizationFeatureFlags(
         organizationId: String,
         before: String? = nil,
@@ -186,8 +221,14 @@ public struct FeatureFlags: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listOrganizationFeatureFlags``: fetches successive
+    /// Auto-paginating variant of `listOrganizationFeatureFlags`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter organizationId: Unique identifier of the Organization.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listOrganizationFeatureFlagsAutoPaging(
         organizationId: String,
         before: String? = nil,
@@ -210,6 +251,13 @@ public struct FeatureFlags: Sendable {
     /// List enabled feature flags for a user
     ///
     /// Get a list of all enabled feature flags for the provided user. This includes feature flags enabled specifically for the user as well as any organizations that the user is a member of.
+    ///
+    /// - Parameter userId: The ID of the user.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listUserFeatureFlags(
         userId: String,
         before: String? = nil,
@@ -242,8 +290,14 @@ public struct FeatureFlags: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listUserFeatureFlags``: fetches successive
+    /// Auto-paginating variant of `listUserFeatureFlags`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter userId: The ID of the user.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listUserFeatureFlagsAutoPaging(
         userId: String,
         before: String? = nil,

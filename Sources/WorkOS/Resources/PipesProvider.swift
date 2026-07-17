@@ -9,6 +9,9 @@ public struct PipesProvider: Sendable {
     /// List providers for an organization
     ///
     /// Returns a list of all providers available to the specified organization, along with any configured custom OAuth scopes, enabled state, and organization-managed credentials where applicable.
+    ///
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier to list provider configurations for.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listOrganizationDataIntegrationConfigurations(
         organizationId: String,
         requestOptions: RequestOptions? = nil
@@ -28,6 +31,14 @@ public struct PipesProvider: Sendable {
     /// Configure a provider for an organization
     ///
     /// Creates or updates an organization's provider configuration. Use this endpoint to enable or disable a provider, set custom OAuth scopes, or supply organization-managed OAuth credentials.
+    ///
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier to configure the provider for.
+    /// - Parameter slug: The slug identifier of the provider to configure (e.g., `github`, `slack`, `notion`).
+    /// - Parameter enabled: Whether the provider is enabled for the organization.
+    /// - Parameter scopes: The OAuth scopes to request for the organization. Pass `null` to inherit the provider scopes.
+    /// - Parameter clientId: The OAuth client ID of the organization's own application. Must be provided together with `client_secret`, and only for providers whose credentials are supplied by the organization.
+    /// - Parameter clientSecret: The OAuth client secret of the organization's own application. Must be provided together with `client_id`.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateOrganizationDataIntegrationConfiguration(
         organizationId: String,
         slug: String,

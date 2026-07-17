@@ -9,6 +9,13 @@ public struct Groups: Sendable {
     /// List groups
     ///
     /// Get a paginated list of groups within an organization.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listOrganizationGroups(
         organizationId: String,
         before: String? = nil,
@@ -41,8 +48,14 @@ public struct Groups: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listOrganizationGroups``: fetches successive
+    /// Auto-paginating variant of `listOrganizationGroups`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listOrganizationGroupsAutoPaging(
         organizationId: String,
         before: String? = nil,
@@ -65,6 +78,11 @@ public struct Groups: Sendable {
     /// Create a group
     ///
     /// Create a new group within an organization.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter name: The name of the Group.
+    /// - Parameter description: An optional description of the Group.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createOrganizationGroup(
         organizationId: String,
         name: String,
@@ -88,6 +106,10 @@ public struct Groups: Sendable {
     /// Get a group
     ///
     /// Retrieve a group by its ID within an organization.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter groupId: The ID of the group.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getOrganizationGroup(
         organizationId: String,
         groupId: String,
@@ -108,6 +130,12 @@ public struct Groups: Sendable {
     /// Update a group
     ///
     /// Update an existing group. Only the fields provided in the request body will be updated.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter groupId: The ID of the group.
+    /// - Parameter name: The name of the Group.
+    /// - Parameter description: An optional description of the Group.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateOrganizationGroup(
         organizationId: String,
         groupId: String,
@@ -133,6 +161,10 @@ public struct Groups: Sendable {
     /// Delete a group
     ///
     /// Delete a group from an organization.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter groupId: The ID of the group.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteOrganizationGroup(
         organizationId: String,
         groupId: String,
@@ -152,6 +184,14 @@ public struct Groups: Sendable {
     /// List Group members
     ///
     /// Get a list of organization memberships in a group.
+    ///
+    /// - Parameter organizationId: Unique identifier of the Organization.
+    /// - Parameter groupId: Unique identifier of the Group.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listOrganizationMemberships(
         organizationId: String,
         groupId: String,
@@ -186,8 +226,15 @@ public struct Groups: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listOrganizationMemberships``: fetches successive
+    /// Auto-paginating variant of `listOrganizationMemberships`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter organizationId: Unique identifier of the Organization.
+    /// - Parameter groupId: Unique identifier of the Group.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listOrganizationMembershipsAutoPaging(
         organizationId: String,
         groupId: String,
@@ -212,6 +259,11 @@ public struct Groups: Sendable {
     /// Add a member to a Group
     ///
     /// Add an organization membership to a group.
+    ///
+    /// - Parameter organizationId: Unique identifier of the Organization.
+    /// - Parameter groupId: Unique identifier of the Group.
+    /// - Parameter organizationMembershipId: The ID of the Organization Membership to add to the group.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createOrganizationMembership(
         organizationId: String,
         groupId: String,
@@ -235,6 +287,11 @@ public struct Groups: Sendable {
     /// Remove a member from a Group
     ///
     /// Remove an organization membership from a group.
+    ///
+    /// - Parameter organizationId: Unique identifier of the Organization.
+    /// - Parameter groupId: Unique identifier of the Group.
+    /// - Parameter omId: Unique identifier of the Organization Membership.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteOrganizationMembership(
         organizationId: String,
         groupId: String,

@@ -10,7 +10,14 @@ public struct DirectorySync: Sendable {
     ///
     /// Get a list of all of your existing directories matching the criteria specified.
     ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter organizationId: Filter Directories by their associated organization.
+    /// - Parameter search: Searchable text to match against Directory names.
     /// - Parameter domain: Deprecated. Filter Directories by their associated domain.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func list(
         before: String? = nil,
         after: String? = nil,
@@ -54,8 +61,16 @@ public struct DirectorySync: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``list``: fetches successive
+    /// Auto-paginating variant of `list`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter organizationId: Filter Directories by their associated organization.
+    /// - Parameter search: Searchable text to match against Directory names.
+    /// - Parameter domain: Deprecated. Filter Directories by their associated domain.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -82,6 +97,9 @@ public struct DirectorySync: Sendable {
     /// Get a Directory
     ///
     /// Get the details of an existing directory.
+    ///
+    /// - Parameter id: Unique identifier for the Directory.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func get(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -100,6 +118,9 @@ public struct DirectorySync: Sendable {
     /// Delete a Directory
     ///
     /// Permanently deletes an existing directory. It cannot be undone.
+    ///
+    /// - Parameter id: Unique identifier for the Directory.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func delete(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -117,6 +138,14 @@ public struct DirectorySync: Sendable {
     /// List Directory Groups
     ///
     /// Get a list of all of existing directory groups matching the criteria specified.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter directory: Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
+    /// - Parameter user: Unique identifier of the WorkOS Directory User. This value can be obtained from the WorkOS API.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listGroups(
         before: String? = nil,
         after: String? = nil,
@@ -156,8 +185,15 @@ public struct DirectorySync: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listGroups``: fetches successive
+    /// Auto-paginating variant of `listGroups`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter directory: Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
+    /// - Parameter user: Unique identifier of the WorkOS Directory User. This value can be obtained from the WorkOS API.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listGroupsAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -182,6 +218,9 @@ public struct DirectorySync: Sendable {
     /// Get a Directory Group
     ///
     /// Get the details of an existing Directory Group.
+    ///
+    /// - Parameter id: Unique identifier for the Directory Group.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getGroup(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -200,6 +239,16 @@ public struct DirectorySync: Sendable {
     /// List Directory Users
     ///
     /// Get a list of all of existing Directory Users matching the criteria specified.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter directory: Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
+    /// - Parameter group: Unique identifier of the WorkOS Directory Group. This value can be obtained from the WorkOS API.
+    /// - Parameter idpId: Filter Directory Users by the identity provider's unique identifier (`idp_id`). Requires the `directory` parameter to also be provided.
+    /// - Parameter email: Filter Directory Users by their primary email address. Requires the `directory` parameter to also be provided.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listUsers(
         before: String? = nil,
         after: String? = nil,
@@ -247,8 +296,17 @@ public struct DirectorySync: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listUsers``: fetches successive
+    /// Auto-paginating variant of `listUsers`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter directory: Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
+    /// - Parameter group: Unique identifier of the WorkOS Directory Group. This value can be obtained from the WorkOS API.
+    /// - Parameter idpId: Filter Directory Users by the identity provider's unique identifier (`idp_id`). Requires the `directory` parameter to also be provided.
+    /// - Parameter email: Filter Directory Users by their primary email address. Requires the `directory` parameter to also be provided.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listUsersAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -277,6 +335,9 @@ public struct DirectorySync: Sendable {
     /// Get a Directory User
     ///
     /// Get the details of an existing Directory User.
+    ///
+    /// - Parameter id: Unique identifier for the Directory User.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getUser(
         id: String,
         requestOptions: RequestOptions? = nil

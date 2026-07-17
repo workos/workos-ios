@@ -18,6 +18,11 @@ public struct Connect: Sendable {
     /// Users are automatically created or updated based on the `id` and `email` provided. If a user with the same `id` exists, their information is updated. Otherwise, a new user is created.
     ///
     /// If you provide a new `id` with an `email` that already belongs to an existing user, the request will fail with an error as email addresses are unique to a user.
+    ///
+    /// - Parameter externalAuthId: Identifier provided when AuthKit redirected to your login page.
+    /// - Parameter user: The user to create or update in AuthKit.
+    /// - Parameter userConsentOptions: Array of [User Consent Options](https://workos.com/docs/reference/workos-connect/standalone/user-consent-options) to store with the session.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func completeOAuth2(
         externalAuthId: String,
         user: UserObject,
@@ -42,6 +47,14 @@ public struct Connect: Sendable {
     /// List Connect Applications
     ///
     /// List all Connect Applications in the current environment with optional filtering.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter registrationTypes: Filter Connect Applications by registration type. Specify multiple as a comma-separated list (e.g. `registration_types=dynamic,authenticated`). Defaults to `authenticated` only when not specified.
+    /// - Parameter organizationId: Filter Connect Applications by organization ID.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listApplications(
         before: String? = nil,
         after: String? = nil,
@@ -83,8 +96,15 @@ public struct Connect: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listApplications``: fetches successive
+    /// Auto-paginating variant of `listApplications`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter registrationTypes: Filter Connect Applications by registration type. Specify multiple as a comma-separated list (e.g. `registration_types=dynamic,authenticated`). Defaults to `authenticated` only when not specified.
+    /// - Parameter organizationId: Filter Connect Applications by organization ID.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listApplicationsAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -106,7 +126,16 @@ public struct Connect: Sendable {
         }
     }
 
-    /// Create oauth application.
+    /// Create oauth application
+    ///
+    /// - Parameter name: The name of the application.
+    /// - Parameter isFirstParty: Whether this is a first-party application. Third-party applications require an organization_id.
+    /// - Parameter description: A description for the application.
+    /// - Parameter scopes: The OAuth scopes granted to the application.
+    /// - Parameter redirectUris: Redirect URIs for the application.
+    /// - Parameter usesPkce: Whether the application uses PKCE (Proof Key for Code Exchange).
+    /// - Parameter organizationId: The organization ID this application belongs to. Required when is_first_party is false.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createOAuthApplication(
         name: String,
         isFirstParty: Bool,
@@ -137,7 +166,13 @@ public struct Connect: Sendable {
         )
     }
 
-    /// Create m2m application.
+    /// Create m2m application
+    ///
+    /// - Parameter name: The name of the application.
+    /// - Parameter organizationId: The organization ID this application belongs to.
+    /// - Parameter description: A description for the application.
+    /// - Parameter scopes: The OAuth scopes granted to the application.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createM2MApplication(
         name: String,
         organizationId: String,
@@ -165,6 +200,9 @@ public struct Connect: Sendable {
     /// Get a Connect Application
     ///
     /// Retrieve details for a specific Connect Application by ID or client ID.
+    ///
+    /// - Parameter id: The application ID or client ID of the Connect Application.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getApplication(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -183,6 +221,13 @@ public struct Connect: Sendable {
     /// Update a Connect Application
     ///
     /// Update an existing Connect Application. For OAuth applications, you can update redirect URIs. For all applications, you can update the name, description, and scopes.
+    ///
+    /// - Parameter id: The application ID or client ID of the Connect Application.
+    /// - Parameter name: The name of the application.
+    /// - Parameter description: A description for the application.
+    /// - Parameter scopes: The OAuth scopes granted to the application.
+    /// - Parameter redirectUris: Updated redirect URIs for the application. OAuth applications only.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateApplication(
         id: String,
         name: String? = nil,
@@ -210,6 +255,9 @@ public struct Connect: Sendable {
     /// Delete a Connect Application
     ///
     /// Delete an existing Connect Application.
+    ///
+    /// - Parameter id: The application ID or client ID of the Connect Application.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteApplication(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -227,6 +275,9 @@ public struct Connect: Sendable {
     /// List Client Secrets for a Connect Application
     ///
     /// List all client secrets associated with a Connect Application.
+    ///
+    /// - Parameter id: The application ID or client ID of the Connect Application.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listApplicationClientSecrets(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -245,6 +296,10 @@ public struct Connect: Sendable {
     /// Create a new client secret for a Connect Application
     ///
     /// Create new secrets for a Connect Application.
+    ///
+    /// - Parameter id: The application ID or client ID of the Connect Application.
+    /// - Parameter body: The body value.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createApplicationClientSecret(
         id: String,
         body: CreateApplicationSecret,
@@ -264,6 +319,9 @@ public struct Connect: Sendable {
     /// Delete a Client Secret
     ///
     /// Delete (revoke) an existing client secret.
+    ///
+    /// - Parameter id: The unique ID of the client secret.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteClientSecret(
         id: String,
         requestOptions: RequestOptions? = nil

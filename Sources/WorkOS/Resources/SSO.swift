@@ -9,6 +9,16 @@ public struct SSO: Sendable {
     /// List Connections
     ///
     /// Get a list of all of your existing connections matching the criteria specified.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter connectionType: Filter Connections by their type.
+    /// - Parameter domain: Filter Connections by their associated domain.
+    /// - Parameter organizationId: Filter Connections by their associated organization.
+    /// - Parameter search: Searchable text to match against Connection names.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listConnections(
         before: String? = nil,
         after: String? = nil,
@@ -56,8 +66,17 @@ public struct SSO: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listConnections``: fetches successive
+    /// Auto-paginating variant of `listConnections`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter connectionType: Filter Connections by their type.
+    /// - Parameter domain: Filter Connections by their associated domain.
+    /// - Parameter organizationId: Filter Connections by their associated organization.
+    /// - Parameter search: Searchable text to match against Connection names.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listConnectionsAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -86,6 +105,9 @@ public struct SSO: Sendable {
     /// Get a Connection
     ///
     /// Get the details of an existing connection.
+    ///
+    /// - Parameter id: Unique identifier for the Connection.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getConnection(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -104,6 +126,9 @@ public struct SSO: Sendable {
     /// Delete a Connection
     ///
     /// Permanently deletes an existing connection. It cannot be undone.
+    ///
+    /// - Parameter id: Unique identifier for the Connection.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteConnection(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -122,7 +147,18 @@ public struct SSO: Sendable {
     ///
     /// Initiates the single sign-on flow.
     ///
+    /// - Parameter redirectUri: Where to redirect the user after they complete the authentication process. You must use one of the redirect URIs configured via the [Redirects](https://dashboard.workos.com/redirects) page on the dashboard.
+    /// - Parameter providerScopes: Additional scopes to request from the identity provider. Applicable when using OAuth or OpenID Connect connections.
+    /// - Parameter providerQueryParams: Key/value pairs of query parameters to pass to the OAuth provider. Only applicable when using OAuth connections.
     /// - Parameter domain: Deprecated. Use `connection` or `organization` instead. Used to initiate SSO for a connection by domain. The domain must be associated with a connection in your WorkOS environment.
+    /// - Parameter provider: Used to initiate OAuth authentication with various providers.
+    /// - Parameter state: An optional parameter that can be used to encode arbitrary information to help restore application state between redirects. If included, the redirect URI received from WorkOS will contain the exact `state` that was passed.
+    /// - Parameter connection: Used to initiate SSO for a connection. The value should be a WorkOS connection ID.
+    /// - Parameter organization: Used to initiate SSO for an organization. The value should be a WorkOS organization ID.
+    /// - Parameter domainHint: Can be used to pre-fill the domain field when initiating authentication with Microsoft OAuth or with a Google SAML connection type.
+    /// - Parameter loginHint: Can be used to pre-fill the username/email address field of the IdP sign-in page for the user, if you know their username ahead of time. Currently supported for OAuth, OpenID Connect, Okta, Entra ID, and custom SAML connections.
+    /// - Parameter nonce: A random string generated by the client that is used to mitigate replay attacks.
+    /// - Parameter prompt: If set to `login`, forces re-authentication at the identity provider. For SAML connections this sets `ForceAuthn="true"` in the SAML request.
     public func getAuthorizationUrl(
         redirectUri: String,
         providerScopes: [String]? = nil,
@@ -188,6 +224,8 @@ public struct SSO: Sendable {
     /// Logout allows to sign out a user from your application by triggering the identity provider sign out flow. This `GET` endpoint should be a redirection, since the identity provider user will be identified in the browser session.
     ///
     /// Before redirecting to this endpoint, you need to generate a short-lived logout token using the [Logout Authorize](https://workos.com/docs/reference/sso/logout/authorize) endpoint.
+    ///
+    /// - Parameter token: The logout token returned from the [Logout Authorize](https://workos.com/docs/reference/sso/logout/authorize) endpoint.
     public func getLogoutUrl(
         token: String
     ) -> URL {
@@ -200,6 +238,9 @@ public struct SSO: Sendable {
     /// Logout Authorize
     ///
     /// You should call this endpoint from your server to generate a logout token which is required for the [Logout Redirect](https://workos.com/docs/reference/sso/logout) endpoint.
+    ///
+    /// - Parameter profileId: The unique ID of the profile to log out.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authorizeLogout(
         profileId: String,
         requestOptions: RequestOptions? = nil
@@ -220,6 +261,8 @@ public struct SSO: Sendable {
     /// Get a User Profile
     ///
     /// Exchange an access token for a user's [Profile](https://workos.com/docs/reference/sso/profile). Because this profile is returned in the [Get a Profile and Token endpoint](https://workos.com/docs/reference/sso/profile/get-profile-and-token) your application usually does not need to call this endpoint. It is available for any authentication flows that require an additional endpoint to retrieve a user's profile.
+    ///
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getProfile(
         requestOptions: RequestOptions? = nil
     ) async throws -> Profile {
@@ -237,6 +280,10 @@ public struct SSO: Sendable {
     /// Get a Profile and Token
     ///
     /// Get an access token along with the user [Profile](https://workos.com/docs/reference/sso/profile) using the code passed to your [Redirect URI](https://workos.com/docs/reference/sso/get-authorization-url/redirect-uri).
+    ///
+    /// - Parameter code: The authorization code received from the authorization callback.
+    /// - Parameter code2: The authorization code received from the authorization callback.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getProfileAndToken(
         code: String,
         code2: String,

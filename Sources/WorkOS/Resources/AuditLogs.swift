@@ -9,6 +9,9 @@ public struct AuditLogs: Sendable {
     /// Get Retention
     ///
     /// Get the configured event retention period for the given Organization.
+    ///
+    /// - Parameter id: Unique identifier of the Organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getOrganizationAuditLogsRetention(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -27,6 +30,10 @@ public struct AuditLogs: Sendable {
     /// Set Retention
     ///
     /// Set the event retention period for the given Organization.
+    ///
+    /// - Parameter id: Unique identifier of the Organization.
+    /// - Parameter retentionPeriodInDays: The number of days Audit Log events will be retained. Valid values are `30` and `365`.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateOrganizationAuditLogsRetention(
         id: String,
         retentionPeriodInDays: Int,
@@ -48,6 +55,12 @@ public struct AuditLogs: Sendable {
     /// List Actions
     ///
     /// Get a list of all Audit Log actions in the current environment.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listActions(
         before: String? = nil,
         after: String? = nil,
@@ -79,8 +92,13 @@ public struct AuditLogs: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listActions``: fetches successive
+    /// Auto-paginating variant of `listActions`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listActionsAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -101,6 +119,13 @@ public struct AuditLogs: Sendable {
     /// List Schemas
     ///
     /// Get a list of all schemas for the Audit Logs action identified by `:name`.
+    ///
+    /// - Parameter actionName: The name of the Audit Log action.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listActionSchemas(
         actionName: String,
         before: String? = nil,
@@ -133,8 +158,14 @@ public struct AuditLogs: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listActionSchemas``: fetches successive
+    /// Auto-paginating variant of `listActionSchemas`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter actionName: The name of the Audit Log action.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listActionSchemasAutoPaging(
         actionName: String,
         before: String? = nil,
@@ -157,6 +188,12 @@ public struct AuditLogs: Sendable {
     /// Create Schema
     ///
     /// Creates a new Audit Log schema used to validate the payload of incoming Audit Log Events. If the `action` does not exist, it will also be created.
+    ///
+    /// - Parameter actionName: The name of the Audit Log action.
+    /// - Parameter targets: The list of targets for the schema.
+    /// - Parameter actor: The metadata schema for the actor.
+    /// - Parameter metadata: Optional JSON schema for event metadata.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createSchema(
         actionName: String,
         targets: [AuditLogSchemaTargetInput],
@@ -188,6 +225,10 @@ public struct AuditLogs: Sendable {
     /// To achieve idempotency, you can add `Idempotency-Key` request header to a Create Event request with a unique string as the value. Each subsequent request matching this unique string will return the same response. We suggest using [v4 UUIDs](https://en.wikipedia.org/wiki/Universally_unique_identifier) for idempotency keys to avoid collisions.
     ///
     /// Idempotency keys expire after 24 hours. The API will generate a new response if you submit a request with an expired key.
+    ///
+    /// - Parameter organizationId: The unique ID of the Organization.
+    /// - Parameter event: The audit log event to create.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createEvent(
         organizationId: String,
         event: AuditLogEvent,
@@ -211,7 +252,15 @@ public struct AuditLogs: Sendable {
     ///
     /// Create an Audit Log Export. Exports are scoped to a single organization within a specified date range.
     ///
+    /// - Parameter organizationId: The unique ID of the Organization.
+    /// - Parameter rangeStart: ISO-8601 value for start of the export range.
+    /// - Parameter rangeEnd: ISO-8601 value for end of the export range.
+    /// - Parameter actions: List of actions to filter against.
     /// - Parameter actors: Deprecated. Use `actor_names` instead.
+    /// - Parameter actorNames: List of actor names to filter against.
+    /// - Parameter actorIds: List of actor IDs to filter against.
+    /// - Parameter targets: List of target types to filter against.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createExport(
         organizationId: String,
         rangeStart: Date,
@@ -246,6 +295,9 @@ public struct AuditLogs: Sendable {
     /// Get Export
     ///
     /// Get an Audit Log Export. The URL will expire after 10 minutes. If the export is needed again at a later time, refetching the export will regenerate the URL.
+    ///
+    /// - Parameter auditLogExportId: The unique ID of the Audit Log Export.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getExport(
         auditLogExportId: String,
         requestOptions: RequestOptions? = nil

@@ -9,6 +9,11 @@ public struct Agents: Sendable {
     /// Validate an agent credential
     ///
     /// Validate an agent credential — an API key or access token — against the environment of the API key used to authenticate the request. This is a read-only check: it never consumes or mutates the credential.
+    ///
+    /// - Parameter type: The kind of credential being validated — an agent API key or an agent access token.
+    /// - Parameter credential: The credential value to validate: the API key value for `api_key`, or the access token (JWT) for `access_token`.
+    /// - Parameter audience: When provided, the access token's `aud` claim is verified against this value. Tokens issued for a different resource are rejected.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createValidate(
         type: AgentAdminValidateCredentialRequestType,
         credential: String,
@@ -33,6 +38,9 @@ public struct Agents: Sendable {
     /// Get an agent registration
     ///
     /// Retrieve the details of an agent registration by ID. The registration is scoped to the environment of the API key used to authenticate the request.
+    ///
+    /// - Parameter id: The unique ID of the agent registration.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getRegistration(
         id: String,
         requestOptions: RequestOptions? = nil

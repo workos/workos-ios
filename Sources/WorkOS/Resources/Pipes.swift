@@ -9,6 +9,12 @@ public struct Pipes: Sendable {
     /// List data integrations
     ///
     /// Lists the environment's data integrations configured with `custom` or `organization` credentials, including custom providers.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listDataIntegrations(
         before: String? = nil,
         after: String? = nil,
@@ -40,8 +46,13 @@ public struct Pipes: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listDataIntegrations``: fetches successive
+    /// Auto-paginating variant of `listDataIntegrations`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listDataIntegrationsAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
@@ -62,6 +73,14 @@ public struct Pipes: Sendable {
     /// Create a data integration
     ///
     /// Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials, or `organization` to have each organization supply its own. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
+    ///
+    /// - Parameter provider: The provider to create a Data Integration for. For a built-in provider use its slug (e.g. `github`, `slack`). For a custom provider, this is the new provider slug and `custom_provider` must be supplied. A custom provider slug cannot shadow an existing global provider slug.
+    /// - Parameter description: An optional description of the Data Integration.
+    /// - Parameter enabled: Whether the Data Integration is enabled. Defaults to `false`.
+    /// - Parameter scopes: The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
+    /// - Parameter credentials: The credentials to configure for the Data Integration. Required for both built-in and custom providers.
+    /// - Parameter customProvider: The OAuth definition for a custom provider. Supply this to define a custom provider; omit it to create an integration for a built-in provider.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createDataIntegration(
         provider: String,
         description: String? = nil,
@@ -92,6 +111,9 @@ public struct Pipes: Sendable {
     /// Get a data integration
     ///
     /// Retrieves a data integration by its slug.
+    ///
+    /// - Parameter slug: The slug identifier of the data integration.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getDataIntegration(
         slug: String,
         requestOptions: RequestOptions? = nil
@@ -110,6 +132,14 @@ public struct Pipes: Sendable {
     /// Update a data integration
     ///
     /// Updates the description, enabled state, or custom credentials of a data integration. For custom providers, `custom_provider` updates the OAuth definition.
+    ///
+    /// - Parameter slug: The slug identifier of the data integration.
+    /// - Parameter description: An optional description of the Data Integration.
+    /// - Parameter enabled: Whether the Data Integration is enabled.
+    /// - Parameter scopes: The OAuth scopes to request for the Data Integration. Pass `null` to reset to the provider's configured scopes.
+    /// - Parameter credentials: New credentials for the Data Integration. When provided, rotates the stored client secret.
+    /// - Parameter customProvider: Updates to a custom provider's OAuth definition. Only valid for custom-provider integrations.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateDataIntegration(
         slug: String,
         description: String? = nil,
@@ -139,6 +169,9 @@ public struct Pipes: Sendable {
     /// Delete a data integration
     ///
     /// Deletes a data integration and all of its connected installations. For a custom provider, also deletes the custom provider definition.
+    ///
+    /// - Parameter slug: The slug identifier of the data integration.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteDataIntegration(
         slug: String,
         requestOptions: RequestOptions? = nil
@@ -156,6 +189,12 @@ public struct Pipes: Sendable {
     /// Upsert an API key for a connected account
     ///
     /// Creates or updates an API-key-based installation for the specified integration and user. If an installation already exists, the stored API key is rotated to the new value.
+    ///
+    /// - Parameter slug: The identifier of the integration.
+    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
+    /// - Parameter secret: The API key secret to store for this integration.
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateDataIntegrationApiKey(
         slug: String,
         userId: String,
@@ -181,6 +220,12 @@ public struct Pipes: Sendable {
     /// Get authorization URL
     ///
     /// Generates an OAuth authorization URL to initiate the connection flow for a user. Redirect the user to the returned URL to begin the OAuth flow with the third-party provider.
+    ///
+    /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+    /// - Parameter userId: The ID of the user to authorize.
+    /// - Parameter organizationId: An organization ID to scope the authorization to a specific organization.
+    /// - Parameter returnTo: The URL to redirect the user to after authorization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authorizeDataIntegration(
         slug: String,
         userId: String,
@@ -206,6 +251,11 @@ public struct Pipes: Sendable {
     /// Vend credentials for a connected account
     ///
     /// Returns credentials for a user's connected account. Branches on the installation's `auth_method`: OAuth installations return an access token (refreshed if needed); API-key installations return the stored secret.
+    ///
+    /// - Parameter slug: The identifier of the integration.
+    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createDataIntegrationCredential(
         slug: String,
         userId: String,
@@ -229,6 +279,11 @@ public struct Pipes: Sendable {
     /// Get an access token for a connected account
     ///
     /// Fetches a valid OAuth access token for a user's connected account. WorkOS automatically handles token refresh, ensuring you always receive a valid, non-expired token.
+    ///
+    /// - Parameter provider: The identifier of the integration.
+    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getAccessToken(
         provider: String,
         userId: String,
@@ -252,6 +307,11 @@ public struct Pipes: Sendable {
     /// Get a connected account
     ///
     /// Retrieves a user's [connected account](https://workos.com/docs/reference/pipes/connected-account) for a specific provider.
+    ///
+    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
+    /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getUserConnectedAccount(
         userId: String,
         slug: String,
@@ -277,6 +337,16 @@ public struct Pipes: Sendable {
     /// Import a connected account
     ///
     /// Imports a [connected account](https://workos.com/docs/reference/pipes/connected-account) for a user by providing OAuth tokens directly. Use this to migrate existing connections or set up connections without going through the OAuth flow.
+    ///
+    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
+    /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+    /// - Parameter accessToken: The OAuth access token for the connected account.
+    /// - Parameter refreshToken: The OAuth refresh token for the connected account.
+    /// - Parameter expiresAt: The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
+    /// - Parameter scopes: The OAuth scopes granted for this connection.
+    /// - Parameter state: Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createUserConnectedAccount(
         userId: String,
         slug: String,
@@ -313,6 +383,16 @@ public struct Pipes: Sendable {
     /// Update a connected account
     ///
     /// Updates a user's [connected account](https://workos.com/docs/reference/pipes/connected-account) tokens, scopes, or state for a specific provider.
+    ///
+    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
+    /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+    /// - Parameter accessToken: The OAuth access token for the connected account.
+    /// - Parameter refreshToken: The OAuth refresh token for the connected account.
+    /// - Parameter expiresAt: The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
+    /// - Parameter scopes: The OAuth scopes granted for this connection.
+    /// - Parameter state: Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateUserConnectedAccount(
         userId: String,
         slug: String,
@@ -349,6 +429,11 @@ public struct Pipes: Sendable {
     /// Delete a connected account
     ///
     /// Disconnects WorkOS's account for the user, including removing any stored access and refresh tokens. The user will need to reauthorize if they want to reconnect. This does not revoke access on the provider side.
+    ///
+    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
+    /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteUserConnectedAccount(
         userId: String,
         slug: String,
@@ -373,6 +458,10 @@ public struct Pipes: Sendable {
     /// List providers for a user
     ///
     /// Retrieves a list of available providers and the user's connection status for each. Returns all providers configured for your environment, along with the user's [connected account](https://workos.com/docs/reference/pipes/connected-account) information where applicable.
+    ///
+    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier to list providers and connected accounts for.
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to filter connections for a specific organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listUserDataProviders(
         userId: String,
         organizationId: String? = nil,

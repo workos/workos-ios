@@ -9,6 +9,10 @@ public struct MultiFactorAuth: Sendable {
     /// Verify Challenge
     ///
     /// Verifies an Authentication Challenge.
+    ///
+    /// - Parameter id: The unique ID of the Authentication Challenge.
+    /// - Parameter code: The one-time code to verify.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func verifyChallenge(
         id: String,
         code: String,
@@ -30,6 +34,13 @@ public struct MultiFactorAuth: Sendable {
     /// Enroll Factor
     ///
     /// Enrolls an Authentication Factor to be used as an additional factor of authentication. The returned ID should be used to create an authentication Challenge.
+    ///
+    /// - Parameter type: The type of factor to enroll.
+    /// - Parameter phoneNumber: Required when type is 'sms'.
+    /// - Parameter totpIssuer: Required when type is 'totp'.
+    /// - Parameter totpUser: Required when type is 'totp'.
+    /// - Parameter userId: The ID of the user to associate the factor with.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func enrollFactor(
         type: AuthenticationFactorsCreateRequestType,
         phoneNumber: String? = nil,
@@ -58,6 +69,9 @@ public struct MultiFactorAuth: Sendable {
     /// Get Factor
     ///
     /// Gets an Authentication Factor.
+    ///
+    /// - Parameter id: The unique ID of the Factor.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getFactor(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -76,6 +90,9 @@ public struct MultiFactorAuth: Sendable {
     /// Delete Factor
     ///
     /// Permanently deletes an Authentication Factor. It cannot be undone.
+    ///
+    /// - Parameter id: The unique ID of the Factor.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteFactor(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -93,6 +110,10 @@ public struct MultiFactorAuth: Sendable {
     /// Challenge Factor
     ///
     /// Creates a Challenge for an Authentication Factor.
+    ///
+    /// - Parameter id: The unique ID of the Authentication Factor to be challenged.
+    /// - Parameter smsTemplate: A custom template for the SMS message. Use the {{code}} placeholder to include the verification code.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func challengeFactor(
         id: String,
         smsTemplate: String? = nil,
@@ -114,6 +135,13 @@ public struct MultiFactorAuth: Sendable {
     /// List authentication factors
     ///
     /// Lists the [authentication factors](https://workos.com/docs/reference/authkit/mfa/authentication-factor) for a user.
+    ///
+    /// - Parameter userlandUserId: The ID of the [user](https://workos.com/docs/reference/authkit/user).
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listUserAuthFactors(
         userlandUserId: String,
         before: String? = nil,
@@ -146,8 +174,14 @@ public struct MultiFactorAuth: Sendable {
         )
     }
 
-    /// Auto-paginating variant of ``listUserAuthFactors``: fetches successive
+    /// Auto-paginating variant of `listUserAuthFactors`: fetches successive
     /// pages as the sequence is iterated.
+    ///
+    /// - Parameter userlandUserId: The ID of the [user](https://workos.com/docs/reference/authkit/user).
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listUserAuthFactorsAutoPaging(
         userlandUserId: String,
         before: String? = nil,
@@ -170,6 +204,13 @@ public struct MultiFactorAuth: Sendable {
     /// Enroll an authentication factor
     ///
     /// Enrolls a user in a new [authentication factor](https://workos.com/docs/reference/authkit/mfa/authentication-factor).
+    ///
+    /// - Parameter userlandUserId: The ID of the [user](https://workos.com/docs/reference/authkit/user).
+    /// - Parameter type: The type of the factor to enroll.
+    /// - Parameter totpIssuer: Your application or company name displayed in the user's authenticator app.
+    /// - Parameter totpUser: The user's account name displayed in their authenticator app.
+    /// - Parameter totpSecret: The Base32-encoded shared secret for TOTP factors. This can be provided when creating the auth factor, otherwise it will be generated. The algorithm used to derive TOTP codes is SHA-1, the code length is 6 digits, and the timestep is 30 seconds – the secret must be compatible with these parameters.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createUserAuthFactor(
         userlandUserId: String,
         type: String,

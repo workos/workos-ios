@@ -1506,6 +1506,10 @@
       "sdkMethod": "createRedirectUri",
       "service": "userManagement"
     },
+    "DELETE /user_management/redirect_uris/{id}": {
+      "sdkMethod": "deleteRedirectUris",
+      "service": "userManagement"
+    },
     "GET /user_management/users/{user_id}/authorized_applications": {
       "sdkMethod": "listAuthorizedApplications",
       "service": "userManagement"

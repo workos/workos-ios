@@ -9,6 +9,10 @@ public struct OrganizationDomains: Sendable {
     /// Create an Organization Domain
     ///
     /// Creates a new Organization Domain.
+    ///
+    /// - Parameter domain: The domain to add to the organization.
+    /// - Parameter organizationId: The ID of the organization to add the domain to.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func create(
         domain: String,
         organizationId: String,
@@ -31,6 +35,9 @@ public struct OrganizationDomains: Sendable {
     /// Get an Organization Domain
     ///
     /// Get the details of an existing organization domain.
+    ///
+    /// - Parameter id: Unique identifier of the organization domain.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func get(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -49,6 +56,9 @@ public struct OrganizationDomains: Sendable {
     /// Delete an Organization Domain
     ///
     /// Permanently deletes an organization domain. It cannot be undone.
+    ///
+    /// - Parameter id: Unique identifier of the organization domain.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func delete(
         id: String,
         requestOptions: RequestOptions? = nil
@@ -66,6 +76,9 @@ public struct OrganizationDomains: Sendable {
     /// Verify an Organization Domain
     ///
     /// Initiates verification process for an Organization Domain.
+    ///
+    /// - Parameter id: Unique identifier of the organization domain.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func verify(
         id: String,
         requestOptions: RequestOptions? = nil
