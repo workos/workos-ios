@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+cd "$ROOT_DIR"
+
+echo "==> prepare docs output"
+rm -rf docs/_site
+mkdir -p docs/_site
+
+echo "==> generate DocC site"
+swift package --allow-writing-to-directory docs/_site \
+  generate-documentation \
+  --target WorkOS \
+  --disable-indexing \
+  --transform-for-static-hosting \
+  --hosting-base-path workos-ios \
+  --output-path docs/_site

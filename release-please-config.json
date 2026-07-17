@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bootstrap-sha": "da8ede74f1c56567cfe9c1f351a27c1fa7bee1de",
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "package-name": "workos-ios",
+      "include-component-in-tag": false,
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "Sources/WorkOS/Version.swift"
+        }
+      ]
+    }
+  }
+}
+

@@ -14,6 +14,9 @@ let package = Package(
     products: [
         .library(name: "WorkOS", targets: ["WorkOS"])
     ],
+    dependencies: [
+        .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.1.0")
+    ],
     targets: [
         .target(name: "WorkOS"),
         .testTarget(name: "WorkOSTests", dependencies: ["WorkOS"]),

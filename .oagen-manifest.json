@@ -2,6 +2,7 @@
   "version": 2,
   "language": "ios",
   "files": [
+    ".oagen-ios-smoke.json",
     "Sources/WorkOS/Enums/AgentAdminValidateCredentialRequestType.swift",
     "Sources/WorkOS/Enums/AgentRegistrationCreatedDataKind.swift",
     "Sources/WorkOS/Enums/AgentRegistrationCreatedDataMethod.swift",
