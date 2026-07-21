@@ -20,6 +20,7 @@
     "Sources/WorkOS/Enums/AuthenticationFactorsCreateRequestType.swift",
     "Sources/WorkOS/Enums/AuthenticationRadarRiskDetectedDataAction.swift",
     "Sources/WorkOS/Enums/AuthorizationAssignment.swift",
+    "Sources/WorkOS/Enums/ClaimViewResponseStatus.swift",
     "Sources/WorkOS/Enums/ConnectedAccountAuthMethod.swift",
     "Sources/WorkOS/Enums/ConnectedAccountInputState.swift",
     "Sources/WorkOS/Enums/ConnectedAccountState.swift",
@@ -37,11 +38,13 @@
     "Sources/WorkOS/Enums/ConnectionStatus.swift",
     "Sources/WorkOS/Enums/ConnectionType.swift",
     "Sources/WorkOS/Enums/ConnectionsConnectionType.swift",
+    "Sources/WorkOS/Enums/CreateDataIntegrationAuthMethods.swift",
     "Sources/WorkOS/Enums/CreateUserInviteOptionsLocale.swift",
     "Sources/WorkOS/Enums/CreateUserPasswordHashType.swift",
     "Sources/WorkOS/Enums/CreateWebhookEndpointEvents.swift",
     "Sources/WorkOS/Enums/CustomProviderDefinitionAuthenticateVia.swift",
     "Sources/WorkOS/Enums/DataIntegrationAccessTokenResponseError.swift",
+    "Sources/WorkOS/Enums/DataIntegrationAuthMethods.swift",
     "Sources/WorkOS/Enums/DataIntegrationCredentialType.swift",
     "Sources/WorkOS/Enums/DataIntegrationCredentialsCredentialsType.swift",
     "Sources/WorkOS/Enums/DataIntegrationCredentialsInputType.swift",
@@ -151,6 +154,8 @@
     "Sources/WorkOS/Models/ActionUserRegistrationDeniedData.swift",
     "Sources/WorkOS/Models/Actor.swift",
     "Sources/WorkOS/Models/AddRolePermission.swift",
+    "Sources/WorkOS/Models/AgentAdminLinkClaimAttemptToExternalUserRequest.swift",
+    "Sources/WorkOS/Models/AgentAdminLinkClaimAttemptToExternalUserRequestUser.swift",
     "Sources/WorkOS/Models/AgentAdminValidateCredentialRequest.swift",
     "Sources/WorkOS/Models/AgentCredentialValidation.swift",
     "Sources/WorkOS/Models/AgentRegistration.swift",
@@ -180,6 +185,7 @@
     "Sources/WorkOS/Models/ApiKeyCreated.swift",
     "Sources/WorkOS/Models/ApiKeyCreatedData.swift",
     "Sources/WorkOS/Models/ApiKeyCreatedDataOwner.swift",
+    "Sources/WorkOS/Models/ApiKeyInstallation.swift",
     "Sources/WorkOS/Models/ApiKeyOwner.swift",
     "Sources/WorkOS/Models/ApiKeyRevoked.swift",
     "Sources/WorkOS/Models/ApiKeyRevokedData.swift",
@@ -284,6 +290,8 @@
     "Sources/WorkOS/Models/AuthorizedConnectApplicationListListMetadata.swift",
     "Sources/WorkOS/Models/ChallengeAuthenticationFactor.swift",
     "Sources/WorkOS/Models/CheckAuthorization.swift",
+    "Sources/WorkOS/Models/ClaimViewResponse.swift",
+    "Sources/WorkOS/Models/ClaimViewResponseOrganization.swift",
     "Sources/WorkOS/Models/ClientApiToken.swift",
     "Sources/WorkOS/Models/ClientApiTokenResponse.swift",
     "Sources/WorkOS/Models/ConfigureDataIntegrationBody.swift",
@@ -357,6 +365,7 @@
     "Sources/WorkOS/Models/DataIntegrationCredentialsResponse.swift",
     "Sources/WorkOS/Models/DataIntegrationCredentialsResponseCredential.swift",
     "Sources/WorkOS/Models/DataIntegrationCustomProvider.swift",
+    "Sources/WorkOS/Models/DataIntegrationInstallation.swift",
     "Sources/WorkOS/Models/DataIntegrationList.swift",
     "Sources/WorkOS/Models/DataIntegrationListListMetadata.swift",
     "Sources/WorkOS/Models/DataIntegrationsGetDataIntegrationAuthorizeUrlRequest.swift",
@@ -508,6 +517,9 @@
     "Sources/WorkOS/Models/OrganizationApiKeyOwner.swift",
     "Sources/WorkOS/Models/OrganizationApiKeyWithValue.swift",
     "Sources/WorkOS/Models/OrganizationApiKeyWithValueOwner.swift",
+    "Sources/WorkOS/Models/OrganizationAuthorizedConnectApplicationList.swift",
+    "Sources/WorkOS/Models/OrganizationAuthorizedConnectApplicationListData.swift",
+    "Sources/WorkOS/Models/OrganizationAuthorizedConnectApplicationListListMetadata.swift",
     "Sources/WorkOS/Models/OrganizationCreated.swift",
     "Sources/WorkOS/Models/OrganizationCreatedData.swift",
     "Sources/WorkOS/Models/OrganizationCreatedDataDomain.swift",
@@ -758,6 +770,10 @@
     "Tests/WorkOSTests/WidgetsTests.swift"
   ],
   "operations": {
+    "PATCH /agents/claims/attempts": {
+      "sdkMethod": "updateAttempts",
+      "service": "agents"
+    },
     "POST /agents/credentials/validate": {
       "sdkMethod": "createValidate",
       "service": "agents"
@@ -1206,6 +1222,10 @@
     },
     "GET /organizations/{id}/audit_log_configuration": {
       "sdkMethod": "getAuditLogConfiguration",
+      "service": "organizations"
+    },
+    "GET /organizations/{organization_id}/authorized_applications": {
+      "sdkMethod": "listAuthorizedApplications",
       "service": "organizations"
     },
     "GET /organizations/{id}/audit_logs_retention": {
