@@ -152,13 +152,13 @@ public struct UserManagement: Sendable {
 
     /// Authenticate with magic auth
     ///
-    /// - Parameter code: The code value.
-    /// - Parameter email: The email value.
-    /// - Parameter invitationToken: The invitation token value.
-    /// - Parameter ipAddress: The ip address value.
-    /// - Parameter deviceId: The device id value.
-    /// - Parameter userAgent: The user agent value.
-    /// - Parameter radarAuthAttemptId: The radar auth attempt id value.
+    /// - Parameter code: The one-time code for Magic Auth authentication.
+    /// - Parameter email: The user's email address.
+    /// - Parameter invitationToken: An invitation token to accept during authentication.
+    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter deviceId: A unique identifier for the device.
+    /// - Parameter userAgent: The user agent string from the user's browser.
+    /// - Parameter radarAuthAttemptId: The ID of an existing Radar authentication attempt to associate with this authentication.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithMagicAuth(
         code: String,
@@ -194,11 +194,11 @@ public struct UserManagement: Sendable {
 
     /// Authenticate with email verification
     ///
-    /// - Parameter code: The code value.
-    /// - Parameter pendingAuthenticationToken: The pending authentication token value.
-    /// - Parameter ipAddress: The ip address value.
-    /// - Parameter deviceId: The device id value.
-    /// - Parameter userAgent: The user agent value.
+    /// - Parameter code: The email verification code.
+    /// - Parameter pendingAuthenticationToken: The pending authentication token from a previous authentication attempt.
+    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter deviceId: A unique identifier for the device.
+    /// - Parameter userAgent: The user agent string from the user's browser.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithEmailVerification(
         code: String,
@@ -269,11 +269,11 @@ public struct UserManagement: Sendable {
 
     /// Authenticate with organization selection
     ///
-    /// - Parameter pendingAuthenticationToken: The pending authentication token value.
-    /// - Parameter organizationId: The organization id value.
-    /// - Parameter ipAddress: The ip address value.
-    /// - Parameter deviceId: The device id value.
-    /// - Parameter userAgent: The user agent value.
+    /// - Parameter pendingAuthenticationToken: The pending authentication token from a previous authentication attempt.
+    /// - Parameter organizationId: The ID of the organization the user selected.
+    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter deviceId: A unique identifier for the device.
+    /// - Parameter userAgent: The user agent string from the user's browser.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithOrganizationSelection(
         pendingAuthenticationToken: String,
@@ -305,10 +305,10 @@ public struct UserManagement: Sendable {
 
     /// Authenticate with device code
     ///
-    /// - Parameter deviceCode: The device code value.
-    /// - Parameter ipAddress: The ip address value.
-    /// - Parameter deviceId: The device id value.
-    /// - Parameter userAgent: The user agent value.
+    /// - Parameter deviceCode: The device verification code.
+    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter deviceId: A unique identifier for the device.
+    /// - Parameter userAgent: The user agent string from the user's browser.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithDeviceCode(
         deviceCode: String,
@@ -337,12 +337,12 @@ public struct UserManagement: Sendable {
 
     /// Authenticate with radar email challenge
     ///
-    /// - Parameter code: The code value.
-    /// - Parameter radarChallengeId: The radar challenge id value.
-    /// - Parameter pendingAuthenticationToken: The pending authentication token value.
-    /// - Parameter ipAddress: The ip address value.
-    /// - Parameter deviceId: The device id value.
-    /// - Parameter userAgent: The user agent value.
+    /// - Parameter code: The one-time code from the Radar email challenge.
+    /// - Parameter radarChallengeId: The ID of the Radar email challenge being verified.
+    /// - Parameter pendingAuthenticationToken: The pending authentication token from a previous authentication attempt.
+    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter deviceId: A unique identifier for the device.
+    /// - Parameter userAgent: The user agent string from the user's browser.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithRadarEmailChallenge(
         code: String,
@@ -376,13 +376,13 @@ public struct UserManagement: Sendable {
 
     /// Authenticate with radar sms challenge
     ///
-    /// - Parameter code: The code value.
-    /// - Parameter verificationId: The verification id value.
-    /// - Parameter phoneNumber: The phone number value.
-    /// - Parameter pendingAuthenticationToken: The pending authentication token value.
-    /// - Parameter ipAddress: The ip address value.
-    /// - Parameter deviceId: The device id value.
-    /// - Parameter userAgent: The user agent value.
+    /// - Parameter code: The one-time code from the Radar SMS challenge.
+    /// - Parameter verificationId: The ID of the Radar SMS verification being confirmed.
+    /// - Parameter phoneNumber: The phone number the Radar SMS challenge was sent to.
+    /// - Parameter pendingAuthenticationToken: The pending authentication token from a previous authentication attempt.
+    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter deviceId: A unique identifier for the device.
+    /// - Parameter userAgent: The user agent string from the user's browser.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithRadarSmsChallenge(
         code: String,
@@ -694,7 +694,7 @@ public struct UserManagement: Sendable {
 
     /// Create a CORS origin
     ///
-    /// Creates a new CORS origin for the current environment. CORS origins allow browser-based applications to make requests to the WorkOS API.
+    /// Creates a new CORS origin for the API key's application. CORS origins allow browser-based applications to make requests to the WorkOS API.
     ///
     /// - Parameter origin: The origin URL to allow for CORS requests.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).

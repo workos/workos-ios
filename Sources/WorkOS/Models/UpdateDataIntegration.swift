@@ -9,8 +9,10 @@ public struct UpdateDataIntegration: Codable, Sendable, Equatable {
     public let enabled: Bool?
     /// The OAuth scopes to request for the Data Integration. Pass `null` to reset to the provider's configured scopes.
     public let scopes: [String]?
-    /// New credentials for the Data Integration. When provided, rotates the stored client secret.
+    /// New OAuth credentials for the Data Integration. When provided, rotates the stored client secret. Mutually exclusive with `api_key`.
     public let credentials: DataIntegrationCredentialsInput?
+    /// An API key to install or rotate for a tenant on an `api_key` integration. Upserts the tenant installation identified by `user_id` (and optional `organization_id`).
+    public let apiKey: ApiKeyInstallation?
     /// Updates to a custom provider's OAuth definition. Only valid for custom-provider integrations.
     public let customProvider: UpdateCustomProviderDefinition?
 
@@ -19,12 +21,14 @@ public struct UpdateDataIntegration: Codable, Sendable, Equatable {
         enabled: Bool? = nil,
         scopes: [String]? = nil,
         credentials: DataIntegrationCredentialsInput? = nil,
+        apiKey: ApiKeyInstallation? = nil,
         customProvider: UpdateCustomProviderDefinition? = nil
     ) {
         self.description = description
         self.enabled = enabled
         self.scopes = scopes
         self.credentials = credentials
+        self.apiKey = apiKey
         self.customProvider = customProvider
     }
 
@@ -33,6 +37,7 @@ public struct UpdateDataIntegration: Codable, Sendable, Equatable {
         case enabled
         case scopes
         case credentials
+        case apiKey = "api_key"
         case customProvider = "custom_provider"
     }
 }
