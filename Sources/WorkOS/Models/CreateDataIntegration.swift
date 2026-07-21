@@ -11,8 +11,12 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
     public let enabled: Bool?
     /// The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
     public let scopes: [String]?
-    /// The credentials to configure for the Data Integration. Required for both built-in and custom providers.
+    /// How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request).
+    public let authMethods: [CreateDataIntegrationAuthMethods]?
+    /// The OAuth credentials to configure for the Data Integration. Required for OAuth integrations; omit when `auth_methods` is `["api_key"]`.
     public let credentials: DataIntegrationCredentialsInput?
+    /// An optional API key to install for the first tenant on an `api_key` integration. Omit to declare a keyless integration; tenants can be added later via the per-installation API key path.
+    public let apiKey: ApiKeyInstallation?
     /// The OAuth definition for a custom provider. Supply this to define a custom provider; omit it to create an integration for a built-in provider.
     public let customProvider: CustomProviderDefinition?
 
@@ -21,14 +25,18 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
         description: String? = nil,
         enabled: Bool? = nil,
         scopes: [String]? = nil,
+        authMethods: [CreateDataIntegrationAuthMethods]? = nil,
         credentials: DataIntegrationCredentialsInput? = nil,
+        apiKey: ApiKeyInstallation? = nil,
         customProvider: CustomProviderDefinition? = nil
     ) {
         self.provider = provider
         self.description = description
         self.enabled = enabled
         self.scopes = scopes
+        self.authMethods = authMethods
         self.credentials = credentials
+        self.apiKey = apiKey
         self.customProvider = customProvider
     }
 
@@ -37,7 +45,9 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
         case description
         case enabled
         case scopes
+        case authMethods = "auth_methods"
         case credentials
+        case apiKey = "api_key"
         case customProvider = "custom_provider"
     }
 }

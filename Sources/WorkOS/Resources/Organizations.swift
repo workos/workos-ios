@@ -251,4 +251,73 @@ public struct Organizations: Sendable {
             as: AuditLogConfiguration.self
         )
     }
+
+    /// List authorized applications
+    ///
+    /// Get a list of all Connect applications that users in the organization have authorized.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listAuthorizedApplications(
+        organizationId: String,
+        before: String? = nil,
+        after: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> Page<OrganizationAuthorizedConnectApplicationListData> {
+        let path = "organizations/\(PathEncoding.segment(organizationId))/authorized_applications"
+        var query: [URLQueryItem] = []
+        if let before {
+            query.append(URLQueryItem(name: "before", value: before))
+        }
+        if let after {
+            query.append(URLQueryItem(name: "after", value: after))
+        }
+        if let limit {
+            query.append(URLQueryItem(name: "limit", value: "\(limit)"))
+        }
+        if let order {
+            query.append(URLQueryItem(name: "order", value: order.rawValue))
+        }
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: query,
+            body: nil,
+            options: requestOptions,
+            as: Page<OrganizationAuthorizedConnectApplicationListData>.self
+        )
+    }
+
+    /// Auto-paginating variant of `listAuthorizedApplications`: fetches successive
+    /// pages as the sequence is iterated.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listAuthorizedApplicationsAutoPaging(
+        organizationId: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<OrganizationAuthorizedConnectApplicationListData> {
+        AutoPagingSequence { cursor in
+            try await self.listAuthorizedApplications(
+                organizationId: organizationId,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
 }

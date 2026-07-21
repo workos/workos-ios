@@ -21,8 +21,12 @@ public struct DataIntegration: Codable, Sendable, Equatable {
     public let scopes: [String]?
     /// The OAuth redirect URI to register with the provider when configuring the custom application.
     public let redirectUri: String
+    /// How accounts authenticate with the provider for this Data Integration.
+    public let authMethods: [DataIntegrationAuthMethods]
     /// The credentials configured for the Data Integration.
     public let credentials: DataIntegrationCredential
+    /// The tenant installation created when an API key was supplied at creation time; `null` otherwise. Not populated on list/get responses.
+    public let installation: DataIntegrationInstallation?
     /// The OAuth definition when this is a custom provider; `null` for built-in providers.
     public let customProvider: DataIntegrationCustomProvider?
     /// An ISO 8601 timestamp.
@@ -38,11 +42,13 @@ public struct DataIntegration: Codable, Sendable, Equatable {
         enabled: Bool,
         state: DataIntegrationState,
         redirectUri: String,
+        authMethods: [DataIntegrationAuthMethods],
         credentials: DataIntegrationCredential,
         createdAt: Date,
         updatedAt: Date,
         description: String? = nil,
         scopes: [String]? = nil,
+        installation: DataIntegrationInstallation? = nil,
         customProvider: DataIntegrationCustomProvider? = nil
     ) {
         self.object = object
@@ -54,7 +60,9 @@ public struct DataIntegration: Codable, Sendable, Equatable {
         self.state = state
         self.scopes = scopes
         self.redirectUri = redirectUri
+        self.authMethods = authMethods
         self.credentials = credentials
+        self.installation = installation
         self.customProvider = customProvider
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -70,7 +78,9 @@ public struct DataIntegration: Codable, Sendable, Equatable {
         case state
         case scopes
         case redirectUri = "redirect_uri"
+        case authMethods = "auth_methods"
         case credentials
+        case installation
         case customProvider = "custom_provider"
         case createdAt = "created_at"
         case updatedAt = "updated_at"

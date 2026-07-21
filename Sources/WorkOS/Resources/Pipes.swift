@@ -8,7 +8,7 @@ public struct Pipes: Sendable {
 
     /// List data integrations
     ///
-    /// Lists the environment's data integrations configured with `custom` or `organization` credentials, including custom providers.
+    /// Lists the environment's data integrations configured with `custom` or `organization` credentials, including custom providers and API key integrations.
     ///
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
@@ -72,13 +72,15 @@ public struct Pipes: Sendable {
 
     /// Create a data integration
     ///
-    /// Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials, or `organization` to have each organization supply its own. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
+    /// Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials or `organization` to have each organization supply its own. Set `auth_methods` to `["api_key"]` to create an API key integration; you may optionally supply an `api_key` block to install a first tenant in the same call. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
     ///
     /// - Parameter provider: The provider to create a Data Integration for. For a built-in provider use its slug (e.g. `github`, `slack`). For a custom provider, this is the new provider slug and `custom_provider` must be supplied. A custom provider slug cannot shadow an existing global provider slug.
     /// - Parameter description: An optional description of the Data Integration.
     /// - Parameter enabled: Whether the Data Integration is enabled. Defaults to `false`.
     /// - Parameter scopes: The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
-    /// - Parameter credentials: The credentials to configure for the Data Integration. Required for both built-in and custom providers.
+    /// - Parameter authMethods: How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request).
+    /// - Parameter credentials: The OAuth credentials to configure for the Data Integration. Required for OAuth integrations; omit when `auth_methods` is `["api_key"]`.
+    /// - Parameter apiKey: An optional API key to install for the first tenant on an `api_key` integration. Omit to declare a keyless integration; tenants can be added later via the per-installation API key path.
     /// - Parameter customProvider: The OAuth definition for a custom provider. Supply this to define a custom provider; omit it to create an integration for a built-in provider.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createDataIntegration(
@@ -86,7 +88,9 @@ public struct Pipes: Sendable {
         description: String? = nil,
         enabled: Bool? = nil,
         scopes: [String]? = nil,
+        authMethods: [CreateDataIntegrationAuthMethods]? = nil,
         credentials: DataIntegrationCredentialsInput? = nil,
+        apiKey: ApiKeyInstallation? = nil,
         customProvider: CustomProviderDefinition? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegration {
@@ -96,7 +100,9 @@ public struct Pipes: Sendable {
         body.set("description", description)
         body.set("enabled", enabled)
         body.set("scopes", scopes)
+        body.set("auth_methods", authMethods)
         body.set("credentials", credentials)
+        body.set("api_key", apiKey)
         body.set("custom_provider", customProvider)
         return try await transport.request(
             method: "POST",
@@ -137,7 +143,8 @@ public struct Pipes: Sendable {
     /// - Parameter description: An optional description of the Data Integration.
     /// - Parameter enabled: Whether the Data Integration is enabled.
     /// - Parameter scopes: The OAuth scopes to request for the Data Integration. Pass `null` to reset to the provider's configured scopes.
-    /// - Parameter credentials: New credentials for the Data Integration. When provided, rotates the stored client secret.
+    /// - Parameter credentials: New OAuth credentials for the Data Integration. When provided, rotates the stored client secret. Mutually exclusive with `api_key`.
+    /// - Parameter apiKey: An API key to install or rotate for a tenant on an `api_key` integration. Upserts the tenant installation identified by `user_id` (and optional `organization_id`).
     /// - Parameter customProvider: Updates to a custom provider's OAuth definition. Only valid for custom-provider integrations.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateDataIntegration(
@@ -146,6 +153,7 @@ public struct Pipes: Sendable {
         enabled: Bool? = nil,
         scopes: [String]? = nil,
         credentials: DataIntegrationCredentialsInput? = nil,
+        apiKey: ApiKeyInstallation? = nil,
         customProvider: UpdateCustomProviderDefinition? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegration {
@@ -155,6 +163,7 @@ public struct Pipes: Sendable {
         body.set("enabled", enabled)
         body.set("scopes", scopes)
         body.set("credentials", credentials)
+        body.set("api_key", apiKey)
         body.set("custom_provider", customProvider)
         return try await transport.request(
             method: "PUT",

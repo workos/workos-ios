@@ -15,6 +15,25 @@ import Testing
         #expect(client.configuration.apiKey == "sk_test_123")
     }
 
+    @Test func updateAttemptsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"id":"agent_reg_01EHWNCE74X7JSDV0X3SZ3KJNY","status":"unverified","user_code":"BCDF-GHJK","organizations":[{"id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Acme Corp"}]}"#
+        )
+        let result = try await client.agents.updateAttempts(
+            type: "link_external_user", claimAttemptToken: "test_claim_attempt_token",
+            user: AgentAdminLinkClaimAttemptToExternalUserRequestUser(
+                email: "test_email", externalId: "test_external_id"))
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PATCH")
+        #expect(request.url?.path == "/agents/claims/attempts")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["type"] != nil)
+        #expect(result.id == "agent_reg_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
     @Test func createValidateSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:

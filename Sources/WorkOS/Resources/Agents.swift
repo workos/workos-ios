@@ -6,6 +6,38 @@ import Foundation
 public struct Agents: Sendable {
     let transport: Transport
 
+    /// Link a claim attempt to an external user
+    ///
+    /// Link an external user to a claim attempt and retrieve the code needed for the agent to complete the claim. The user is looked up by external ID; if no user exists, one is created. When the user belongs to multiple organizations, an explicit organization must be provided.
+    ///
+    /// - Parameter type: The operation to perform on the claim attempt. Currently only `link_external_user` is supported.
+    /// - Parameter claimAttemptToken: The token identifying the claim attempt.
+    /// - Parameter user: The user to attach to the claim attempt, identified by email and external ID.
+    /// - Parameter organizationId: The organization to place the agent in. Required when the user belongs to more than one organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func updateAttempts(
+        type: String,
+        claimAttemptToken: String,
+        user: AgentAdminLinkClaimAttemptToExternalUserRequestUser,
+        organizationId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> ClaimViewResponse {
+        let path = "agents/claims/attempts"
+        var body = EncodableBody()
+        body.set("type", type)
+        body.set("claim_attempt_token", claimAttemptToken)
+        body.set("user", user)
+        body.set("organization_id", organizationId)
+        return try await transport.request(
+            method: "PATCH",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: ClaimViewResponse.self
+        )
+    }
+
     /// Validate an agent credential
     ///
     /// Validate an agent credential — an API key or access token — against the environment of the API key used to authenticate the request. This is a read-only check: it never consumes or mutates the credential.
