@@ -17,3 +17,12 @@ swift package --allow-writing-to-directory docs/_site \
   --transform-for-static-hosting \
   --hosting-base-path workos-ios \
   --output-path docs/_site
+
+echo "==> write root redirect to documentation landing page"
+cat > docs/_site/index.html <<'HTML'
+<!doctype html>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="0; url=documentation/workos/">
+<link rel="canonical" href="documentation/workos/">
+<title>WorkOS iOS Documentation</title>
+HTML
