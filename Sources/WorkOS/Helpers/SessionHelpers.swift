@@ -236,10 +236,15 @@ public struct Session: Sendable {
                 requestOptions: requestOptions
             )
         } catch let error as WorkOSError {
+            // A terminal refresh failure surfaces as OAuth `invalid_grant` (the
+            // refresh token is expired, revoked, or reused past the grace
+            // window). The WorkOS token endpoint returns it at HTTP 400, so
+            // detection must key off the error code rather than a specific
+            // status. Any other failure (429, 5xx, network) stays the generic
+            // `refresh_failed`: the refresh token is still valid and the caller
+            // can retry rather than signing the user out.
             var reason = "refresh_failed"
-            if let apiError = error.apiError, apiError.statusCode == 401,
-                error.helperErrorCode == "invalid_grant"
-            {
+            if error.helperErrorCode == "invalid_grant" {
                 reason = "refresh_token_revoked"
             }
             return RefreshSessionResult(authenticated: false, reason: reason)
