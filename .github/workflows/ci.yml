@@ -20,5 +20,8 @@ jobs:
       - name: Swift build
         run: swift build
 
+      - name: Swift build (iOS deployment floor)
+        run: swift build --sdk "$(xcrun --sdk iphonesimulator --show-sdk-path)" --triple arm64-apple-ios16.0-simulator
+
       - name: Swift test
         run: swift test
