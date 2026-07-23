@@ -23,15 +23,33 @@ jobs:
       - name: Swift test
         run: swift test
 
-  build-ios:
-    name: Build (iOS ${{ matrix.ios-version }})
+  build-floors:
+    name: Build (${{ matrix.platform }})
     runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
-        ios-version: ['16.0', '17.0']
+        include:
+          - platform: iOS 16.0
+            sdk: iphonesimulator
+            triple: arm64-apple-ios16.0-simulator
+          - platform: iOS 17.0
+            sdk: iphonesimulator
+            triple: arm64-apple-ios17.0-simulator
+          - platform: Mac Catalyst 16.0
+            sdk: macosx
+            triple: arm64-apple-ios16.0-macabi
+          - platform: macOS 13.0
+            sdk: macosx
+            triple: arm64-apple-macosx13.0
+          - platform: tvOS 16.0
+            sdk: appletvsimulator
+            triple: arm64-apple-tvos16.0-simulator
+          - platform: watchOS 9.0
+            sdk: watchsimulator
+            triple: arm64-apple-watchos9.0-simulator
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Swift build
-        run: swift build --sdk "$(xcrun --sdk iphonesimulator --show-sdk-path)" --triple arm64-apple-ios${{ matrix.ios-version }}-simulator
+        run: swift build --sdk "$(xcrun --sdk ${{ matrix.sdk }} --show-sdk-path)" --triple ${{ matrix.triple }}
