@@ -4,11 +4,11 @@ import PackageDescription
 let package = Package(
     name: "WorkOS",
     platforms: [
-        .iOS(.v17),
-        .macCatalyst(.v17),
-        .macOS(.v14),
-        .watchOS(.v10),
-        .tvOS(.v17),
+        .iOS(.v16),
+        .macCatalyst(.v16),
+        .macOS(.v13),
+        .watchOS(.v9),
+        .tvOS(.v16),
         .visionOS(.v1),
     ],
     products: [

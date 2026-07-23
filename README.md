@@ -12,7 +12,7 @@ The WorkOS iOS SDK provides convenient access to AuthKit and the WorkOS API from
 
 ### Requirements
 
-- iOS 17+ / Mac Catalyst 17+ / macOS 14+ / tvOS 17+ / watchOS 10+ / visionOS 1+
+- iOS 16+ / Mac Catalyst 16+ / macOS 13+ / tvOS 16+ / watchOS 9+ / visionOS 1+
 - Xcode 26+
 - Swift 6.2+
 
