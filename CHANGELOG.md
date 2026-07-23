@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/workos/workos-ios/compare/v0.1.1...v0.2.0) (2026-07-23)
+
+
+### Features
+
+* lower deployment targets to the iOS 16 generation ([#7](https://github.com/workos/workos-ios/issues/7)) ([8060ff2](https://github.com/workos/workos-ios/commit/8060ff28ccf593084e20b83328f7259616e325b8))
+
 ## [0.1.1](https://github.com/workos/workos-ios/compare/v0.1.0...v0.1.1) (2026-07-22)
 
 
