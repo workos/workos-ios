@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/workos/workos-ios/compare/v0.1.0...v0.1.1) (2026-07-22)
+
+
+### Bug Fixes
+
+* **docs:** add root redirect to documentation landing page ([a746573](https://github.com/workos/workos-ios/commit/a74657356c1804455d0a9332efb0e346a6593acc))
+
 ## [0.1.0](https://github.com/workos/workos-ios/compare/v0.0.1...v0.1.0) (2026-07-21)
 
 
