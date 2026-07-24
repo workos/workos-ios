@@ -19,7 +19,7 @@ private struct EmptyBody: Codable {}
         #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer sk_test_123")
         #expect(
             request.value(forHTTPHeaderField: "User-Agent")
-                == "WorkOS swift/\(WorkOSVersion.current)")
+                == "WorkOS iOS/\(WorkOSVersion.current)")
     }
 
     @Test func requestOptionsOverrideHeadersAndTimeout() async throws {

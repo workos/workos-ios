@@ -72,7 +72,7 @@ public struct Transport: Sendable {
         request.httpMethod = method
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue(
-            "WorkOS swift/\(WorkOSVersion.current)", forHTTPHeaderField: "User-Agent")
+            "WorkOS iOS/\(WorkOSVersion.current)", forHTTPHeaderField: "User-Agent")
         request.setValue("Bearer \(configuration.apiKey)", forHTTPHeaderField: "Authorization")
         request.timeoutInterval = options?.timeout ?? configuration.timeout
 
