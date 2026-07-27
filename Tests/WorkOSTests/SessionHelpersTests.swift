@@ -127,9 +127,10 @@ import Testing
     }
 
     @Test func refreshReportsRevokedToken() async throws {
+        // The WorkOS token endpoint returns terminal invalid_grant at HTTP 400.
         let sealed = try Self.makeSealedSession()
         let (client, _) = makeHelperTestClient(
-            statusCode: 401,
+            statusCode: 400,
             responding: #"{"error":"invalid_grant","error_description":"Refresh token revoked"}"#
         )
         let result = try await client.refreshSession(
@@ -137,6 +138,21 @@ import Testing
 
         #expect(!result.authenticated)
         #expect(result.reason == "refresh_token_revoked")
+    }
+
+    @Test func refreshTreatsNonInvalidGrantAsNotRevoked() async throws {
+        // A non-invalid_grant failure is not a dead token, so it stays the
+        // generic refresh_failed rather than being reported as revoked.
+        let sealed = try Self.makeSealedSession()
+        let (client, _) = makeHelperTestClient(
+            statusCode: 400,
+            responding: #"{"error":"invalid_request","error_description":"Something else"}"#
+        )
+        let result = try await client.refreshSession(
+            sealedSession: sealed, cookiePassword: Self.cookiePassword)
+
+        #expect(!result.authenticated)
+        #expect(result.reason == "refresh_failed")
     }
 
     @Test func refreshWithoutClientThrows() async throws {
