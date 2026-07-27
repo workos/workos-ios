@@ -99,14 +99,21 @@ extension WorkOSClient {
     /// Exchange an authorization code with a PKCE code verifier. Works for
     /// both confidential clients (API key configured) and public clients —
     /// the client secret is only sent when an API key is present.
+    /// `clientId` overrides the configuration's client ID, so a multi-tenant
+    /// caller can keep the exchange on the same application as the
+    /// authorization URL it was generated for.
     public func authKitPKCECodeExchange(
-        code: String, codeVerifier: String, requestOptions: RequestOptions? = nil
+        code: String, codeVerifier: String, clientId: String? = nil,
+        requestOptions: RequestOptions? = nil
     ) async throws -> AuthenticateResponse {
+        guard let resolvedClientId = clientId ?? configuration.clientID else {
+            throw HelperError.missingClientID
+        }
         var body = EncodableBody()
         body.set("code", code)
         body.set("code_verifier", codeVerifier)
         body.set("grant_type", "authorization_code")
-        body.set("client_id", configuration.clientID)
+        body.set("client_id", resolvedClientId)
         if !configuration.apiKey.isEmpty {
             body.set("client_secret", configuration.apiKey)
         }
