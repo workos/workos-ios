@@ -89,6 +89,23 @@ import Testing
         #expect(response.user.id == "user_01E4ZCR3C56J083X43JQXF3JK5")
     }
 
+    @Test func pkceCodeExchangeAcceptsExplicitClientID() async throws {
+        let (client, recorder) = makeHelperTestClient(responding: authenticateResponseJSON)
+        _ = try await client.authKitPKCECodeExchange(
+            code: "code_123", codeVerifier: "verifier_456", clientId: "client_override")
+
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["client_id"] as? String == "client_override")
+    }
+
+    @Test func pkceCodeExchangeThrowsWithoutClientID() async {
+        let (client, _) = makeHelperTestClient(clientID: nil)
+        await #expect(throws: HelperError.missingClientID) {
+            _ = try await client.authKitPKCECodeExchange(code: "c", codeVerifier: "v")
+        }
+    }
+
     // MARK: - H12: device flow
 
     @Test func startDeviceAuthorizationSendsClientID() async throws {

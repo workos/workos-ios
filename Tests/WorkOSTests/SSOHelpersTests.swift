@@ -73,6 +73,23 @@ import Testing
         #expect(response.profile.id == "prof_01DMC79VCBZ0NY2099737PSVF1")
     }
 
+    @Test func ssoPkceCodeExchangeAcceptsExplicitClientID() async throws {
+        let (client, recorder) = makeHelperTestClient(responding: Self.ssoTokenResponseJSON)
+        _ = try await client.ssoPKCECodeExchange(
+            code: "code_123", codeVerifier: "verifier_456", clientId: "client_override")
+
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["client_id"] as? String == "client_override")
+    }
+
+    @Test func ssoPkceCodeExchangeThrowsWithoutClientID() async {
+        let (client, _) = makeHelperTestClient(clientID: nil)
+        await #expect(throws: HelperError.missingClientID) {
+            _ = try await client.ssoPKCECodeExchange(code: "c", codeVerifier: "v")
+        }
+    }
+
     // MARK: - H17: logout flow
 
     @Test func ssoLogoutAuthorizesAndBuildsRedirectUrl() async throws {
