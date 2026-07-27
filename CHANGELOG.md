@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1](https://github.com/workos/workos-ios/compare/v0.2.0...v0.2.1) (2026-07-27)
+
+
+### Bug Fixes
+
+* Detect revoked refresh token via invalid_grant regardless of status ([#10](https://github.com/workos/workos-ios/issues/10)) ([736e2db](https://github.com/workos/workos-ios/commit/736e2dbdd145e779b35e6036f4cadb1f58478b95))
+* identify as iOS in the User-Agent header ([51d78f9](https://github.com/workos/workos-ios/commit/51d78f9c65c8efdf9ad89e35ba57c7bb675b76fa))
+
 ## [0.2.0](https://github.com/workos/workos-ios/compare/v0.1.1...v0.2.0) (2026-07-23)
 
 
