@@ -79,6 +79,7 @@ public struct Pipes: Sendable {
     /// - Parameter enabled: Whether the Data Integration is enabled. Defaults to `false`.
     /// - Parameter scopes: The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
     /// - Parameter authMethods: How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request).
+    /// - Parameter config: Provider-specific config values (e.g. a Snowflake `account_identifier`), keyed by the config field. Only fields the built-in provider declares are accepted.
     /// - Parameter credentials: The OAuth credentials to configure for the Data Integration. Required for OAuth integrations; omit when `auth_methods` is `["api_key"]`.
     /// - Parameter apiKey: An optional API key to install for the first tenant on an `api_key` integration. Omit to declare a keyless integration; tenants can be added later via the per-installation API key path.
     /// - Parameter customProvider: The OAuth definition for a custom provider. Supply this to define a custom provider; omit it to create an integration for a built-in provider.
@@ -89,6 +90,7 @@ public struct Pipes: Sendable {
         enabled: Bool? = nil,
         scopes: [String]? = nil,
         authMethods: [CreateDataIntegrationAuthMethods]? = nil,
+        config: [String: String]? = nil,
         credentials: DataIntegrationCredentialsInput? = nil,
         apiKey: ApiKeyInstallation? = nil,
         customProvider: CustomProviderDefinition? = nil,
@@ -101,6 +103,7 @@ public struct Pipes: Sendable {
         body.set("enabled", enabled)
         body.set("scopes", scopes)
         body.set("auth_methods", authMethods)
+        body.set("config", config)
         body.set("credentials", credentials)
         body.set("api_key", apiKey)
         body.set("custom_provider", customProvider)
@@ -234,12 +237,14 @@ public struct Pipes: Sendable {
     /// - Parameter userId: The ID of the user to authorize.
     /// - Parameter organizationId: An organization ID to scope the authorization to a specific organization.
     /// - Parameter returnTo: The URL to redirect the user to after authorization.
+    /// - Parameter config: Connect-time config values for the provider-declared `installation`-scope fields (e.g. a Zendesk `subdomain`), keyed by the config field. Only fields the provider declares may be supplied, and required fields must be provided unless already pinned on the integration.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authorizeDataIntegration(
         slug: String,
         userId: String,
         organizationId: String? = nil,
         returnTo: String? = nil,
+        config: [String: String]? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegrationAuthorizeUrlResponse {
         let path = "data-integrations/\(PathEncoding.segment(slug))/authorize"
@@ -247,6 +252,7 @@ public struct Pipes: Sendable {
         body.set("user_id", userId)
         body.set("organization_id", organizationId)
         body.set("return_to", returnTo)
+        body.set("config", config)
         return try await transport.request(
             method: "POST",
             path: path,

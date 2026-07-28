@@ -13,7 +13,7 @@ public struct DataIntegrationsListResponseDataConnectedAccount: Codable, Sendabl
     public let organizationId: String?
     /// The OAuth scopes granted for this connection.
     public let scopes: [String]
-    /// The authentication method used for this connection (`oauth` or `api_key`). Defaults to `oauth` if absent.
+    /// The authentication method used for this connection (`oauth`, `api_key`, or `client_credentials`). Defaults to `oauth` if absent.
     public let authMethod: DataIntegrationsListResponseDataConnectedAccountAuthMethod?
     /// The last four characters of the API key, or `null` for OAuth connections.
     public let apiKeyLast4: String?

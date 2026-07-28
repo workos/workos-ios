@@ -13,6 +13,8 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
     public let scopes: [String]?
     /// How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request).
     public let authMethods: [CreateDataIntegrationAuthMethods]?
+    /// Provider-specific config values (e.g. a Snowflake `account_identifier`), keyed by the config field. Only fields the built-in provider declares are accepted.
+    public let config: [String: String]?
     /// The OAuth credentials to configure for the Data Integration. Required for OAuth integrations; omit when `auth_methods` is `["api_key"]`.
     public let credentials: DataIntegrationCredentialsInput?
     /// An optional API key to install for the first tenant on an `api_key` integration. Omit to declare a keyless integration; tenants can be added later via the per-installation API key path.
@@ -26,6 +28,7 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
         enabled: Bool? = nil,
         scopes: [String]? = nil,
         authMethods: [CreateDataIntegrationAuthMethods]? = nil,
+        config: [String: String]? = nil,
         credentials: DataIntegrationCredentialsInput? = nil,
         apiKey: ApiKeyInstallation? = nil,
         customProvider: CustomProviderDefinition? = nil
@@ -35,6 +38,7 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
         self.enabled = enabled
         self.scopes = scopes
         self.authMethods = authMethods
+        self.config = config
         self.credentials = credentials
         self.apiKey = apiKey
         self.customProvider = customProvider
@@ -46,6 +50,7 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
         case enabled
         case scopes
         case authMethods = "auth_methods"
+        case config
         case credentials
         case apiKey = "api_key"
         case customProvider = "custom_provider"

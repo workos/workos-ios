@@ -20,8 +20,6 @@ public struct Connection: Codable, Sendable, Equatable {
     public let status: ConnectionStatus
     /// List of Organization Domains.
     public let domains: [ConnectionDomain]
-    /// The immutable callback endpoint for this Connection. For SAML connections this is the ACS URL; for OIDC connections this is the redirect URI.
-    public let callbackEndpoint: String?
     /// An ISO 8601 timestamp.
     public let createdAt: Date
     /// An ISO 8601 timestamp.
@@ -37,8 +35,7 @@ public struct Connection: Codable, Sendable, Equatable {
         domains: [ConnectionDomain],
         createdAt: Date,
         updatedAt: Date,
-        organizationId: String? = nil,
-        callbackEndpoint: String? = nil
+        organizationId: String? = nil
     ) {
         self.object = object
         self.id = id
@@ -48,7 +45,6 @@ public struct Connection: Codable, Sendable, Equatable {
         self.state = state
         self.status = status
         self.domains = domains
-        self.callbackEndpoint = callbackEndpoint
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
@@ -62,7 +58,6 @@ public struct Connection: Codable, Sendable, Equatable {
         case state
         case status
         case domains
-        case callbackEndpoint = "callback_endpoint"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }

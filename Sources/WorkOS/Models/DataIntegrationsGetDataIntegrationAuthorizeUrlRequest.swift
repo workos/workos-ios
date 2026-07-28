@@ -9,20 +9,25 @@ public struct DataIntegrationsGetDataIntegrationAuthorizeUrlRequest: Codable, Se
     public let organizationId: String?
     /// The URL to redirect the user to after authorization.
     public let returnTo: String?
+    /// Connect-time config values for the provider-declared `installation`-scope fields (e.g. a Zendesk `subdomain`), keyed by the config field. Only fields the provider declares may be supplied, and required fields must be provided unless already pinned on the integration.
+    public let config: [String: String]?
 
     public init(
         userId: String,
         organizationId: String? = nil,
-        returnTo: String? = nil
+        returnTo: String? = nil,
+        config: [String: String]? = nil
     ) {
         self.userId = userId
         self.organizationId = organizationId
         self.returnTo = returnTo
+        self.config = config
     }
 
     private enum CodingKeys: String, CodingKey {
         case userId = "user_id"
         case organizationId = "organization_id"
         case returnTo = "return_to"
+        case config
     }
 }

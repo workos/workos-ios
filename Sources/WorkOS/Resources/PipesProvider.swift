@@ -38,6 +38,7 @@ public struct PipesProvider: Sendable {
     /// - Parameter scopes: The OAuth scopes to request for the organization. Pass `null` to inherit the provider scopes.
     /// - Parameter clientId: The OAuth client ID of the organization's own application. Must be provided together with `client_secret`, and only for providers whose credentials are supplied by the organization.
     /// - Parameter clientSecret: The OAuth client secret of the organization's own application. Must be provided together with `client_id`.
+    /// - Parameter config: Provider-specific config values to set for the organization, keyed by config field. Only fields the provider declares are accepted, and each value must match that field's pattern. Accepted only for providers whose credentials are organization-managed; for shared or custom credential providers, config belongs on the integration itself (via the data-integrations API) and supplying it here is rejected.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateOrganizationDataIntegrationConfiguration(
         organizationId: String,
@@ -46,6 +47,7 @@ public struct PipesProvider: Sendable {
         scopes: [String]? = nil,
         clientId: String? = nil,
         clientSecret: String? = nil,
+        config: [String: String]? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegrationConfigurationResponse {
         let path =
@@ -55,6 +57,7 @@ public struct PipesProvider: Sendable {
         body.set("scopes", scopes)
         body.set("client_id", clientId)
         body.set("client_secret", clientSecret)
+        body.set("config", config)
         return try await transport.request(
             method: "PUT",
             path: path,

@@ -17,6 +17,8 @@ public struct DataIntegrationConfigurationResponse: Codable, Sendable, Equatable
     public let enabled: Bool
     /// The OAuth scopes in effect for this organization. Reflects the organization override when one is set, otherwise the provider scopes, or `null` when none are configured.
     public let scopes: [String]?
+    /// The provider-specific config values in effect for this organization, keyed by config field. Reflects the organization override for organization-credential providers, otherwise the provider root. Empty when none are configured.
+    public let config: [String: String]
     /// The timestamp when the configuration was created.
     public let createdAt: String
     /// The timestamp when the configuration was last updated.
@@ -30,6 +32,7 @@ public struct DataIntegrationConfigurationResponse: Codable, Sendable, Equatable
         slug: String,
         name: String,
         enabled: Bool,
+        config: [String: String],
         createdAt: String,
         updatedAt: String,
         scopes: [String]? = nil,
@@ -42,6 +45,7 @@ public struct DataIntegrationConfigurationResponse: Codable, Sendable, Equatable
         self.name = name
         self.enabled = enabled
         self.scopes = scopes
+        self.config = config
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.credentials = credentials
@@ -55,6 +59,7 @@ public struct DataIntegrationConfigurationResponse: Codable, Sendable, Equatable
         case name
         case enabled
         case scopes
+        case config
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case credentials
