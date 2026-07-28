@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.0](https://github.com/workos/workos-ios/compare/v0.3.0...v0.4.0) (2026-07-28)
+
+
+### Features
+
+* **generated:** SSO (batch 16283437) ([#16](https://github.com/workos/workos-ios/issues/16)) ([9a64edc](https://github.com/workos/workos-ios/commit/9a64edc7e10ae212993525ae0b9220ebb2a0ab24))
+* **pipes:** SDK surface change: Parameter "requestOptions" moved from position 4 to 5 on "Pipes.authorizeDataIntegration" ([#14](https://github.com/workos/workos-ios/issues/14)) ([6849ca5](https://github.com/workos/workos-ios/commit/6849ca515b48e13d65a271f29b0640fd3fe024b0))
+
 ## [0.3.0](https://github.com/workos/workos-ios/compare/v0.2.1...v0.3.0) (2026-07-27)
 
 
