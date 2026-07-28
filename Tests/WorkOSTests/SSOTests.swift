@@ -18,7 +18,7 @@ import Testing
     @Test func listConnectionsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"data":[{"object":"connection","id":"conn_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","connection_type":"OktaSAML","name":"Foo Corp","state":"active","status":"linked","domains":[{"id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","object":"connection_domain","domain":"foo-corp.com"}],"callback_endpoint":"https://auth.workos.com/sso/saml/acs/conn_externalkey","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                #"{"data":[{"object":"connection","id":"conn_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","connection_type":"OktaSAML","name":"Foo Corp","state":"active","status":"linked","domains":[{"id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","object":"connection_domain","domain":"foo-corp.com"}],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
         let result = try await client.sso.listConnections()
 
@@ -29,10 +29,35 @@ import Testing
         #expect(result.data.first?.id == "conn_01E4ZCR3C56J083X43JQXF3JK5")
     }
 
+    @Test func listConnectionsAutoPagingFetchesAllPages() async throws {
+        let (client, recorder) = makeTestClient(stubs: [
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"connection","id":"conn_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","connection_type":"OktaSAML","name":"Foo Corp","state":"active","status":"linked","domains":[{"id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","object":"connection_domain","domain":"foo-corp.com"}],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":"cursor_2"}}"#
+                        .utf8), headers: [:]),
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"connection","id":"conn_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","connection_type":"OktaSAML","name":"Foo Corp","state":"active","status":"linked","domains":[{"id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","object":"connection_domain","domain":"foo-corp.com"}],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                        .utf8), headers: [:]),
+        ])
+        var items: [Connection] = []
+        for try await item in client.sso.listConnectionsAutoPaging() {
+            items.append(item)
+        }
+
+        #expect(items.count == 2)
+        #expect(recorder.allRequests.count == 2)
+        let second = try #require(recorder.allRequests.last?.url)
+        let query = URLComponents(url: second, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        #expect(query.contains(URLQueryItem(name: "after", value: "cursor_2")))
+    }
+
     @Test func getConnectionSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connection","id":"conn_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","connection_type":"OktaSAML","name":"Foo Corp","state":"active","status":"linked","domains":[{"id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","object":"connection_domain","domain":"foo-corp.com"}],"callback_endpoint":"https://auth.workos.com/sso/saml/acs/conn_externalkey","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"connection","id":"conn_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","connection_type":"OktaSAML","name":"Foo Corp","state":"active","status":"linked","domains":[{"id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","object":"connection_domain","domain":"foo-corp.com"}],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.sso.getConnection(id: "sample-id")
 
