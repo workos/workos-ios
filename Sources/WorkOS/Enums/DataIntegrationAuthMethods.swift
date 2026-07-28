@@ -6,6 +6,7 @@ import Foundation
 public enum DataIntegrationAuthMethods: RawRepresentable, Codable, Sendable, Hashable {
     case oauth
     case apiKey
+    case clientCredentials
     /// A value not known at SDK generation time.
     case unknown(String)
 
@@ -13,6 +14,7 @@ public enum DataIntegrationAuthMethods: RawRepresentable, Codable, Sendable, Has
         switch rawValue {
         case "oauth": self = .oauth
         case "api_key": self = .apiKey
+        case "client_credentials": self = .clientCredentials
         default: self = .unknown(rawValue)
         }
     }
@@ -21,6 +23,7 @@ public enum DataIntegrationAuthMethods: RawRepresentable, Codable, Sendable, Has
         switch self {
         case .oauth: return "oauth"
         case .apiKey: return "api_key"
+        case .clientCredentials: return "client_credentials"
         case .unknown(let value): return value
         }
     }
@@ -35,5 +38,9 @@ public enum DataIntegrationAuthMethods: RawRepresentable, Codable, Sendable, Has
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [DataIntegrationAuthMethods] = [.oauth, .apiKey]
+    public static let allKnownCases: [DataIntegrationAuthMethods] = [
+        .oauth,
+        .apiKey,
+        .clientCredentials,
+    ]
 }

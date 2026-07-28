@@ -18,7 +18,7 @@ import Testing
     @Test func listOrganizationDataIntegrationConfigurationsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"list","data":[{"object":"data_integration_configuration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","name":"GitHub","enabled":true,"scopes":["repo","user:email"],"created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","credentials":{"credentials_type":"organization","has_credentials":true,"client_id":"client_01EHZNVPK3SFK441A1RGBFSHRT","client_secret_last_four":"1a2b","redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback"}}]}"#
+                #"{"object":"list","data":[{"object":"data_integration_configuration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","name":"GitHub","enabled":true,"scopes":["repo","user:email"],"config":{"account_identifier":"acme-prod"},"created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","credentials":{"credentials_type":"organization","has_credentials":true,"client_id":"client_01EHZNVPK3SFK441A1RGBFSHRT","client_secret_last_four":"1a2b","redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback"}}]}"#
         )
         let result = try await client.pipesProvider.listOrganizationDataIntegrationConfigurations(
             organizationId: "sample-organizationId")
@@ -34,7 +34,7 @@ import Testing
     @Test func updateOrganizationDataIntegrationConfigurationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"data_integration_configuration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","name":"GitHub","enabled":true,"scopes":["repo","user:email"],"created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","credentials":{"credentials_type":"organization","has_credentials":true,"client_id":"client_01EHZNVPK3SFK441A1RGBFSHRT","client_secret_last_four":"1a2b","redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback"}}"#
+                #"{"object":"data_integration_configuration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","name":"GitHub","enabled":true,"scopes":["repo","user:email"],"config":{"account_identifier":"acme-prod"},"created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","credentials":{"credentials_type":"organization","has_credentials":true,"client_id":"client_01EHZNVPK3SFK441A1RGBFSHRT","client_secret_last_four":"1a2b","redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback"}}"#
         )
         let result = try await client.pipesProvider.updateOrganizationDataIntegrationConfiguration(
             organizationId: "sample-organizationId", slug: "sample-slug")

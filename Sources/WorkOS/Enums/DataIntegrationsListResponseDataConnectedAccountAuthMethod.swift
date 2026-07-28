@@ -8,6 +8,7 @@ public enum DataIntegrationsListResponseDataConnectedAccountAuthMethod: RawRepre
 {
     case oauth
     case apiKey
+    case clientCredentials
     /// A value not known at SDK generation time.
     case unknown(String)
 
@@ -15,6 +16,7 @@ public enum DataIntegrationsListResponseDataConnectedAccountAuthMethod: RawRepre
         switch rawValue {
         case "oauth": self = .oauth
         case "api_key": self = .apiKey
+        case "client_credentials": self = .clientCredentials
         default: self = .unknown(rawValue)
         }
     }
@@ -23,6 +25,7 @@ public enum DataIntegrationsListResponseDataConnectedAccountAuthMethod: RawRepre
         switch self {
         case .oauth: return "oauth"
         case .apiKey: return "api_key"
+        case .clientCredentials: return "client_credentials"
         case .unknown(let value): return value
         }
     }
@@ -41,5 +44,6 @@ public enum DataIntegrationsListResponseDataConnectedAccountAuthMethod: RawRepre
         [
             .oauth,
             .apiKey,
+            .clientCredentials,
         ]
 }

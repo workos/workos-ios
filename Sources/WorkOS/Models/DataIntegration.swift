@@ -27,6 +27,8 @@ public struct DataIntegration: Codable, Sendable, Equatable {
     public let credentials: DataIntegrationCredential
     /// The tenant installation created when an API key was supplied at creation time; `null` otherwise. Not populated on list/get responses.
     public let installation: DataIntegrationInstallation?
+    /// Provider-specific config values set on the Data Integration (e.g. a Snowflake `account_identifier`), keyed by config field. Only fields the provider declares are accepted.
+    public let config: [String: String]
     /// The OAuth definition when this is a custom provider; `null` for built-in providers.
     public let customProvider: DataIntegrationCustomProvider?
     /// An ISO 8601 timestamp.
@@ -44,6 +46,7 @@ public struct DataIntegration: Codable, Sendable, Equatable {
         redirectUri: String,
         authMethods: [DataIntegrationAuthMethods],
         credentials: DataIntegrationCredential,
+        config: [String: String],
         createdAt: Date,
         updatedAt: Date,
         description: String? = nil,
@@ -63,6 +66,7 @@ public struct DataIntegration: Codable, Sendable, Equatable {
         self.authMethods = authMethods
         self.credentials = credentials
         self.installation = installation
+        self.config = config
         self.customProvider = customProvider
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -81,6 +85,7 @@ public struct DataIntegration: Codable, Sendable, Equatable {
         case authMethods = "auth_methods"
         case credentials
         case installation
+        case config
         case customProvider = "custom_provider"
         case createdAt = "created_at"
         case updatedAt = "updated_at"

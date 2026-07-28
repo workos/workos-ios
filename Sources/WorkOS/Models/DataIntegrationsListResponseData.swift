@@ -19,7 +19,7 @@ public struct DataIntegrationsListResponseData: Codable, Sendable, Equatable {
     public let credentialsType: String
     /// The OAuth scopes configured for this provider, or `null` if none are configured.
     public let scopes: [String]?
-    /// The authentication methods supported by this provider (`oauth`, `api_key`, or both). Defaults to `["oauth"]` if absent.
+    /// The authentication methods supported by this provider (`oauth`, `api_key`, `client_credentials`, or a combination). Defaults to `["oauth"]` if absent.
     public let authMethods: [DataIntegrationsListResponseDataAuthMethods]?
     /// Whether the provider is owned by a user or organization.
     public let ownership: DataIntegrationsListResponseDataOwnership

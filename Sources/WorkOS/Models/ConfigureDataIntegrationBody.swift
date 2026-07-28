@@ -11,17 +11,21 @@ public struct ConfigureDataIntegrationBody: Codable, Sendable, Equatable {
     public let clientId: String?
     /// The OAuth client secret of the organization's own application. Must be provided together with `client_id`.
     public let clientSecret: String?
+    /// Provider-specific config values to set for the organization, keyed by config field. Only fields the provider declares are accepted, and each value must match that field's pattern. Accepted only for providers whose credentials are organization-managed; for shared or custom credential providers, config belongs on the integration itself (via the data-integrations API) and supplying it here is rejected.
+    public let config: [String: String]?
 
     public init(
         enabled: Bool? = nil,
         scopes: [String]? = nil,
         clientId: String? = nil,
-        clientSecret: String? = nil
+        clientSecret: String? = nil,
+        config: [String: String]? = nil
     ) {
         self.enabled = enabled
         self.scopes = scopes
         self.clientId = clientId
         self.clientSecret = clientSecret
+        self.config = config
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -29,5 +33,6 @@ public struct ConfigureDataIntegrationBody: Codable, Sendable, Equatable {
         case scopes
         case clientId = "client_id"
         case clientSecret = "client_secret"
+        case config
     }
 }
