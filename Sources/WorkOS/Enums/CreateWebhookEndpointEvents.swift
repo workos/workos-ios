@@ -9,6 +9,7 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
     case agentRegistrationClaimCompleted
     case agentRegistrationCredentialIssued
     case agentRegistrationDeleted
+    case agentRegistrationRefreshed
     case agentRegistrationExpired
     case agentRegistrationOrganizationSwitched
     case agentRegistrationRevoked
@@ -107,6 +108,7 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case "agent.registration.claim.completed": self = .agentRegistrationClaimCompleted
         case "agent.registration.credential.issued": self = .agentRegistrationCredentialIssued
         case "agent.registration.deleted": self = .agentRegistrationDeleted
+        case "agent.registration.refreshed": self = .agentRegistrationRefreshed
         case "agent.registration.expired": self = .agentRegistrationExpired
         case "agent.registration.organization.switched":
             self = .agentRegistrationOrganizationSwitched
@@ -212,6 +214,7 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case .agentRegistrationClaimCompleted: return "agent.registration.claim.completed"
         case .agentRegistrationCredentialIssued: return "agent.registration.credential.issued"
         case .agentRegistrationDeleted: return "agent.registration.deleted"
+        case .agentRegistrationRefreshed: return "agent.registration.refreshed"
         case .agentRegistrationExpired: return "agent.registration.expired"
         case .agentRegistrationOrganizationSwitched:
             return "agent.registration.organization.switched"
@@ -325,6 +328,7 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         .agentRegistrationClaimCompleted,
         .agentRegistrationCredentialIssued,
         .agentRegistrationDeleted,
+        .agentRegistrationRefreshed,
         .agentRegistrationExpired,
         .agentRegistrationOrganizationSwitched,
         .agentRegistrationRevoked,

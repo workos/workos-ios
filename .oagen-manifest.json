@@ -179,6 +179,8 @@
     "Sources/WorkOS/Models/AgentRegistrationExpiredData.swift",
     "Sources/WorkOS/Models/AgentRegistrationOrganizationSwitched.swift",
     "Sources/WorkOS/Models/AgentRegistrationOrganizationSwitchedData.swift",
+    "Sources/WorkOS/Models/AgentRegistrationRefreshed.swift",
+    "Sources/WorkOS/Models/AgentRegistrationRefreshedData.swift",
     "Sources/WorkOS/Models/AgentRegistrationRevoked.swift",
     "Sources/WorkOS/Models/AgentRegistrationRevokedData.swift",
     "Sources/WorkOS/Models/ApiKey.swift",
