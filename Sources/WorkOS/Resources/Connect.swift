@@ -126,7 +126,7 @@ public struct Connect: Sendable {
         }
     }
 
-    /// Create oauth application
+    /// Create OAuth application
     ///
     /// - Parameter name: The name of the application.
     /// - Parameter isFirstParty: Whether this is a first-party application. Third-party applications require an organization_id.
@@ -166,7 +166,7 @@ public struct Connect: Sendable {
         )
     }
 
-    /// Create m2m application
+    /// Create M2M application
     ///
     /// - Parameter name: The name of the application.
     /// - Parameter organizationId: The organization ID this application belongs to.

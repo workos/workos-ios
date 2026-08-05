@@ -459,8 +459,7 @@ public struct UserManagement: Sendable {
             query.append(URLQueryItem(name: "client_id", value: value))
         }
         if let codeChallengeMethod {
-            query.append(
-                URLQueryItem(name: "code_challenge_method", value: "\(codeChallengeMethod)"))
+            query.append(URLQueryItem(name: "code_challenge_method", value: codeChallengeMethod))
         }
         if let codeChallenge {
             query.append(URLQueryItem(name: "code_challenge", value: codeChallenge))

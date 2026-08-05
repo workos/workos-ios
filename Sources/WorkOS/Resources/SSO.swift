@@ -214,7 +214,7 @@ public struct SSO: Sendable {
             query.append(URLQueryItem(name: "nonce", value: nonce))
         }
         if let prompt {
-            query.append(URLQueryItem(name: "prompt", value: "\(prompt)"))
+            query.append(URLQueryItem(name: "prompt", value: prompt))
         }
         return transport.buildURL(path: path, query: query)
     }
