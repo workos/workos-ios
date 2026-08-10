@@ -43,7 +43,7 @@ import Testing
 
     @Test func constructActionVerifiesAndDeserializes() throws {
         let payload = #"""
-            {"object":"event","id":"event_01ACTION","event":"authentication.action_required","data":{"user":{"id":"user_123"}},"created_at":"2026-01-15T12:00:00.000Z"}
+            {"object":"authentication_action_context","id":"action_01","user":{"object":"user","id":"user_01","email":"test@example.com","email_verified":true,"created_at":"2024-01-01T00:00:00.000Z","updated_at":"2024-01-01T00:00:00.000Z"},"ip_address":"1.2.3.4","user_agent":"curl/8","device_fingerprint":"fp_123","issuer":"https://auth.example.com"}
             """#
         let timestamp = String(Int64(Date().timeIntervalSince1970 * 1000))
         let signature = WebhookSignature.compute(
@@ -55,8 +55,32 @@ import Testing
             signatureHeader: "t=\(timestamp), v1=\(signature)",
             secret: Self.secret
         )
-        #expect(action.id == "event_01ACTION")
-        #expect(action.event == "authentication.action_required")
+        #expect(action.object == "authentication_action_context")
+        #expect(action.id == "action_01")
+        #expect(action.user?.id == "user_01")
+        #expect(action.user?.email == "test@example.com")
+        #expect(action.ipAddress == "1.2.3.4")
+        #expect(action.issuer == "https://auth.example.com")
+    }
+
+    @Test func constructActionDeserializesUserRegistration() throws {
+        let payload = #"""
+            {"object":"user_registration_action_context","id":"action_02","user_data":{"object":"user_data","email":"new@example.com","first_name":"New","last_name":"User","name":null},"ip_address":"5.6.7.8","device_fingerprint":"fp_456"}
+            """#
+        let timestamp = String(Int64(Date().timeIntervalSince1970 * 1000))
+        let signature = WebhookSignature.compute(
+            secret: Self.secret, timestamp: timestamp, body: payload)
+
+        let helper = ActionsHelper()
+        let action = try helper.constructAction(
+            payload: payload,
+            signatureHeader: "t=\(timestamp), v1=\(signature)",
+            secret: Self.secret
+        )
+        #expect(action.object == "user_registration_action_context")
+        #expect(action.userData?.email == "new@example.com")
+        #expect(action.userData?.firstName == "New")
+        #expect(action.user == nil)
     }
 
     @Test func verifyHeaderRejectsExpiredTimestamp() {
