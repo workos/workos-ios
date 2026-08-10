@@ -14,17 +14,43 @@ public enum ActionVerdict: String, Codable, Sendable {
     case deny = "Deny"
 }
 
-/// A signed action response. Send `payload` and `sig` back to WorkOS as the
-/// action webhook response body.
-public struct ActionSignedResponse: Codable, Sendable, Equatable {
-    /// The base64-encoded JSON response body.
-    public let payload: String
-    /// The signature header in the form `"t=<timestamp>,v1=<hex>"`.
-    public let sig: String
+/// The signed payload of an action response.
+public struct ActionResponsePayload: Sendable, Equatable {
+    /// Milliseconds since the Unix epoch.
+    public let timestamp: Int64
+    /// The verdict: `.allow` or `.deny`.
+    public let verdict: ActionVerdict
+    /// Present (and non-empty) only when denying.
+    public let errorMessage: String?
 
-    public init(payload: String, sig: String) {
+    public init(timestamp: Int64, verdict: ActionVerdict, errorMessage: String? = nil) {
+        self.timestamp = timestamp
+        self.verdict = verdict
+        self.errorMessage = errorMessage
+    }
+}
+
+/// A signed action response ready to send back to WorkOS.
+///
+/// Matches the `workos-node` wire format: `{object, payload, signature}`, where
+/// `signature` is the HMAC-SHA256 of `"<timestamp>.<JSON(payload)>"`. Send
+/// `bodyData` as the HTTP response body; it is the exact bytes the signature
+/// covers, so do not re-serialize it.
+public struct ActionSignedResponse: Sendable, Equatable {
+    /// `authentication_action_response` or `user_registration_action_response`.
+    public let object: String
+    /// The signed payload.
+    public let payload: ActionResponsePayload
+    /// HMAC-SHA256 hex signature over `"<timestamp>.<JSON(payload)>"`.
+    public let signature: String
+    /// The exact JSON response body to send to WorkOS.
+    public let bodyData: Data
+
+    public init(object: String, payload: ActionResponsePayload, signature: String, bodyData: Data) {
+        self.object = object
         self.payload = payload
-        self.sig = sig
+        self.signature = signature
+        self.bodyData = bodyData
     }
 }
 
@@ -175,26 +201,73 @@ public struct ActionsHelper: Sendable {
     }
 
     /// Sign an action response with the given secret.
+    ///
+    /// Returns the `{object, payload, signature}` body to send back to WorkOS,
+    /// matching `workos-node`. The signature is the HMAC-SHA256 of
+    /// `"<timestamp>.<JSON(payload)>"`. Send `bodyData` as the HTTP response
+    /// body; do not re-serialize it, or the signature may not verify.
     public func signResponse(
         actionType: ActionType, verdict: ActionVerdict, errorMessage: String = "",
         secret: String
     ) throws -> ActionSignedResponse {
-        let responsePayload: [String: String] = [
-            "type": actionType.rawValue,
-            "verdict": verdict.rawValue,
-            "error_message": errorMessage,
-        ]
-        let jsonData = try JSONSerialization.data(
-            withJSONObject: responsePayload, options: [.sortedKeys])
-        let base64Payload = jsonData.base64EncodedString()
+        let object: String
+        switch actionType {
+        case .authentication: object = "authentication_action_response"
+        case .userRegistration: object = "user_registration_action_response"
+        }
 
-        let timestamp = String(Int64(Date().timeIntervalSince1970 * 1000))
-        let signature = WebhookSignature.compute(
-            secret: secret, timestamp: timestamp, body: base64Payload)
-
-        return ActionSignedResponse(
-            payload: base64Payload,
-            sig: "t=\(timestamp),v1=\(signature)"
+        let timestampMs = Int64(Date().timeIntervalSince1970 * 1000)
+        let timestamp = String(timestampMs)
+        let includeError = verdict == .deny && !errorMessage.isEmpty
+        let payload = ActionResponsePayload(
+            timestamp: timestampMs,
+            verdict: verdict,
+            errorMessage: includeError ? errorMessage : nil
         )
+
+        let payloadJSON = ActionsHelper.encodeResponsePayload(payload)
+        let signature = WebhookSignature.compute(
+            secret: secret, timestamp: timestamp, body: payloadJSON)
+
+        let body = "{\"object\":\"\(object)\",\"payload\":\(payloadJSON),\"signature\":\"\(signature)\"}"
+        return ActionSignedResponse(
+            object: object,
+            payload: payload,
+            signature: signature,
+            bodyData: Data(body.utf8)
+        )
+    }
+
+    /// Encodes an `ActionResponsePayload` to the exact JSON bytes `workos-node`
+    /// produces: `timestamp`, `verdict`, then `error_message` when present.
+    static func encodeResponsePayload(_ payload: ActionResponsePayload) -> String {
+        let verdict = payload.verdict.rawValue
+        if let errorMessage = payload.errorMessage, !errorMessage.isEmpty {
+            return "{\"timestamp\":\(payload.timestamp),\"verdict\":\"\(verdict)\",\"error_message\":\"\(ActionsHelper.jsonEscape(errorMessage))\"}"
+        }
+        return "{\"timestamp\":\(payload.timestamp),\"verdict\":\"\(verdict)\"}"
+    }
+
+    /// Escapes a string for inclusion in a JSON string literal.
+    static func jsonEscape(_ string: String) -> String {
+        var out = ""
+        for scalar in string.unicodeScalars {
+            switch scalar {
+            case "\"": out += "\\\""
+            case "\\": out += "\\\\"
+            case "\n": out += "\\n"
+            case "\r": out += "\\r"
+            case "\t": out += "\\t"
+            case "\u{08}": out += "\\b"
+            case "\u{0C}": out += "\\f"
+            default:
+                if scalar.value < 0x20 {
+                    out += String(format: "\\u%04x", scalar.value)
+                } else {
+                    out.unicodeScalars.append(scalar)
+                }
+            }
+        }
+        return out
     }
 }
