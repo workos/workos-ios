@@ -5,10 +5,10 @@ import Foundation
 public struct CustomProviderDefinition: Codable, Sendable, Equatable {
     /// A descriptive name for the custom provider.
     public let name: String
-    /// The provider's OAuth authorization endpoint.
-    public let authorizationUrl: String
-    /// The provider's OAuth token endpoint.
-    public let tokenUrl: String
+    /// The provider's OAuth authorization endpoint. Required for OAuth providers; omit for `api_key` providers.
+    public let authorizationUrl: String?
+    /// The provider's OAuth token endpoint. Required for OAuth providers; omit for `api_key` providers.
+    public let tokenUrl: String?
     /// The endpoint used to refresh tokens, if different from the token endpoint.
     public let refreshTokenUrl: String?
     /// Whether PKCE is used during the authorization code flow. Defaults to `true`.
@@ -28,8 +28,8 @@ public struct CustomProviderDefinition: Codable, Sendable, Equatable {
 
     public init(
         name: String,
-        authorizationUrl: String,
-        tokenUrl: String,
+        authorizationUrl: String? = nil,
+        tokenUrl: String? = nil,
         refreshTokenUrl: String? = nil,
         pkceEnabled: Bool? = nil,
         requestScopeSeparator: String? = nil,

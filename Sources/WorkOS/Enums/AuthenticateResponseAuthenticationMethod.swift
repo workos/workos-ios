@@ -16,6 +16,8 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
     case gitHubOAuth
     case gitLabOAuth
     case googleOAuth
+    case grokOAuth
+    case xoAuth
     case intuitOAuth
     case linkedInOAuth
     case microsoftOAuth
@@ -43,6 +45,8 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
         case "GitHubOAuth": self = .gitHubOAuth
         case "GitLabOAuth": self = .gitLabOAuth
         case "GoogleOAuth": self = .googleOAuth
+        case "GrokOAuth": self = .grokOAuth
+        case "XOAuth": self = .xoAuth
         case "IntuitOAuth": self = .intuitOAuth
         case "LinkedInOAuth": self = .linkedInOAuth
         case "MicrosoftOAuth": self = .microsoftOAuth
@@ -71,6 +75,8 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
         case .gitHubOAuth: return "GitHubOAuth"
         case .gitLabOAuth: return "GitLabOAuth"
         case .googleOAuth: return "GoogleOAuth"
+        case .grokOAuth: return "GrokOAuth"
+        case .xoAuth: return "XOAuth"
         case .intuitOAuth: return "IntuitOAuth"
         case .linkedInOAuth: return "LinkedInOAuth"
         case .microsoftOAuth: return "MicrosoftOAuth"
@@ -108,6 +114,8 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
         .gitHubOAuth,
         .gitLabOAuth,
         .googleOAuth,
+        .grokOAuth,
+        .xoAuth,
         .intuitOAuth,
         .linkedInOAuth,
         .microsoftOAuth,

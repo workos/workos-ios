@@ -18,7 +18,7 @@ import Testing
     @Test func listDataIntegrationsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"data":[{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account_identifier":"acme-prod"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                #"{"data":[{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
         let result = try await client.pipes.listDataIntegrations()
 
@@ -32,7 +32,7 @@ import Testing
     @Test func createDataIntegrationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account_identifier":"acme-prod"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.pipes.createDataIntegration(provider: "test_provider")
 
@@ -65,7 +65,7 @@ import Testing
     @Test func getDataIntegrationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account_identifier":"acme-prod"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.pipes.getDataIntegration(slug: "sample-slug")
 
@@ -78,7 +78,7 @@ import Testing
     @Test func updateDataIntegrationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account_identifier":"acme-prod"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.pipes.updateDataIntegration(slug: "sample-slug")
 
@@ -100,7 +100,7 @@ import Testing
     @Test func updateDataIntegrationApiKeySendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.updateDataIntegrationApiKey(
             slug: "sample-slug", userId: "test_user_id", secret: "test_secret")
@@ -131,6 +131,24 @@ import Testing
         _ = result
     }
 
+    @Test func updateDataIntegrationClientCredentialsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+        )
+        let result = try await client.pipes.updateDataIntegrationClientCredentials(
+            slug: "sample-slug", userId: "test_user_id", clientId: "test_client_id",
+            clientSecret: "test_client_secret")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/data-integrations/sample-slug/client-credentials")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["user_id"] != nil)
+        #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
     @Test func createDataIntegrationCredentialSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
@@ -151,7 +169,7 @@ import Testing
     @Test func getUserConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.getUserConnectedAccount(
             userId: "sample-user-id", slug: "sample-slug")
@@ -167,7 +185,7 @@ import Testing
     @Test func createUserConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.createUserConnectedAccount(
             userId: "sample-user-id", slug: "sample-slug")
@@ -183,7 +201,7 @@ import Testing
     @Test func updateUserConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.updateUserConnectedAccount(
             userId: "sample-user-id", slug: "sample-slug")
@@ -211,7 +229,7 @@ import Testing
     @Test func listUserDataProvidersSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"list","data":[{"object":"data_provider","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","name":"GitHub","description":"Connect your GitHub account to access repositories.","slug":"github","integration_type":"github","credentials_type":"oauth2","scopes":["repo","user:email"],"auth_methods":["oauth"],"ownership":"userland_user","created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","connected_account":{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"}}]}"#
+                #"{"object":"list","data":[{"object":"data_provider","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","name":"GitHub","description":"Connect your GitHub account to access repositories.","slug":"github","integration_type":"github","credentials_type":"oauth2","scopes":["repo","user:email"],"auth_methods":["oauth"],"ownership":"userland_user","created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","connected_account":{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"}}]}"#
         )
         let result = try await client.pipes.listUserDataProviders(userId: "sample-user-id")
 

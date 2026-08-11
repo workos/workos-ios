@@ -2,28 +2,25 @@
 
 import Foundation
 
-/// Enumeration of valid CreateDataIntegrationAuthMethods values.
-public enum CreateDataIntegrationAuthMethods: RawRepresentable, Codable, Sendable, Hashable {
-    case oauth
-    case apiKey
-    case clientCredentials
+/// Enumeration of valid CreateUserPasswordSaltPosition values.
+public enum CreateUserPasswordSaltPosition: RawRepresentable, Codable, Sendable, Hashable {
+    case prefix
+    case suffix
     /// A value not known at SDK generation time.
     case unknown(String)
 
     public init(rawValue: String) {
         switch rawValue {
-        case "oauth": self = .oauth
-        case "api_key": self = .apiKey
-        case "client_credentials": self = .clientCredentials
+        case "prefix": self = .prefix
+        case "suffix": self = .suffix
         default: self = .unknown(rawValue)
         }
     }
 
     public var rawValue: String {
         switch self {
-        case .oauth: return "oauth"
-        case .apiKey: return "api_key"
-        case .clientCredentials: return "client_credentials"
+        case .prefix: return "prefix"
+        case .suffix: return "suffix"
         case .unknown(let value): return value
         }
     }
@@ -38,9 +35,5 @@ public enum CreateDataIntegrationAuthMethods: RawRepresentable, Codable, Sendabl
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [CreateDataIntegrationAuthMethods] = [
-        .oauth,
-        .apiKey,
-        .clientCredentials,
-    ]
+    public static let allKnownCases: [CreateUserPasswordSaltPosition] = [.prefix, .suffix]
 }

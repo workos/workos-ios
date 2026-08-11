@@ -19,12 +19,14 @@ public struct UpdateUser: Codable, Sendable, Equatable {
     public let externalId: String?
     /// The user's preferred locale.
     public let locale: String?
-    /// The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`.
+    /// The password to set for the user. Mutually exclusive with `password_hash`, `password_hash_type`, and `password_salt_position`.
     public let password: String?
     /// The hashed password to set for the user. Required with `password_hash_type`. Mutually exclusive with `password`.
     public let passwordHash: String?
     /// The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`.
     public let passwordHashType: UpdateUserPasswordHashType?
+    /// The position of the salt relative to the password when the `password_hash` digest was computed: `prefix` for `hash(salt + password)` or `suffix` for `hash(password + salt)`. Only supported with the `ssha256` hash type and only valid when a `password_hash` is provided. Defaults to `suffix`. Mutually exclusive with `password`.
+    public let passwordSaltPosition: UpdateUserPasswordSaltPosition?
 
     public init(
         email: String? = nil,
@@ -37,7 +39,8 @@ public struct UpdateUser: Codable, Sendable, Equatable {
         locale: String? = nil,
         password: String? = nil,
         passwordHash: String? = nil,
-        passwordHashType: UpdateUserPasswordHashType? = nil
+        passwordHashType: UpdateUserPasswordHashType? = nil,
+        passwordSaltPosition: UpdateUserPasswordSaltPosition? = nil
     ) {
         self.email = email
         self.firstName = firstName
@@ -50,6 +53,7 @@ public struct UpdateUser: Codable, Sendable, Equatable {
         self.password = password
         self.passwordHash = passwordHash
         self.passwordHashType = passwordHashType
+        self.passwordSaltPosition = passwordSaltPosition
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -64,5 +68,6 @@ public struct UpdateUser: Codable, Sendable, Equatable {
         case password
         case passwordHash = "password_hash"
         case passwordHashType = "password_hash_type"
+        case passwordSaltPosition = "password_salt_position"
     }
 }

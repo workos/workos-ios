@@ -10,6 +10,8 @@ public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, 
     case githubOAuth
     case gitLabOAuth
     case googleOAuth
+    case grokOAuth
+    case xoAuth
     case intuitOAuth
     case linkedInOAuth
     case microsoftOAuth
@@ -29,6 +31,8 @@ public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, 
         case "GithubOAuth": self = .githubOAuth
         case "GitLabOAuth": self = .gitLabOAuth
         case "GoogleOAuth": self = .googleOAuth
+        case "GrokOAuth": self = .grokOAuth
+        case "XOAuth": self = .xoAuth
         case "IntuitOAuth": self = .intuitOAuth
         case "LinkedInOAuth": self = .linkedInOAuth
         case "MicrosoftOAuth": self = .microsoftOAuth
@@ -49,6 +53,8 @@ public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, 
         case .githubOAuth: return "GithubOAuth"
         case .gitLabOAuth: return "GitLabOAuth"
         case .googleOAuth: return "GoogleOAuth"
+        case .grokOAuth: return "GrokOAuth"
+        case .xoAuth: return "XOAuth"
         case .intuitOAuth: return "IntuitOAuth"
         case .linkedInOAuth: return "LinkedInOAuth"
         case .microsoftOAuth: return "MicrosoftOAuth"
@@ -78,6 +84,8 @@ public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, 
         .githubOAuth,
         .gitLabOAuth,
         .googleOAuth,
+        .grokOAuth,
+        .xoAuth,
         .intuitOAuth,
         .linkedInOAuth,
         .microsoftOAuth,

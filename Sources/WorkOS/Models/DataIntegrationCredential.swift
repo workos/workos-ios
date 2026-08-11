@@ -2,7 +2,6 @@
 
 import Foundation
 
-/// The credentials configured for the Data Integration.
 public struct DataIntegrationCredential: Codable, Sendable, Equatable {
     /// The credentials type. `custom` uses your own OAuth app credentials; `organization` has each organization supply its own credentials (so `client_id`/`redacted_client_secret` are null on the integration itself).
     public let type: DataIntegrationCredentialType

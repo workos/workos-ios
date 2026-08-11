@@ -17,6 +17,12 @@ public struct ConnectedAccount: Codable, Sendable, Equatable {
     public let authMethod: ConnectedAccountAuthMethod?
     /// The last four characters of the API key, or `null` for OAuth connections.
     public let apiKeyLast4: String?
+    /// The client ID supplied for this connection. Only present when `auth_method` is `client_credentials`.
+    public let clientId: String?
+    /// The last four characters of the client secret supplied for this connection, or `null` when it can't be read. Only present when `auth_method` is `client_credentials`.
+    public let clientSecretLast4: String?
+    /// The connection-level configuration values stored for this connection — the fields the provider declares at `installation` scope, excluding any it declares as secret. Only present when `auth_method` is `client_credentials`.
+    public let config: [String: String]?
     /// The state of the connected account:
     /// - `connected`: The connection is active and tokens are valid.
     /// - `needs_reauthorization`: The user needs to reauthorize the connection, typically because required scopes have changed.
@@ -37,7 +43,10 @@ public struct ConnectedAccount: Codable, Sendable, Equatable {
         userId: String? = nil,
         organizationId: String? = nil,
         authMethod: ConnectedAccountAuthMethod? = nil,
-        apiKeyLast4: String? = nil
+        apiKeyLast4: String? = nil,
+        clientId: String? = nil,
+        clientSecretLast4: String? = nil,
+        config: [String: String]? = nil
     ) {
         self.object = object
         self.id = id
@@ -46,6 +55,9 @@ public struct ConnectedAccount: Codable, Sendable, Equatable {
         self.scopes = scopes
         self.authMethod = authMethod
         self.apiKeyLast4 = apiKeyLast4
+        self.clientId = clientId
+        self.clientSecretLast4 = clientSecretLast4
+        self.config = config
         self.state = state
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -59,6 +71,9 @@ public struct ConnectedAccount: Codable, Sendable, Equatable {
         case scopes
         case authMethod = "auth_method"
         case apiKeyLast4 = "api_key_last_4"
+        case clientId = "client_id"
+        case clientSecretLast4 = "client_secret_last_4"
+        case config
         case state
         case createdAt = "created_at"
         case updatedAt = "updated_at"
