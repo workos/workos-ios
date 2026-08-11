@@ -43,7 +43,9 @@ import Testing
         #expect(signed.payload.errorMessage == "Registration blocked")
 
         let timestamp = String(signed.payload.timestamp)
-        let payloadJSON = "{\"timestamp\":\(signed.payload.timestamp),\"verdict\":\"Deny\",\"error_message\":\"Registration blocked\"}"
+        let payloadJSON =
+            "{\"timestamp\":\(signed.payload.timestamp),\"verdict\":\"Deny\","
+            + "\"error_message\":\"Registration blocked\"}"
         let expectedSig = WebhookSignature.compute(
             secret: Self.secret, timestamp: timestamp, body: payloadJSON)
         #expect(signed.signature == expectedSig)

@@ -229,7 +229,10 @@ public struct ActionsHelper: Sendable {
         let signature = WebhookSignature.compute(
             secret: secret, timestamp: timestamp, body: payloadJSON)
 
-        let body = "{\"object\":\"\(object)\",\"payload\":\(payloadJSON),\"signature\":\"\(signature)\"}"
+        let body =
+            "{\"object\":\"\(object)\","
+            + "\"payload\":\(payloadJSON),"
+            + "\"signature\":\"\(signature)\"}"
         return ActionSignedResponse(
             object: object,
             payload: payload,
@@ -243,7 +246,9 @@ public struct ActionsHelper: Sendable {
     static func encodeResponsePayload(_ payload: ActionResponsePayload) -> String {
         let verdict = payload.verdict.rawValue
         if let errorMessage = payload.errorMessage, !errorMessage.isEmpty {
-            return "{\"timestamp\":\(payload.timestamp),\"verdict\":\"\(verdict)\",\"error_message\":\"\(ActionsHelper.jsonEscape(errorMessage))\"}"
+            let escaped = ActionsHelper.jsonEscape(errorMessage)
+            return "{\"timestamp\":\(payload.timestamp),\"verdict\":\"\(verdict)\","
+                + "\"error_message\":\"\(escaped)\"}"
         }
         return "{\"timestamp\":\(payload.timestamp),\"verdict\":\"\(verdict)\"}"
     }
