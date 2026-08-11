@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.5.0](https://github.com/workos/workos-ios/compare/v0.4.0...v0.5.0) (2026-08-11)
+
+
+### Features
+
+* **events:** Change required status for parameter `Events.list.events` ([#20](https://github.com/workos/workos-ios/issues/20)) ([3aa63f0](https://github.com/workos/workos-ios/commit/3aa63f031e866d21b4f2975025295f952b84e130))
+* **groups:** SDK surface change: Parameter "requestOptions" moved from position 5 to 6 on "Groups.listOrganizationGroups" ([#20](https://github.com/workos/workos-ios/issues/20)) ([3aa63f0](https://github.com/workos/workos-ios/commit/3aa63f031e866d21b4f2975025295f952b84e130))
+* **user_management:** SDK surface change: Parameter type changed for "verificationId" on "UserManagement.authenticateWithRadarSmsChallenge" ([#20](https://github.com/workos/workos-ios/issues/20)) ([3aa63f0](https://github.com/workos/workos-ios/commit/3aa63f031e866d21b4f2975025295f952b84e130))
+
+
+### Bug Fixes
+
+* parse AuthKit Actions request into flat ActionContext ([#19](https://github.com/workos/workos-ios/issues/19)) ([8ee6a8d](https://github.com/workos/workos-ios/commit/8ee6a8d0388d0a995829dd9d14ca918d8bbbf52f))
+
 ## [0.4.0](https://github.com/workos/workos-ios/compare/v0.3.0...v0.4.0) (2026-07-28)
 
 
