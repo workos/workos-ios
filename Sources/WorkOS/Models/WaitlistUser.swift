@@ -13,6 +13,8 @@ public struct WaitlistUser: Codable, Sendable, Equatable {
     public let state: WaitlistUserState
     /// The timestamp when the Waitlist User was approved, or null if not yet approved.
     public let approvedAt: Date?
+    /// The unique ID of the Waitlist that the Waitlist User joined.
+    public let waitlistId: String?
     /// An ISO 8601 timestamp.
     public let createdAt: Date
     /// An ISO 8601 timestamp.
@@ -25,13 +27,15 @@ public struct WaitlistUser: Codable, Sendable, Equatable {
         state: WaitlistUserState,
         createdAt: Date,
         updatedAt: Date,
-        approvedAt: Date? = nil
+        approvedAt: Date? = nil,
+        waitlistId: String? = nil
     ) {
         self.object = object
         self.id = id
         self.email = email
         self.state = state
         self.approvedAt = approvedAt
+        self.waitlistId = waitlistId
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
@@ -42,6 +46,7 @@ public struct WaitlistUser: Codable, Sendable, Equatable {
         case email
         case state
         case approvedAt = "approved_at"
+        case waitlistId = "waitlist_id"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }
