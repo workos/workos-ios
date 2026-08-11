@@ -377,8 +377,8 @@ public struct UserManagement: Sendable {
     /// Authenticate with radar sms challenge
     ///
     /// - Parameter code: The one-time code from the Radar SMS challenge.
-    /// - Parameter verificationId: The ID of the Radar SMS verification being confirmed.
-    /// - Parameter phoneNumber: The phone number the Radar SMS challenge was sent to.
+    /// - Parameter verificationId: The ID of the Radar SMS verification being confirmed. Required for sign-up challenges; omitted for sign-in challenges, where the verification is resolved server-side.
+    /// - Parameter phoneNumber: The phone number the Radar SMS challenge was sent to. Required for sign-up challenges; omitted for sign-in challenges, where the phone number on file is resolved server-side.
     /// - Parameter pendingAuthenticationToken: The pending authentication token from a previous authentication attempt.
     /// - Parameter ipAddress: The IP address of the user's request.
     /// - Parameter deviceId: A unique identifier for the device.
@@ -386,9 +386,9 @@ public struct UserManagement: Sendable {
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func authenticateWithRadarSmsChallenge(
         code: String,
-        verificationId: String,
-        phoneNumber: String,
         pendingAuthenticationToken: String,
+        verificationId: String? = nil,
+        phoneNumber: String? = nil,
         ipAddress: String? = nil,
         deviceId: String? = nil,
         userAgent: String? = nil,
@@ -907,9 +907,10 @@ public struct UserManagement: Sendable {
     /// - Parameter ipAddress: The IP address of the user's request.
     /// - Parameter userAgent: The user agent string from the user's request.
     /// - Parameter signalsId: An optional Radar signals ID to correlate client-side signals with this request.
-    /// - Parameter password: The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`.
+    /// - Parameter password: The password to set for the user. Mutually exclusive with `password_hash`, `password_hash_type`, and `password_salt_position`.
     /// - Parameter passwordHash: The hashed password to set for the user. Required with `password_hash_type`. Mutually exclusive with `password`.
     /// - Parameter passwordHashType: The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`.
+    /// - Parameter passwordSaltPosition: The position of the salt relative to the password when the `password_hash` digest was computed: `prefix` for `hash(salt + password)` or `suffix` for `hash(password + salt)`. Only supported with the `ssha256` hash type and only valid when a `password_hash` is provided. Defaults to `suffix`. Mutually exclusive with `password`.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func create(
         email: String,
@@ -925,6 +926,7 @@ public struct UserManagement: Sendable {
         password: String? = nil,
         passwordHash: String? = nil,
         passwordHashType: CreateUserPasswordHashType? = nil,
+        passwordSaltPosition: CreateUserPasswordSaltPosition? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> UserCreateResponse {
         let path = "user_management/users"
@@ -942,6 +944,7 @@ public struct UserManagement: Sendable {
         body.set("password", password)
         body.set("password_hash", passwordHash)
         body.set("password_hash_type", passwordHashType)
+        body.set("password_salt_position", passwordSaltPosition)
         return try await transport.request(
             method: "POST",
             path: path,
@@ -1007,9 +1010,10 @@ public struct UserManagement: Sendable {
     /// - Parameter metadata: Object containing metadata key/value pairs associated with the user.
     /// - Parameter externalId: The external ID of the user.
     /// - Parameter locale: The user's preferred locale.
-    /// - Parameter password: The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`.
+    /// - Parameter password: The password to set for the user. Mutually exclusive with `password_hash`, `password_hash_type`, and `password_salt_position`.
     /// - Parameter passwordHash: The hashed password to set for the user. Required with `password_hash_type`. Mutually exclusive with `password`.
     /// - Parameter passwordHashType: The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`.
+    /// - Parameter passwordSaltPosition: The position of the salt relative to the password when the `password_hash` digest was computed: `prefix` for `hash(salt + password)` or `suffix` for `hash(password + salt)`. Only supported with the `ssha256` hash type and only valid when a `password_hash` is provided. Defaults to `suffix`. Mutually exclusive with `password`.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func update(
         id: String,
@@ -1024,6 +1028,7 @@ public struct UserManagement: Sendable {
         password: String? = nil,
         passwordHash: String? = nil,
         passwordHashType: UpdateUserPasswordHashType? = nil,
+        passwordSaltPosition: UpdateUserPasswordSaltPosition? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> User {
         let path = "user_management/users/\(PathEncoding.segment(id))"
@@ -1039,6 +1044,7 @@ public struct UserManagement: Sendable {
         body.set("password", password)
         body.set("password_hash", passwordHash)
         body.set("password_hash_type", passwordHashType)
+        body.set("password_salt_position", passwordSaltPosition)
         return try await transport.request(
             method: "PUT",
             path: path,
