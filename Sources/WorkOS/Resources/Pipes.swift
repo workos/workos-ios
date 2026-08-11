@@ -72,14 +72,14 @@ public struct Pipes: Sendable {
 
     /// Create a data integration
     ///
-    /// Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials or `organization` to have each organization supply its own. Set `auth_methods` to `["api_key"]` to create an API key integration; you may optionally supply an `api_key` block to install a first tenant in the same call. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
+    /// Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials or `organization` to have each organization supply its own. Set `auth_methods` to `["api_key"]` to create an API key integration; you may optionally supply an `api_key` block to install a first tenant in the same call. Set `auth_methods` to `["client_credentials"]` to create a client-credentials integration; client credentials are installed per-tenant afterwards. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
     ///
     /// - Parameter provider: The provider to create a Data Integration for. For a built-in provider use its slug (e.g. `github`, `slack`). For a custom provider, this is the new provider slug and `custom_provider` must be supplied. A custom provider slug cannot shadow an existing global provider slug.
     /// - Parameter description: An optional description of the Data Integration.
     /// - Parameter enabled: Whether the Data Integration is enabled. Defaults to `false`.
     /// - Parameter scopes: The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
-    /// - Parameter authMethods: How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request).
-    /// - Parameter config: Provider-specific config values (e.g. a Snowflake `account_identifier`), keyed by the config field. Only fields the built-in provider declares are accepted.
+    /// - Parameter authMethods: How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request). Use `["client_credentials"]` to declare a client-credentials integration; `credentials` is likewise not required and client credentials are supplied per-tenant.
+    /// - Parameter config: Provider-specific config values (e.g. a Snowflake `account`), keyed by the config field. Only fields the built-in provider declares are accepted.
     /// - Parameter credentials: The OAuth credentials to configure for the Data Integration. Required for OAuth integrations; omit when `auth_methods` is `["api_key"]`.
     /// - Parameter apiKey: An optional API key to install for the first tenant on an `api_key` integration. Omit to declare a keyless integration; tenants can be added later via the per-installation API key path.
     /// - Parameter customProvider: The OAuth definition for a custom provider. Supply this to define a custom provider; omit it to create an integration for a built-in provider.
@@ -260,6 +260,43 @@ public struct Pipes: Sendable {
             body: body,
             options: requestOptions,
             as: DataIntegrationAuthorizeUrlResponse.self
+        )
+    }
+
+    /// Upsert client credentials for a connected account
+    ///
+    /// Creates or updates a client-credentials-based installation for the specified integration and user. If an installation already exists, the stored client credentials are rotated to the new values.
+    ///
+    /// - Parameter slug: The identifier of the integration.
+    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
+    /// - Parameter clientId: The OAuth client ID to store for this integration.
+    /// - Parameter clientSecret: The OAuth client secret to store for this integration.
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// - Parameter config: Provider-specific configuration values collected for this installation, keyed by the provider's config field descriptors.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func updateDataIntegrationClientCredentials(
+        slug: String,
+        userId: String,
+        clientId: String,
+        clientSecret: String,
+        organizationId: String? = nil,
+        config: [String: String]? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> ConnectedAccount {
+        let path = "data-integrations/\(PathEncoding.segment(slug))/client-credentials"
+        var body = EncodableBody()
+        body.set("user_id", userId)
+        body.set("organization_id", organizationId)
+        body.set("client_id", clientId)
+        body.set("client_secret", clientSecret)
+        body.set("config", config)
+        return try await transport.request(
+            method: "PUT",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: ConnectedAccount.self
         )
     }
 

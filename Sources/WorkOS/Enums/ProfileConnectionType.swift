@@ -27,6 +27,8 @@ public enum ProfileConnectionType: RawRepresentable, Codable, Sendable, Hashable
     case googleOAuth
     case googleOidc
     case googleSAML
+    case grokOAuth
+    case xoAuth
     case intuitOAuth
     case jumpCloudSAML
     case keycloakSAML
@@ -83,6 +85,8 @@ public enum ProfileConnectionType: RawRepresentable, Codable, Sendable, Hashable
         case "GoogleOAuth": self = .googleOAuth
         case "GoogleOIDC": self = .googleOidc
         case "GoogleSAML": self = .googleSAML
+        case "GrokOAuth": self = .grokOAuth
+        case "XOAuth": self = .xoAuth
         case "IntuitOAuth": self = .intuitOAuth
         case "JumpCloudSAML": self = .jumpCloudSAML
         case "KeycloakSAML": self = .keycloakSAML
@@ -140,6 +144,8 @@ public enum ProfileConnectionType: RawRepresentable, Codable, Sendable, Hashable
         case .googleOAuth: return "GoogleOAuth"
         case .googleOidc: return "GoogleOIDC"
         case .googleSAML: return "GoogleSAML"
+        case .grokOAuth: return "GrokOAuth"
+        case .xoAuth: return "XOAuth"
         case .intuitOAuth: return "IntuitOAuth"
         case .jumpCloudSAML: return "JumpCloudSAML"
         case .keycloakSAML: return "KeycloakSAML"
@@ -206,6 +212,8 @@ public enum ProfileConnectionType: RawRepresentable, Codable, Sendable, Hashable
         .googleOAuth,
         .googleOidc,
         .googleSAML,
+        .grokOAuth,
+        .xoAuth,
         .intuitOAuth,
         .jumpCloudSAML,
         .keycloakSAML,

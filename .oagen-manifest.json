@@ -41,6 +41,7 @@
     "Sources/WorkOS/Enums/CreateDataIntegrationAuthMethods.swift",
     "Sources/WorkOS/Enums/CreateUserInviteOptionsLocale.swift",
     "Sources/WorkOS/Enums/CreateUserPasswordHashType.swift",
+    "Sources/WorkOS/Enums/CreateUserPasswordSaltPosition.swift",
     "Sources/WorkOS/Enums/CreateWebhookEndpointEvents.swift",
     "Sources/WorkOS/Enums/CustomProviderDefinitionAuthenticateVia.swift",
     "Sources/WorkOS/Enums/DataIntegrationAccessTokenResponseError.swift",
@@ -120,6 +121,7 @@
     "Sources/WorkOS/Enums/SessionRevokedDataStatus.swift",
     "Sources/WorkOS/Enums/UpdateCustomProviderDefinitionAuthenticateVia.swift",
     "Sources/WorkOS/Enums/UpdateUserPasswordHashType.swift",
+    "Sources/WorkOS/Enums/UpdateUserPasswordSaltPosition.swift",
     "Sources/WorkOS/Enums/UpdateWebhookEndpointEvents.swift",
     "Sources/WorkOS/Enums/UpdateWebhookEndpointStatus.swift",
     "Sources/WorkOS/Enums/UserIdentitiesGetItemProvider.swift",
@@ -376,6 +378,7 @@
     "Sources/WorkOS/Models/DataIntegrationsListResponseData.swift",
     "Sources/WorkOS/Models/DataIntegrationsListResponseDataConnectedAccount.swift",
     "Sources/WorkOS/Models/DataIntegrationsUpsertApiKeyRequest.swift",
+    "Sources/WorkOS/Models/DataIntegrationsUpsertClientCredentialsRequest.swift",
     "Sources/WorkOS/Models/DataIntegrationsVendCredentialsRequest.swift",
     "Sources/WorkOS/Models/DecryptRequest.swift",
     "Sources/WorkOS/Models/DecryptResponse.swift",
@@ -1643,6 +1646,10 @@
     "POST /widgets/token": {
       "sdkMethod": "createToken",
       "service": "widgets"
+    },
+    "PUT /data-integrations/{slug}/client-credentials": {
+      "sdkMethod": "updateDataIntegrationClientCredentials",
+      "service": "pipes"
     }
   }
 }
