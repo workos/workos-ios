@@ -1788,6 +1788,228 @@ public struct UserManagement: Sendable {
         )
     }
 
+    /// Delete a waitlist entry
+    ///
+    /// Remove the entry from the waitlist. Its email address can join again unless a user with that email now exists in the environment. Deleting the entry does not revoke an invitation created by approving it — [revoke that invitation](https://workos.com/docs/reference/authkit/invitation/revoke) separately to withdraw access.
+    ///
+    /// - Parameter id: The unique ID of the waitlist entry.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func deleteWaitlistEntry(
+        id: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path = "user_management/waitlist_entries/\(PathEncoding.segment(id))"
+        try await transport.requestVoid(
+            method: "DELETE",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions
+        )
+    }
+
+    /// Approve a waitlist entry
+    ///
+    /// Approve a waitlist entry, create an invitation for its email address, and send the invitation email. Approving a denied entry reverses the denial. The approval is saved even when the invitation steps fail, so instead of retrying the approval, recover based on the outcome:
+    ///
+    /// - `200` — the entry is approved. If invitation creation failed, no invitation exists yet; [send](https://workos.com/docs/reference/authkit/invitation/send) one.
+    /// - `422` with code `invitation_email_not_sent` — the entry is approved and an invitation exists, but its email was not sent; [resend](https://workos.com/docs/reference/authkit/invitation/resend) it.
+    /// - `422` with code `invalid_state` — the entry was already approved.
+    ///
+    /// - Parameter id: The unique ID of the waitlist entry.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createWaitlistEntryApprove(
+        id: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> WaitlistEntry {
+        let path = "user_management/waitlist_entries/\(PathEncoding.segment(id))/approve"
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: WaitlistEntry.self
+        )
+    }
+
+    /// Deny a waitlist entry
+    ///
+    /// Deny a pending waitlist entry. Denying an entry that is not pending fails with the code `invalid_state`. A denial can be reversed by approving the entry.
+    ///
+    /// - Parameter id: The unique ID of the waitlist entry.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createWaitlistEntryDeny(
+        id: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> WaitlistEntry {
+        let path = "user_management/waitlist_entries/\(PathEncoding.segment(id))/deny"
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: WaitlistEntry.self
+        )
+    }
+
+    /// List waitlists
+    ///
+    /// Get a list of the waitlists in the environment. All waitlists are returned in a single response — this endpoint is not paginated, so the `list_metadata` cursors are always `null`.
+    ///
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listWaitlists(
+        requestOptions: RequestOptions? = nil
+    ) async throws -> Page<Waitlist> {
+        let path = "user_management/waitlists"
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: Page<Waitlist>.self
+        )
+    }
+
+    /// Get a waitlist
+    ///
+    /// Get the details of an existing waitlist.
+    ///
+    /// - Parameter id: The unique ID of the waitlist, or the literal `default` for the environment's default waitlist. The default waitlist is created when its first entry is added, so read requests for `default` return a `404` until then.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func getWaitlist(
+        id: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> Waitlist {
+        let path = "user_management/waitlists/\(PathEncoding.segment(id))"
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: Waitlist.self
+        )
+    }
+
+    /// List waitlist entries
+    ///
+    /// Get a list of entries on a waitlist matching the criteria specified.
+    ///
+    /// - Parameter id: The unique ID of the waitlist, or the literal `default` for the environment's default waitlist. The default waitlist is created when its first entry is added, so read requests for `default` return a `404` until then.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter state: Filter waitlist entries by their state.
+    /// - Parameter email: Filter waitlist entries by their exact email address.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listWaitlistEntries(
+        id: String,
+        before: String? = nil,
+        after: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        state: UserManagementWaitlistsState? = nil,
+        email: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> Page<WaitlistEntry> {
+        let path = "user_management/waitlists/\(PathEncoding.segment(id))/entries"
+        var query: [URLQueryItem] = []
+        if let before {
+            query.append(URLQueryItem(name: "before", value: before))
+        }
+        if let after {
+            query.append(URLQueryItem(name: "after", value: after))
+        }
+        if let limit {
+            query.append(URLQueryItem(name: "limit", value: "\(limit)"))
+        }
+        if let order {
+            query.append(URLQueryItem(name: "order", value: order.rawValue))
+        }
+        if let state {
+            query.append(URLQueryItem(name: "state", value: state.rawValue))
+        }
+        if let email {
+            query.append(URLQueryItem(name: "email", value: email))
+        }
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: query,
+            body: nil,
+            options: requestOptions,
+            as: Page<WaitlistEntry>.self
+        )
+    }
+
+    /// Auto-paginating variant of `listWaitlistEntries`: fetches successive
+    /// pages as the sequence is iterated.
+    ///
+    /// - Parameter id: The unique ID of the waitlist, or the literal `default` for the environment's default waitlist. The default waitlist is created when its first entry is added, so read requests for `default` return a `404` until then.
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter state: Filter waitlist entries by their state.
+    /// - Parameter email: Filter waitlist entries by their exact email address.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listWaitlistEntriesAutoPaging(
+        id: String,
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        state: UserManagementWaitlistsState? = nil,
+        email: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<WaitlistEntry> {
+        AutoPagingSequence { cursor in
+            try await self.listWaitlistEntries(
+                id: id,
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                state: state,
+                email: email,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
+    /// Create a waitlist entry
+    ///
+    /// Add an email address to the waitlist. Email addresses are normalized and unique per environment: a request for an email address already on the waitlist returns the existing entry unchanged (still with status `201`) and does not send another confirmation email. If a user with the email address already exists in the environment, the request fails with the code `user_already_exists`.
+    ///
+    /// - Parameter id: The unique ID of the waitlist, or the literal `default` for the environment's default waitlist. Use `default` when adding the first entry — the default waitlist is created automatically.
+    /// - Parameter email: The email address of the user joining the waitlist.
+    /// - Parameter additionalFields: Object containing additional key/value pairs collected with the waitlist entry. Supports up to 50 string pairs, with keys up to 40 characters and values up to 600 characters. Values are user-provided — treat them as untrusted input when rendering or exporting.
+    /// - Parameter sendConfirmationEmail: Whether to send the waitlist confirmation email to the user. Defaults to `false`. No email is sent when the waitlist confirmation email is disabled in the environment, even if `send_confirmation_email` is `true`.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createWaitlistEntry(
+        id: String,
+        email: String,
+        additionalFields: [String: String]? = nil,
+        sendConfirmationEmail: Bool? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> WaitlistEntry {
+        let path = "user_management/waitlists/\(PathEncoding.segment(id))/entries"
+        var body = EncodableBody()
+        body.set("email", email)
+        body.set("additional_fields", additionalFields)
+        body.set("send_confirmation_email", sendConfirmationEmail)
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: WaitlistEntry.self
+        )
+    }
+
     /// List API keys for a user
     ///
     /// Get a list of API keys owned by a specific user.

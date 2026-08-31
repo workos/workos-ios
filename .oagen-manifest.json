@@ -4,6 +4,11 @@
   "files": [
     ".oagen-ios-smoke.json",
     "Sources/WorkOS/Enums/AgentAdminValidateCredentialRequestType.swift",
+    "Sources/WorkOS/Enums/AgentBlueprintsTokenMintTokenRequestType.swift",
+    "Sources/WorkOS/Enums/AgentInstanceCreatedDataType.swift",
+    "Sources/WorkOS/Enums/AgentInstanceDeletedDataType.swift",
+    "Sources/WorkOS/Enums/AgentInstanceSessionStatus.swift",
+    "Sources/WorkOS/Enums/AgentInstanceType.swift",
     "Sources/WorkOS/Enums/AgentRegistrationCreatedDataKind.swift",
     "Sources/WorkOS/Enums/AgentRegistrationCreatedDataMethod.swift",
     "Sources/WorkOS/Enums/AgentRegistrationCreatedDataStatus.swift",
@@ -38,6 +43,8 @@
     "Sources/WorkOS/Enums/ConnectionStatus.swift",
     "Sources/WorkOS/Enums/ConnectionType.swift",
     "Sources/WorkOS/Enums/ConnectionsConnectionType.swift",
+    "Sources/WorkOS/Enums/CreateConnectionOidcOptionsIdTokenSignatureAlgorithm.swift",
+    "Sources/WorkOS/Enums/CreateConnectionOidcOptionsTokenAuthenticationMethod.swift",
     "Sources/WorkOS/Enums/CreateDataIntegrationAuthMethods.swift",
     "Sources/WorkOS/Enums/CreateUserInviteOptionsLocale.swift",
     "Sources/WorkOS/Enums/CreateUserPasswordHashType.swift",
@@ -78,6 +85,7 @@
     "Sources/WorkOS/Enums/InvitationResentDataState.swift",
     "Sources/WorkOS/Enums/InvitationRevokedDataState.swift",
     "Sources/WorkOS/Enums/InvitationState.swift",
+    "Sources/WorkOS/Enums/InviteItContactIntents.swift",
     "Sources/WorkOS/Enums/OrganizationCreatedDataDomainState.swift",
     "Sources/WorkOS/Enums/OrganizationCreatedDataDomainVerificationStrategy.swift",
     "Sources/WorkOS/Enums/OrganizationDeletedDataDomainState.swift",
@@ -103,6 +111,8 @@
     "Sources/WorkOS/Enums/OrganizationUpdatedDataDomainState.swift",
     "Sources/WorkOS/Enums/OrganizationUpdatedDataDomainVerificationStrategy.swift",
     "Sources/WorkOS/Enums/PaginationOrder.swift",
+    "Sources/WorkOS/Enums/PatchConnectionOidcOptionsIdTokenSignatureAlgorithm.swift",
+    "Sources/WorkOS/Enums/PatchConnectionOidcOptionsTokenAuthenticationMethod.swift",
     "Sources/WorkOS/Enums/PipeConnectedAccountState.swift",
     "Sources/WorkOS/Enums/ProfileConnectionType.swift",
     "Sources/WorkOS/Enums/RadarListAction.swift",
@@ -113,12 +123,18 @@
     "Sources/WorkOS/Enums/RadarStandaloneResponseControl.swift",
     "Sources/WorkOS/Enums/RadarStandaloneResponseVerdict.swift",
     "Sources/WorkOS/Enums/ResendUserInviteOptionsLocale.swift",
+    "Sources/WorkOS/Enums/ResourceExportCompletedDataResourceType.swift",
+    "Sources/WorkOS/Enums/ResourceExportCreatedDataResourceType.swift",
+    "Sources/WorkOS/Enums/ResourceExportDownloadedDataResourceType.swift",
+    "Sources/WorkOS/Enums/ResourceExportFailedDataResourceType.swift",
     "Sources/WorkOS/Enums/RoleType.swift",
+    "Sources/WorkOS/Enums/SSOGrantType.swift",
     "Sources/WorkOS/Enums/SSOProvider.swift",
     "Sources/WorkOS/Enums/SessionCreatedDataAuthMethod.swift",
     "Sources/WorkOS/Enums/SessionCreatedDataStatus.swift",
     "Sources/WorkOS/Enums/SessionRevokedDataAuthMethod.swift",
     "Sources/WorkOS/Enums/SessionRevokedDataStatus.swift",
+    "Sources/WorkOS/Enums/TokenBodyGrantType.swift",
     "Sources/WorkOS/Enums/UpdateCustomProviderDefinitionAuthenticateVia.swift",
     "Sources/WorkOS/Enums/UpdateUserPasswordHashType.swift",
     "Sources/WorkOS/Enums/UpdateUserPasswordSaltPosition.swift",
@@ -129,6 +145,7 @@
     "Sources/WorkOS/Enums/UserManagementAuthenticationProvider.swift",
     "Sources/WorkOS/Enums/UserManagementAuthenticationScreenHint.swift",
     "Sources/WorkOS/Enums/UserManagementOrganizationMembershipStatuses.swift",
+    "Sources/WorkOS/Enums/UserManagementWaitlistsState.swift",
     "Sources/WorkOS/Enums/UserOrganizationMembershipBaseListDataStatus.swift",
     "Sources/WorkOS/Enums/UserOrganizationMembershipStatus.swift",
     "Sources/WorkOS/Enums/UserRoleAssignmentSourceType.swift",
@@ -146,6 +163,7 @@
     "Sources/WorkOS/Enums/VaultMetadataReadDataActorSource.swift",
     "Sources/WorkOS/Enums/VaultNamesListedDataActorSource.swift",
     "Sources/WorkOS/Enums/VaultOrder.swift",
+    "Sources/WorkOS/Enums/WaitlistEntryState.swift",
     "Sources/WorkOS/Enums/WaitlistUserState.swift",
     "Sources/WorkOS/Enums/WebhookEndpointStatus.swift",
     "Sources/WorkOS/Enums/WidgetSessionTokenScopes.swift",
@@ -159,7 +177,37 @@
     "Sources/WorkOS/Models/AgentAdminLinkClaimAttemptToExternalUserRequest.swift",
     "Sources/WorkOS/Models/AgentAdminLinkClaimAttemptToExternalUserRequestUser.swift",
     "Sources/WorkOS/Models/AgentAdminValidateCredentialRequest.swift",
+    "Sources/WorkOS/Models/AgentBlueprint.swift",
+    "Sources/WorkOS/Models/AgentBlueprintCreated.swift",
+    "Sources/WorkOS/Models/AgentBlueprintCreatedData.swift",
+    "Sources/WorkOS/Models/AgentBlueprintCreatedDataInvocableBy.swift",
+    "Sources/WorkOS/Models/AgentBlueprintCreatedDataSessionSetting.swift",
+    "Sources/WorkOS/Models/AgentBlueprintDeleted.swift",
+    "Sources/WorkOS/Models/AgentBlueprintDeletedData.swift",
+    "Sources/WorkOS/Models/AgentBlueprintInvocableBy.swift",
+    "Sources/WorkOS/Models/AgentBlueprintSessionSetting.swift",
+    "Sources/WorkOS/Models/AgentBlueprintUpdated.swift",
+    "Sources/WorkOS/Models/AgentBlueprintUpdatedData.swift",
+    "Sources/WorkOS/Models/AgentBlueprintUpdatedDataInvocableBy.swift",
+    "Sources/WorkOS/Models/AgentBlueprintUpdatedDataSessionSetting.swift",
+    "Sources/WorkOS/Models/AgentBlueprintsCreateRequest.swift",
+    "Sources/WorkOS/Models/AgentBlueprintsCreateRequestInvocableBy.swift",
+    "Sources/WorkOS/Models/AgentBlueprintsCreateRequestSessionSetting.swift",
+    "Sources/WorkOS/Models/AgentBlueprintsTokenMintTokenRequest.swift",
+    "Sources/WorkOS/Models/AgentBlueprintsUpdateRequest.swift",
+    "Sources/WorkOS/Models/AgentBlueprintsUpdateRequestInvocableBy.swift",
+    "Sources/WorkOS/Models/AgentBlueprintsUpdateRequestSessionSetting.swift",
     "Sources/WorkOS/Models/AgentCredentialValidation.swift",
+    "Sources/WorkOS/Models/AgentInstance.swift",
+    "Sources/WorkOS/Models/AgentInstanceCreated.swift",
+    "Sources/WorkOS/Models/AgentInstanceCreatedData.swift",
+    "Sources/WorkOS/Models/AgentInstanceDeleted.swift",
+    "Sources/WorkOS/Models/AgentInstanceDeletedData.swift",
+    "Sources/WorkOS/Models/AgentInstanceSession.swift",
+    "Sources/WorkOS/Models/AgentInstanceSessionCreated.swift",
+    "Sources/WorkOS/Models/AgentInstanceSessionCreatedData.swift",
+    "Sources/WorkOS/Models/AgentInstanceSessionRevoked.swift",
+    "Sources/WorkOS/Models/AgentInstanceSessionRevokedData.swift",
     "Sources/WorkOS/Models/AgentRegistration.swift",
     "Sources/WorkOS/Models/AgentRegistrationAgentIdentity.swift",
     "Sources/WorkOS/Models/AgentRegistrationClaim.swift",
@@ -185,6 +233,7 @@
     "Sources/WorkOS/Models/AgentRegistrationRefreshedData.swift",
     "Sources/WorkOS/Models/AgentRegistrationRevoked.swift",
     "Sources/WorkOS/Models/AgentRegistrationRevokedData.swift",
+    "Sources/WorkOS/Models/AgentToken.swift",
     "Sources/WorkOS/Models/ApiKey.swift",
     "Sources/WorkOS/Models/ApiKeyCreated.swift",
     "Sources/WorkOS/Models/ApiKeyCreatedData.swift",
@@ -333,6 +382,12 @@
     "Sources/WorkOS/Models/CreateApplicationSecret.swift",
     "Sources/WorkOS/Models/CreateAuthorizationPermission.swift",
     "Sources/WorkOS/Models/CreateAuthorizationResource.swift",
+    "Sources/WorkOS/Models/CreateConnection.swift",
+    "Sources/WorkOS/Models/CreateConnectionAttributeMaps.swift",
+    "Sources/WorkOS/Models/CreateConnectionKeyPair.swift",
+    "Sources/WorkOS/Models/CreateConnectionOidcOptions.swift",
+    "Sources/WorkOS/Models/CreateConnectionSAMLOptions.swift",
+    "Sources/WorkOS/Models/CreateConnectionStandardAttributes.swift",
     "Sources/WorkOS/Models/CreateCorsOrigin.swift",
     "Sources/WorkOS/Models/CreateDataIntegration.swift",
     "Sources/WorkOS/Models/CreateDataKeyRequest.swift",
@@ -340,6 +395,7 @@
     "Sources/WorkOS/Models/CreateGroup.swift",
     "Sources/WorkOS/Models/CreateGroupMembership.swift",
     "Sources/WorkOS/Models/CreateGroupRoleAssignment.swift",
+    "Sources/WorkOS/Models/CreateItContact.swift",
     "Sources/WorkOS/Models/CreateM2MApplication.swift",
     "Sources/WorkOS/Models/CreateMagicCodeAndReturn.swift",
     "Sources/WorkOS/Models/CreateOAuthApplication.swift",
@@ -351,10 +407,12 @@
     "Sources/WorkOS/Models/CreatePasswordResetToken.swift",
     "Sources/WorkOS/Models/CreateRedirectUri.swift",
     "Sources/WorkOS/Models/CreateRole.swift",
+    "Sources/WorkOS/Models/CreateSAMLIdpSigningCertificate.swift",
     "Sources/WorkOS/Models/CreateUser.swift",
     "Sources/WorkOS/Models/CreateUserApiKey.swift",
     "Sources/WorkOS/Models/CreateUserInviteOptions.swift",
     "Sources/WorkOS/Models/CreateUserOrganizationMembership.swift",
+    "Sources/WorkOS/Models/CreateWaitlistEntry.swift",
     "Sources/WorkOS/Models/CreateWebhookEndpoint.swift",
     "Sources/WorkOS/Models/CustomProviderDefinition.swift",
     "Sources/WorkOS/Models/DataIntegration.swift",
@@ -499,6 +557,10 @@
     "Sources/WorkOS/Models/InvitationResentData.swift",
     "Sources/WorkOS/Models/InvitationRevoked.swift",
     "Sources/WorkOS/Models/InvitationRevokedData.swift",
+    "Sources/WorkOS/Models/InviteItContact.swift",
+    "Sources/WorkOS/Models/ItContact.swift",
+    "Sources/WorkOS/Models/ItContactList.swift",
+    "Sources/WorkOS/Models/ItContactListListMetadata.swift",
     "Sources/WorkOS/Models/JWTTemplateResponse.swift",
     "Sources/WorkOS/Models/JwksResponse.swift",
     "Sources/WorkOS/Models/JwksResponseKeys.swift",
@@ -570,6 +632,11 @@
     "Sources/WorkOS/Models/PasswordResetSucceeded.swift",
     "Sources/WorkOS/Models/PasswordResetSucceededData.swift",
     "Sources/WorkOS/Models/PasswordSessionAuthenticateRequest.swift",
+    "Sources/WorkOS/Models/PatchConnection.swift",
+    "Sources/WorkOS/Models/PatchConnectionAttributeMaps.swift",
+    "Sources/WorkOS/Models/PatchConnectionOidcOptions.swift",
+    "Sources/WorkOS/Models/PatchConnectionSAMLOptions.swift",
+    "Sources/WorkOS/Models/PatchConnectionStandardAttributes.swift",
     "Sources/WorkOS/Models/Permission.swift",
     "Sources/WorkOS/Models/PermissionCreated.swift",
     "Sources/WorkOS/Models/PermissionCreatedData.swift",
@@ -605,6 +672,14 @@
     "Sources/WorkOS/Models/ReplaceGroupRoleAssignments.swift",
     "Sources/WorkOS/Models/ResendUserInviteOptions.swift",
     "Sources/WorkOS/Models/ResetPasswordResponse.swift",
+    "Sources/WorkOS/Models/ResourceExportCompleted.swift",
+    "Sources/WorkOS/Models/ResourceExportCompletedData.swift",
+    "Sources/WorkOS/Models/ResourceExportCreated.swift",
+    "Sources/WorkOS/Models/ResourceExportCreatedData.swift",
+    "Sources/WorkOS/Models/ResourceExportDownloaded.swift",
+    "Sources/WorkOS/Models/ResourceExportDownloadedData.swift",
+    "Sources/WorkOS/Models/ResourceExportFailed.swift",
+    "Sources/WorkOS/Models/ResourceExportFailedData.swift",
     "Sources/WorkOS/Models/RevokeSession.swift",
     "Sources/WorkOS/Models/Role.swift",
     "Sources/WorkOS/Models/RoleCreated.swift",
@@ -614,6 +689,11 @@
     "Sources/WorkOS/Models/RoleList.swift",
     "Sources/WorkOS/Models/RoleUpdated.swift",
     "Sources/WorkOS/Models/RoleUpdatedData.swift",
+    "Sources/WorkOS/Models/SAMLIdpSigningCertificate.swift",
+    "Sources/WorkOS/Models/SAMLIdpSigningCertificateList.swift",
+    "Sources/WorkOS/Models/SAMLSpEncryptionCertificate.swift",
+    "Sources/WorkOS/Models/SAMLSpEncryptionCertificateList.swift",
+    "Sources/WorkOS/Models/SAMLSpSigningCertificate.swift",
     "Sources/WorkOS/Models/SSOAuthorizeUrlResponse.swift",
     "Sources/WorkOS/Models/SSODeviceAuthorizationRequest.swift",
     "Sources/WorkOS/Models/SSOLogoutAuthorizeRequest.swift",
@@ -632,6 +712,7 @@
     "Sources/WorkOS/Models/SessionRevokedDataImpersonator.swift",
     "Sources/WorkOS/Models/SetRolePermissions.swift",
     "Sources/WorkOS/Models/SlimRole.swift",
+    "Sources/WorkOS/Models/TokenBody.swift",
     "Sources/WorkOS/Models/TokenQuery.swift",
     "Sources/WorkOS/Models/UpdateAuditLogsRetention.swift",
     "Sources/WorkOS/Models/UpdateAuthorizationPermission.swift",
@@ -717,6 +798,8 @@
     "Sources/WorkOS/Models/VerifyEmailAddress.swift",
     "Sources/WorkOS/Models/VerifyEmailResponse.swift",
     "Sources/WorkOS/Models/VersionListResponse.swift",
+    "Sources/WorkOS/Models/Waitlist.swift",
+    "Sources/WorkOS/Models/WaitlistEntry.swift",
     "Sources/WorkOS/Models/WaitlistUser.swift",
     "Sources/WorkOS/Models/WaitlistUserApproved.swift",
     "Sources/WorkOS/Models/WaitlistUserCreated.swift",
@@ -1650,6 +1733,154 @@
     "PUT /data-integrations/{slug}/client-credentials": {
       "sdkMethod": "updateDataIntegrationClientCredentials",
       "service": "pipes"
+    },
+    "GET /agents/blueprints": {
+      "sdkMethod": "listBlueprints",
+      "service": "agents"
+    },
+    "POST /agents/blueprints": {
+      "sdkMethod": "createBlueprint",
+      "service": "agents"
+    },
+    "GET /agents/blueprints/{agent_blueprint_id}": {
+      "sdkMethod": "getBlueprint",
+      "service": "agents"
+    },
+    "PATCH /agents/blueprints/{agent_blueprint_id}": {
+      "sdkMethod": "updateBlueprint",
+      "service": "agents"
+    },
+    "DELETE /agents/blueprints/{agent_blueprint_id}": {
+      "sdkMethod": "deleteBlueprint",
+      "service": "agents"
+    },
+    "POST /agents/blueprints/{agent_blueprint_id}/tokens": {
+      "sdkMethod": "createBlueprintToken",
+      "service": "agents"
+    },
+    "GET /agents/instances": {
+      "sdkMethod": "listInstances",
+      "service": "agents"
+    },
+    "GET /agents/instances/{agent_instance_id}": {
+      "sdkMethod": "getInstance",
+      "service": "agents"
+    },
+    "DELETE /agents/instances/{agent_instance_id}": {
+      "sdkMethod": "deleteInstance",
+      "service": "agents"
+    },
+    "GET /agents/sessions": {
+      "sdkMethod": "listSessions",
+      "service": "agents"
+    },
+    "GET /agents/sessions/{agent_instance_session_id}": {
+      "sdkMethod": "getSession",
+      "service": "agents"
+    },
+    "POST /agents/sessions/{agent_instance_session_id}/revoke": {
+      "sdkMethod": "revokeSession",
+      "service": "agents"
+    },
+    "POST /connections": {
+      "sdkMethod": "createConnection",
+      "service": "sso"
+    },
+    "GET /connections/{connectionId}/saml_idp_signing_certs": {
+      "sdkMethod": "listConnectionSAMLIdpSigningCerts",
+      "service": "sso"
+    },
+    "POST /connections/{connectionId}/saml_idp_signing_certs": {
+      "sdkMethod": "createConnectionSAMLIdpSigningCert",
+      "service": "sso"
+    },
+    "DELETE /connections/{connectionId}/saml_idp_signing_certs/{certificateId}": {
+      "sdkMethod": "deleteConnectionSAMLIdpSigningCert",
+      "service": "sso"
+    },
+    "GET /connections/{connectionId}/saml_sp_encryption_certs": {
+      "sdkMethod": "listConnectionSAMLSpEncryptionCerts",
+      "service": "sso"
+    },
+    "POST /connections/{connectionId}/saml_sp_encryption_certs": {
+      "sdkMethod": "createConnectionSAMLSpEncryptionCert",
+      "service": "sso"
+    },
+    "DELETE /connections/{connectionId}/saml_sp_encryption_certs/{certificateId}": {
+      "sdkMethod": "deleteConnectionSAMLSpEncryptionCert",
+      "service": "sso"
+    },
+    "GET /connections/{connectionId}/saml_sp_signing_cert": {
+      "sdkMethod": "listConnectionSAMLSpSigningCert",
+      "service": "sso"
+    },
+    "POST /connections/{connectionId}/saml_sp_signing_cert": {
+      "sdkMethod": "createConnectionSAMLSpSigningCert",
+      "service": "sso"
+    },
+    "DELETE /connections/{connectionId}/saml_sp_signing_cert/{certificateId}": {
+      "sdkMethod": "deleteConnectionSAMLSpSigningCert",
+      "service": "sso"
+    },
+    "PATCH /connections/{id}": {
+      "sdkMethod": "updateConnection",
+      "service": "sso"
+    },
+    "GET /organizations/{organization_id}/it_contacts": {
+      "sdkMethod": "listItContacts",
+      "service": "organizations"
+    },
+    "POST /organizations/{organization_id}/it_contacts": {
+      "sdkMethod": "createItContact",
+      "service": "organizations"
+    },
+    "DELETE /organizations/{organization_id}/it_contacts/{contact_id}": {
+      "sdkMethod": "deleteItContact",
+      "service": "organizations"
+    },
+    "POST /organizations/{organization_id}/it_contacts/{contact_id}/invite": {
+      "sdkMethod": "inviteItContact",
+      "service": "organizations"
+    },
+    "POST /organizations/{organization_id}/it_contacts/{contact_id}/revoke": {
+      "sdkMethod": "revokeItContact",
+      "service": "organizations"
+    },
+    "POST /platform/teams": {
+      "sdkMethod": "createTeam",
+      "service": "platformTeams"
+    },
+    "GET /platform/teams/{team_id}": {
+      "sdkMethod": "getTeam",
+      "service": "platformTeams"
+    },
+    "DELETE /user_management/waitlist_entries/{id}": {
+      "sdkMethod": "deleteWaitlistEntry",
+      "service": "userManagement"
+    },
+    "POST /user_management/waitlist_entries/{id}/approve": {
+      "sdkMethod": "createWaitlistEntryApprove",
+      "service": "userManagement"
+    },
+    "POST /user_management/waitlist_entries/{id}/deny": {
+      "sdkMethod": "createWaitlistEntryDeny",
+      "service": "userManagement"
+    },
+    "GET /user_management/waitlists": {
+      "sdkMethod": "listWaitlists",
+      "service": "userManagement"
+    },
+    "GET /user_management/waitlists/{id}": {
+      "sdkMethod": "getWaitlist",
+      "service": "userManagement"
+    },
+    "GET /user_management/waitlists/{id}/entries": {
+      "sdkMethod": "listWaitlistEntries",
+      "service": "userManagement"
+    },
+    "POST /user_management/waitlists/{id}/entries": {
+      "sdkMethod": "createWaitlistEntry",
+      "service": "userManagement"
     }
   }
 }
