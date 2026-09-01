@@ -11,13 +11,10 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
     case appleOAuth
     case bitbucketOAuth
     case crossAppAuth
-    case discordOAuth
     case externalAuth
     case gitHubOAuth
     case gitLabOAuth
     case googleOAuth
-    case grokOAuth
-    case xoAuth
     case intuitOAuth
     case linkedInOAuth
     case microsoftOAuth
@@ -40,13 +37,10 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
         case "AppleOAuth": self = .appleOAuth
         case "BitbucketOAuth": self = .bitbucketOAuth
         case "CrossAppAuth": self = .crossAppAuth
-        case "DiscordOAuth": self = .discordOAuth
         case "ExternalAuth": self = .externalAuth
         case "GitHubOAuth": self = .gitHubOAuth
         case "GitLabOAuth": self = .gitLabOAuth
         case "GoogleOAuth": self = .googleOAuth
-        case "GrokOAuth": self = .grokOAuth
-        case "XOAuth": self = .xoAuth
         case "IntuitOAuth": self = .intuitOAuth
         case "LinkedInOAuth": self = .linkedInOAuth
         case "MicrosoftOAuth": self = .microsoftOAuth
@@ -70,13 +64,10 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
         case .appleOAuth: return "AppleOAuth"
         case .bitbucketOAuth: return "BitbucketOAuth"
         case .crossAppAuth: return "CrossAppAuth"
-        case .discordOAuth: return "DiscordOAuth"
         case .externalAuth: return "ExternalAuth"
         case .gitHubOAuth: return "GitHubOAuth"
         case .gitLabOAuth: return "GitLabOAuth"
         case .googleOAuth: return "GoogleOAuth"
-        case .grokOAuth: return "GrokOAuth"
-        case .xoAuth: return "XOAuth"
         case .intuitOAuth: return "IntuitOAuth"
         case .linkedInOAuth: return "LinkedInOAuth"
         case .microsoftOAuth: return "MicrosoftOAuth"
@@ -109,13 +100,10 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
         .appleOAuth,
         .bitbucketOAuth,
         .crossAppAuth,
-        .discordOAuth,
         .externalAuth,
         .gitHubOAuth,
         .gitLabOAuth,
         .googleOAuth,
-        .grokOAuth,
-        .xoAuth,
         .intuitOAuth,
         .linkedInOAuth,
         .microsoftOAuth,
