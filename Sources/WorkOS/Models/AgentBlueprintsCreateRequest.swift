@@ -12,14 +12,14 @@ public struct AgentBlueprintsCreateRequest: Codable, Sendable, Equatable {
     /// Who may mint sessions from this blueprint.
     public let invocableBy: AgentBlueprintsCreateRequestInvocableBy?
     /// Token and session lifetimes for sessions minted from this blueprint.
-    public let sessionSettings: AgentBlueprintsCreateRequestSessionSetting
+    public let sessionSettings: AgentBlueprintsCreateRequestSessionSetting?
 
     public init(
         name: String,
-        sessionSettings: AgentBlueprintsCreateRequestSessionSetting,
         description: String? = nil,
         permissions: [String]? = nil,
-        invocableBy: AgentBlueprintsCreateRequestInvocableBy? = nil
+        invocableBy: AgentBlueprintsCreateRequestInvocableBy? = nil,
+        sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = nil
     ) {
         self.name = name
         self.description = description
