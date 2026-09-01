@@ -4,6 +4,13 @@ import Foundation
 
 /// Enumeration of valid CreateWebhookEndpointEvents values.
 public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Hashable {
+    case agentBlueprintCreated
+    case agentBlueprintDeleted
+    case agentBlueprintUpdated
+    case agentInstanceCreated
+    case agentInstanceDeleted
+    case agentInstanceSessionCreated
+    case agentInstanceSessionRevoked
     case agentRegistrationCreated
     case agentRegistrationClaimAttemptCreated
     case agentRegistrationClaimCompleted
@@ -102,6 +109,13 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
 
     public init(rawValue: String) {
         switch rawValue {
+        case "agent.blueprint.created": self = .agentBlueprintCreated
+        case "agent.blueprint.deleted": self = .agentBlueprintDeleted
+        case "agent.blueprint.updated": self = .agentBlueprintUpdated
+        case "agent.instance.created": self = .agentInstanceCreated
+        case "agent.instance.deleted": self = .agentInstanceDeleted
+        case "agent.instance.session.created": self = .agentInstanceSessionCreated
+        case "agent.instance.session.revoked": self = .agentInstanceSessionRevoked
         case "agent.registration.created": self = .agentRegistrationCreated
         case "agent.registration.claim.attempt.created":
             self = .agentRegistrationClaimAttemptCreated
@@ -208,6 +222,13 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
 
     public var rawValue: String {
         switch self {
+        case .agentBlueprintCreated: return "agent.blueprint.created"
+        case .agentBlueprintDeleted: return "agent.blueprint.deleted"
+        case .agentBlueprintUpdated: return "agent.blueprint.updated"
+        case .agentInstanceCreated: return "agent.instance.created"
+        case .agentInstanceDeleted: return "agent.instance.deleted"
+        case .agentInstanceSessionCreated: return "agent.instance.session.created"
+        case .agentInstanceSessionRevoked: return "agent.instance.session.revoked"
         case .agentRegistrationCreated: return "agent.registration.created"
         case .agentRegistrationClaimAttemptCreated:
             return "agent.registration.claim.attempt.created"
@@ -323,6 +344,13 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
     }
 
     public static let allKnownCases: [CreateWebhookEndpointEvents] = [
+        .agentBlueprintCreated,
+        .agentBlueprintDeleted,
+        .agentBlueprintUpdated,
+        .agentInstanceCreated,
+        .agentInstanceDeleted,
+        .agentInstanceSessionCreated,
+        .agentInstanceSessionRevoked,
         .agentRegistrationCreated,
         .agentRegistrationClaimAttemptCreated,
         .agentRegistrationClaimCompleted,

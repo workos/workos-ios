@@ -16,6 +16,8 @@ public struct AuthenticationOAuthFailedData: Codable, Sendable, Equatable {
     public let email: String?
     /// Details about the authentication error.
     public let error: AuthenticationOAuthFailedDataError
+    /// The OAuth provider used for authentication.
+    public let provider: String?
 
     public init(
         type: String,
@@ -24,7 +26,8 @@ public struct AuthenticationOAuthFailedData: Codable, Sendable, Equatable {
         ipAddress: String? = nil,
         userAgent: String? = nil,
         userId: String? = nil,
-        email: String? = nil
+        email: String? = nil,
+        provider: String? = nil
     ) {
         self.type = type
         self.status = status
@@ -33,6 +36,7 @@ public struct AuthenticationOAuthFailedData: Codable, Sendable, Equatable {
         self.userId = userId
         self.email = email
         self.error = error
+        self.provider = provider
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -43,5 +47,6 @@ public struct AuthenticationOAuthFailedData: Codable, Sendable, Equatable {
         case userId = "user_id"
         case email
         case error
+        case provider
     }
 }
