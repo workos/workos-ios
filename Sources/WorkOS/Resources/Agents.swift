@@ -75,17 +75,17 @@ public struct Agents: Sendable {
     /// Creates an agent blueprint: the template describing what an agent may do (its permission ceiling), who may invoke it, and the lifetimes of its sessions.
     ///
     /// - Parameter name: Human-readable name of the agent blueprint.
-    /// - Parameter sessionSettings: Token and session lifetimes for sessions minted from this blueprint.
     /// - Parameter description: Human-readable description of the agent blueprint.
     /// - Parameter permissions: Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
     /// - Parameter invocableBy: Who may mint sessions from this blueprint.
+    /// - Parameter sessionSettings: Token and session lifetimes for sessions minted from this blueprint.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createBlueprint(
         name: String,
-        sessionSettings: AgentBlueprintsCreateRequestSessionSetting,
         description: String? = nil,
         permissions: [String]? = nil,
         invocableBy: AgentBlueprintsCreateRequestInvocableBy? = nil,
+        sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> AgentBlueprint {
         let path = "agents/blueprints"
@@ -220,6 +220,31 @@ public struct Agents: Sendable {
             body: body,
             options: requestOptions,
             as: AgentToken.self
+        )
+    }
+
+    /// Validate an agent token
+    ///
+    /// Validates an agent access token: verifies its signature against the environment, that it was minted under this blueprint, and that the backing session is live (not revoked or expired, and — for delegated sessions — that the delegating user session has not ended). Returns the token claims and session metadata when valid; invalid tokens are reported as errors with stable codes.
+    ///
+    /// - Parameter agentBlueprintId: The unique ID of the agent blueprint.
+    /// - Parameter agentAccessToken: The agent access token (a JWT) to validate.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func validateBlueprintToken(
+        agentBlueprintId: String,
+        agentAccessToken: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> AgentTokenValidation {
+        let path = "agents/blueprints/\(PathEncoding.segment(agentBlueprintId))/tokens/validate"
+        var body = EncodableBody()
+        body.set("agent_access_token", agentAccessToken)
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: AgentTokenValidation.self
         )
     }
 
