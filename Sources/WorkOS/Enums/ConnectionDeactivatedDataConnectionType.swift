@@ -16,7 +16,6 @@ public enum ConnectionDeactivatedDataConnectionType: RawRepresentable, Codable, 
     case cleverOidc
     case cloudflareSAML
     case cyberArkSAML
-    case discordOAuth
     case duoSAML
     case entraIdOidc
     case genericOidc
@@ -26,8 +25,6 @@ public enum ConnectionDeactivatedDataConnectionType: RawRepresentable, Codable, 
     case googleOAuth
     case googleOidc
     case googleSAML
-    case grokOAuth
-    case xoAuth
     case intuitOAuth
     case jumpCloudSAML
     case keycloakSAML
@@ -73,7 +70,6 @@ public enum ConnectionDeactivatedDataConnectionType: RawRepresentable, Codable, 
         case "CleverOIDC": self = .cleverOidc
         case "CloudflareSAML": self = .cloudflareSAML
         case "CyberArkSAML": self = .cyberArkSAML
-        case "DiscordOAuth": self = .discordOAuth
         case "DuoSAML": self = .duoSAML
         case "EntraIdOIDC": self = .entraIdOidc
         case "GenericOIDC": self = .genericOidc
@@ -83,8 +79,6 @@ public enum ConnectionDeactivatedDataConnectionType: RawRepresentable, Codable, 
         case "GoogleOAuth": self = .googleOAuth
         case "GoogleOIDC": self = .googleOidc
         case "GoogleSAML": self = .googleSAML
-        case "GrokOAuth": self = .grokOAuth
-        case "XOAuth": self = .xoAuth
         case "IntuitOAuth": self = .intuitOAuth
         case "JumpCloudSAML": self = .jumpCloudSAML
         case "KeycloakSAML": self = .keycloakSAML
@@ -131,7 +125,6 @@ public enum ConnectionDeactivatedDataConnectionType: RawRepresentable, Codable, 
         case .cleverOidc: return "CleverOIDC"
         case .cloudflareSAML: return "CloudflareSAML"
         case .cyberArkSAML: return "CyberArkSAML"
-        case .discordOAuth: return "DiscordOAuth"
         case .duoSAML: return "DuoSAML"
         case .entraIdOidc: return "EntraIdOIDC"
         case .genericOidc: return "GenericOIDC"
@@ -141,8 +134,6 @@ public enum ConnectionDeactivatedDataConnectionType: RawRepresentable, Codable, 
         case .googleOAuth: return "GoogleOAuth"
         case .googleOidc: return "GoogleOIDC"
         case .googleSAML: return "GoogleSAML"
-        case .grokOAuth: return "GrokOAuth"
-        case .xoAuth: return "XOAuth"
         case .intuitOAuth: return "IntuitOAuth"
         case .jumpCloudSAML: return "JumpCloudSAML"
         case .keycloakSAML: return "KeycloakSAML"
@@ -198,7 +189,6 @@ public enum ConnectionDeactivatedDataConnectionType: RawRepresentable, Codable, 
         .cleverOidc,
         .cloudflareSAML,
         .cyberArkSAML,
-        .discordOAuth,
         .duoSAML,
         .entraIdOidc,
         .genericOidc,
@@ -208,8 +198,6 @@ public enum ConnectionDeactivatedDataConnectionType: RawRepresentable, Codable, 
         .googleOAuth,
         .googleOidc,
         .googleSAML,
-        .grokOAuth,
-        .xoAuth,
         .intuitOAuth,
         .jumpCloudSAML,
         .keycloakSAML,

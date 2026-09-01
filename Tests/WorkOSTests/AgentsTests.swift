@@ -15,6 +15,119 @@ import Testing
         #expect(client.configuration.apiKey == "sk_test_123")
     }
 
+    @Test func listBlueprintsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.agents.listBlueprints()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/agents/blueprints")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func listBlueprintsAutoPagingFetchesAllPages() async throws {
+        let (client, recorder) = makeTestClient(stubs: [
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":"cursor_2"}}"#
+                        .utf8), headers: [:]),
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                        .utf8), headers: [:]),
+        ])
+        var items: [AgentBlueprint] = []
+        for try await item in client.agents.listBlueprintsAutoPaging() {
+            items.append(item)
+        }
+
+        #expect(items.count == 2)
+        #expect(recorder.allRequests.count == 2)
+        let second = try #require(recorder.allRequests.last?.url)
+        let query = URLComponents(url: second, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        #expect(query.contains(URLQueryItem(name: "after", value: "cursor_2")))
+    }
+
+    @Test func createBlueprintSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.agents.createBlueprint(
+            name: "test_name",
+            sessionSettings: AgentBlueprintsCreateRequestSessionSetting(
+                maxAgeSeconds: 1, accessTokenTtlSeconds: 1, refreshTokenTtlSeconds: 1))
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/agents/blueprints")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["name"] != nil)
+        #expect(result.id == "agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func getBlueprintSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.agents.getBlueprint(
+            agentBlueprintId: "sample-agent-blueprint-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/agents/blueprints/sample-agent-blueprint-id")
+        #expect(result.id == "agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func updateBlueprintSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.agents.updateBlueprint(
+            agentBlueprintId: "sample-agent-blueprint-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PATCH")
+        #expect(request.url?.path == "/agents/blueprints/sample-agent-blueprint-id")
+        #expect(result.id == "agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func deleteBlueprintSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.agents.deleteBlueprint(agentBlueprintId: "sample-agent-blueprint-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/agents/blueprints/sample-agent-blueprint-id")
+    }
+
+    @Test func createBlueprintTokenSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"access_token":"eyJhbGciOiJSUzI1NiIsImtpZCI6...","token_type":"Bearer","expires_in":300,"refresh_token":"njGkA8Wyht0GBEGGA0Zh1Q3wZzL2...","agent_instance_id":"agent_01EHWNCE74X7JSDV0X3SZ3KJNY","new_instance":false,"agent_instance_session_id":"agent_session_01EHWNCE74X7JSDV0X3SZ3KJNY","permissions":["crm:read"]}"#
+        )
+        let result = try await client.agents.createBlueprintToken(
+            agentBlueprintId: "sample-agent-blueprint-id",
+            type: AgentBlueprintsTokenMintTokenRequestType(rawValue: "user_delegated"))
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/agents/blueprints/sample-agent-blueprint-id/tokens")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["type"] != nil)
+        _ = result
+    }
+
     @Test func updateAttemptsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
@@ -52,6 +165,43 @@ import Testing
         _ = result
     }
 
+    @Test func listInstancesSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"agent_instance","id":"agent_01EHWNCE74X7JSDV0X3SZ3KJNY","agent_blueprint_id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","organization_membership_id":"om_01EHWNCE74X7JSDV0X3SZ3KJNY","type":"delegated","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.agents.listInstances()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/agents/instances")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "agent_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func getInstanceSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"agent_instance","id":"agent_01EHWNCE74X7JSDV0X3SZ3KJNY","agent_blueprint_id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","organization_membership_id":"om_01EHWNCE74X7JSDV0X3SZ3KJNY","type":"delegated","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.agents.getInstance(
+            agentInstanceId: "sample-agent-instance-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/agents/instances/sample-agent-instance-id")
+        #expect(result.id == "agent_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func deleteInstanceSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.agents.deleteInstance(agentInstanceId: "sample-agent-instance-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/agents/instances/sample-agent-instance-id")
+    }
+
     @Test func getRegistrationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
@@ -63,5 +213,47 @@ import Testing
         #expect(request.httpMethod == "GET")
         #expect(request.url?.path == "/agents/registrations/sample-id")
         #expect(result.id == "agent_reg_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func listSessionsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"agent_instance_session","id":"agent_session_01EHWNCE74X7JSDV0X3SZ3KJNY","agent_instance_id":"agent_01EHWNCE74X7JSDV0X3SZ3KJNY","status":"active","expires_at":"2026-01-15T13:00:00.000Z","revoked_at":null,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.agents.listSessions()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/agents/sessions")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "agent_session_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func getSessionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"agent_instance_session","id":"agent_session_01EHWNCE74X7JSDV0X3SZ3KJNY","agent_instance_id":"agent_01EHWNCE74X7JSDV0X3SZ3KJNY","status":"active","expires_at":"2026-01-15T13:00:00.000Z","revoked_at":null,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.agents.getSession(
+            agentInstanceSessionId: "sample-agent-instance-session-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/agents/sessions/sample-agent-instance-session-id")
+        #expect(result.id == "agent_session_01EHWNCE74X7JSDV0X3SZ3KJNY")
+    }
+
+    @Test func revokeSessionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"agent_instance_session","id":"agent_session_01EHWNCE74X7JSDV0X3SZ3KJNY","agent_instance_id":"agent_01EHWNCE74X7JSDV0X3SZ3KJNY","status":"active","expires_at":"2026-01-15T13:00:00.000Z","revoked_at":null,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.agents.revokeSession(
+            agentInstanceSessionId: "sample-agent-instance-session-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/agents/sessions/sample-agent-instance-session-id/revoke")
+        #expect(result.id == "agent_session_01EHWNCE74X7JSDV0X3SZ3KJNY")
     }
 }

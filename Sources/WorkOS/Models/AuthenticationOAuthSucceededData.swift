@@ -14,6 +14,8 @@ public struct AuthenticationOAuthSucceededData: Codable, Sendable, Equatable {
     public let userId: String?
     /// The email address of the user.
     public let email: String
+    /// The OAuth provider used for authentication.
+    public let provider: String?
 
     public init(
         type: String,
@@ -21,7 +23,8 @@ public struct AuthenticationOAuthSucceededData: Codable, Sendable, Equatable {
         email: String,
         ipAddress: String? = nil,
         userAgent: String? = nil,
-        userId: String? = nil
+        userId: String? = nil,
+        provider: String? = nil
     ) {
         self.type = type
         self.status = status
@@ -29,6 +32,7 @@ public struct AuthenticationOAuthSucceededData: Codable, Sendable, Equatable {
         self.userAgent = userAgent
         self.userId = userId
         self.email = email
+        self.provider = provider
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -38,5 +42,6 @@ public struct AuthenticationOAuthSucceededData: Codable, Sendable, Equatable {
         case userAgent = "user_agent"
         case userId = "user_id"
         case email
+        case provider
     }
 }

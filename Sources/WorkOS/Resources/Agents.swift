@@ -6,6 +6,223 @@ import Foundation
 public struct Agents: Sendable {
     let transport: Transport
 
+    /// List agent blueprints
+    ///
+    /// Lists the agent blueprints in the current environment.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listBlueprints(
+        before: String? = nil,
+        after: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> Page<AgentBlueprint> {
+        let path = "agents/blueprints"
+        var query: [URLQueryItem] = []
+        if let before {
+            query.append(URLQueryItem(name: "before", value: before))
+        }
+        if let after {
+            query.append(URLQueryItem(name: "after", value: after))
+        }
+        if let limit {
+            query.append(URLQueryItem(name: "limit", value: "\(limit)"))
+        }
+        if let order {
+            query.append(URLQueryItem(name: "order", value: order.rawValue))
+        }
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: query,
+            body: nil,
+            options: requestOptions,
+            as: Page<AgentBlueprint>.self
+        )
+    }
+
+    /// Auto-paginating variant of `listBlueprints`: fetches successive
+    /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listBlueprintsAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AgentBlueprint> {
+        AutoPagingSequence { cursor in
+            try await self.listBlueprints(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
+    /// Create an agent blueprint
+    ///
+    /// Creates an agent blueprint: the template describing what an agent may do (its permission ceiling), who may invoke it, and the lifetimes of its sessions.
+    ///
+    /// - Parameter name: Human-readable name of the agent blueprint.
+    /// - Parameter sessionSettings: Token and session lifetimes for sessions minted from this blueprint.
+    /// - Parameter description: Human-readable description of the agent blueprint.
+    /// - Parameter permissions: Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
+    /// - Parameter invocableBy: Who may mint sessions from this blueprint.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createBlueprint(
+        name: String,
+        sessionSettings: AgentBlueprintsCreateRequestSessionSetting,
+        description: String? = nil,
+        permissions: [String]? = nil,
+        invocableBy: AgentBlueprintsCreateRequestInvocableBy? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> AgentBlueprint {
+        let path = "agents/blueprints"
+        var body = EncodableBody()
+        body.set("name", name)
+        body.set("description", description)
+        body.set("permissions", permissions)
+        body.set("invocable_by", invocableBy)
+        body.set("session_settings", sessionSettings)
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: AgentBlueprint.self
+        )
+    }
+
+    /// Get an agent blueprint
+    ///
+    /// Retrieves an agent blueprint by ID.
+    ///
+    /// - Parameter agentBlueprintId: The unique ID of the agent blueprint.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func getBlueprint(
+        agentBlueprintId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> AgentBlueprint {
+        let path = "agents/blueprints/\(PathEncoding.segment(agentBlueprintId))"
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: AgentBlueprint.self
+        )
+    }
+
+    /// Update an agent blueprint
+    ///
+    /// Updates an agent blueprint. Omitted fields are left unchanged; provided lists replace the existing configuration.
+    ///
+    /// - Parameter agentBlueprintId: The unique ID of the agent blueprint.
+    /// - Parameter name: Human-readable name of the agent blueprint.
+    /// - Parameter description: Human-readable description of the agent blueprint. Pass `null` to clear it.
+    /// - Parameter permissions: Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
+    /// - Parameter invocableBy: Who may mint sessions from this blueprint. Omitted lists are left unchanged.
+    /// - Parameter sessionSettings: Token and session lifetimes for sessions minted from this blueprint. Omitted fields are left unchanged.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func updateBlueprint(
+        agentBlueprintId: String,
+        name: String? = nil,
+        description: String? = nil,
+        permissions: [String]? = nil,
+        invocableBy: AgentBlueprintsUpdateRequestInvocableBy? = nil,
+        sessionSettings: AgentBlueprintsUpdateRequestSessionSetting? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> AgentBlueprint {
+        let path = "agents/blueprints/\(PathEncoding.segment(agentBlueprintId))"
+        var body = EncodableBody()
+        body.set("name", name)
+        body.set("description", description)
+        body.set("permissions", permissions)
+        body.set("invocable_by", invocableBy)
+        body.set("session_settings", sessionSettings)
+        return try await transport.request(
+            method: "PATCH",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: AgentBlueprint.self
+        )
+    }
+
+    /// Delete an agent blueprint
+    ///
+    /// Deletes an agent blueprint along with its configuration, instances, and sessions.
+    ///
+    /// - Parameter agentBlueprintId: The unique ID of the agent blueprint.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func deleteBlueprint(
+        agentBlueprintId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path = "agents/blueprints/\(PathEncoding.segment(agentBlueprintId))"
+        try await transport.requestVoid(
+            method: "DELETE",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions
+        )
+    }
+
+    /// Mint an agent token
+    ///
+    /// Mint an agent access token (and backing session) from an agent blueprint. The session can be user-delegated (exchanging a user access token), autonomous (the agent acting as itself in an organization), agent-delegated (the agent exchanging its own access token for a new session on the same instance), or a refresh of a previously issued refresh token.
+    ///
+    /// - Parameter agentBlueprintId: The unique ID of the agent blueprint.
+    /// - Parameter type: How the session is minted: `user_delegated`, `autonomous`, `agent_delegated`, or `refresh`.
+    /// - Parameter userAccessToken: The access token of the user delegating to the agent. The token identifies the user and organization; effective permissions are resolved server-side.
+    /// - Parameter intent: Optional caller-supplied context, echoed as an object with a `text` field in the `intent` claim of the minted access token.
+    /// - Parameter organizationId: The organization the agent acts within when operating as itself.
+    /// - Parameter agentAccessToken: The agent's own access token to exchange for a new session on the same instance. The token must have been minted from this blueprint; permissions are re-derived from current authority.
+    /// - Parameter refreshToken: The refresh token issued with a previous agent access token. Refresh tokens are single-use: each refresh rotates it.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createBlueprintToken(
+        agentBlueprintId: String,
+        type: AgentBlueprintsTokenMintTokenRequestType,
+        userAccessToken: String? = nil,
+        intent: String? = nil,
+        organizationId: String? = nil,
+        agentAccessToken: String? = nil,
+        refreshToken: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> AgentToken {
+        let path = "agents/blueprints/\(PathEncoding.segment(agentBlueprintId))/tokens"
+        var body = EncodableBody()
+        body.set("type", type)
+        body.set("user_access_token", userAccessToken)
+        body.set("intent", intent)
+        body.set("organization_id", organizationId)
+        body.set("agent_access_token", agentAccessToken)
+        body.set("refresh_token", refreshToken)
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: AgentToken.self
+        )
+    }
+
     /// Link a claim attempt to an external user
     ///
     /// Link an external user to a claim attempt and retrieve the code needed for the agent to complete the claim. The user is looked up by external ID; if no user exists, one is created. When the user belongs to multiple organizations, an explicit organization must be provided.
@@ -85,6 +302,249 @@ public struct Agents: Sendable {
             body: nil,
             options: requestOptions,
             as: AgentRegistration.self
+        )
+    }
+
+    /// List agent instances
+    ///
+    /// Lists the agent instances in the current environment. Instances are created implicitly when tokens are minted.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter organizationId: Only return instances acting within this organization.
+    /// - Parameter agentBlueprintId: Only return instances minted from this blueprint.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listInstances(
+        before: String? = nil,
+        after: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        organizationId: String? = nil,
+        agentBlueprintId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> Page<AgentInstance> {
+        let path = "agents/instances"
+        var query: [URLQueryItem] = []
+        if let before {
+            query.append(URLQueryItem(name: "before", value: before))
+        }
+        if let after {
+            query.append(URLQueryItem(name: "after", value: after))
+        }
+        if let limit {
+            query.append(URLQueryItem(name: "limit", value: "\(limit)"))
+        }
+        if let order {
+            query.append(URLQueryItem(name: "order", value: order.rawValue))
+        }
+        if let organizationId {
+            query.append(URLQueryItem(name: "organization_id", value: organizationId))
+        }
+        if let agentBlueprintId {
+            query.append(URLQueryItem(name: "agent_blueprint_id", value: agentBlueprintId))
+        }
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: query,
+            body: nil,
+            options: requestOptions,
+            as: Page<AgentInstance>.self
+        )
+    }
+
+    /// Auto-paginating variant of `listInstances`: fetches successive
+    /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter organizationId: Only return instances acting within this organization.
+    /// - Parameter agentBlueprintId: Only return instances minted from this blueprint.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listInstancesAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        organizationId: String? = nil,
+        agentBlueprintId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AgentInstance> {
+        AutoPagingSequence { cursor in
+            try await self.listInstances(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                organizationId: organizationId,
+                agentBlueprintId: agentBlueprintId,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
+    /// Get an agent instance
+    ///
+    /// Retrieves an agent instance by ID.
+    ///
+    /// - Parameter agentInstanceId: The unique ID of the agent instance.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func getInstance(
+        agentInstanceId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> AgentInstance {
+        let path = "agents/instances/\(PathEncoding.segment(agentInstanceId))"
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: AgentInstance.self
+        )
+    }
+
+    /// Delete an agent instance
+    ///
+    /// Deletes an agent instance along with its sessions, invalidating their refresh tokens.
+    ///
+    /// - Parameter agentInstanceId: The unique ID of the agent instance.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func deleteInstance(
+        agentInstanceId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path = "agents/instances/\(PathEncoding.segment(agentInstanceId))"
+        try await transport.requestVoid(
+            method: "DELETE",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions
+        )
+    }
+
+    /// List agent instance sessions
+    ///
+    /// Lists the agent instance sessions in the current environment. Sessions are created when tokens are minted.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter agentBlueprintId: Only return sessions of instances minted from this blueprint.
+    /// - Parameter agentInstanceId: Only return sessions belonging to this agent instance.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listSessions(
+        before: String? = nil,
+        after: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        agentBlueprintId: String? = nil,
+        agentInstanceId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> Page<AgentInstanceSession> {
+        let path = "agents/sessions"
+        var query: [URLQueryItem] = []
+        if let before {
+            query.append(URLQueryItem(name: "before", value: before))
+        }
+        if let after {
+            query.append(URLQueryItem(name: "after", value: after))
+        }
+        if let limit {
+            query.append(URLQueryItem(name: "limit", value: "\(limit)"))
+        }
+        if let order {
+            query.append(URLQueryItem(name: "order", value: order.rawValue))
+        }
+        if let agentBlueprintId {
+            query.append(URLQueryItem(name: "agent_blueprint_id", value: agentBlueprintId))
+        }
+        if let agentInstanceId {
+            query.append(URLQueryItem(name: "agent_instance_id", value: agentInstanceId))
+        }
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: query,
+            body: nil,
+            options: requestOptions,
+            as: Page<AgentInstanceSession>.self
+        )
+    }
+
+    /// Auto-paginating variant of `listSessions`: fetches successive
+    /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter agentBlueprintId: Only return sessions of instances minted from this blueprint.
+    /// - Parameter agentInstanceId: Only return sessions belonging to this agent instance.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listSessionsAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        agentBlueprintId: String? = nil,
+        agentInstanceId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AgentInstanceSession> {
+        AutoPagingSequence { cursor in
+            try await self.listSessions(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                agentBlueprintId: agentBlueprintId,
+                agentInstanceId: agentInstanceId,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
+    /// Get an agent instance session
+    ///
+    /// Retrieves an agent instance session by ID.
+    ///
+    /// - Parameter agentInstanceSessionId: The unique ID of the agent instance session.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func getSession(
+        agentInstanceSessionId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> AgentInstanceSession {
+        let path = "agents/sessions/\(PathEncoding.segment(agentInstanceSessionId))"
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: AgentInstanceSession.self
+        )
+    }
+
+    /// Revoke an agent instance session
+    ///
+    /// Revokes an agent instance session, invalidating its refresh token and every access token minted under it. Revocation is idempotent: revoking an already-revoked session keeps the original `revoked_at`, and revoking an already-expired session returns the session with `status: expired` and a null `revoked_at`.
+    ///
+    /// - Parameter agentInstanceSessionId: The unique ID of the agent instance session.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func revokeSession(
+        agentInstanceSessionId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> AgentInstanceSession {
+        let path = "agents/sessions/\(PathEncoding.segment(agentInstanceSessionId))/revoke"
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: AgentInstanceSession.self
         )
     }
 }

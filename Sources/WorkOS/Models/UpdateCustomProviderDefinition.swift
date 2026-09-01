@@ -5,11 +5,11 @@ import Foundation
 public struct UpdateCustomProviderDefinition: Codable, Sendable, Equatable {
     /// A descriptive name for the custom provider.
     public let name: String?
-    /// The provider's OAuth authorization endpoint.
+    /// The provider's OAuth authorization endpoint. Must be a static URL: `${config.…}` placeholders are resolved against a provider's declared config fields, which custom providers cannot declare.
     public let authorizationUrl: String?
-    /// The provider's OAuth token endpoint.
+    /// The provider's OAuth token endpoint. Must be a static URL: `${config.…}` placeholders are resolved against a provider's declared config fields, which custom providers cannot declare.
     public let tokenUrl: String?
-    /// The endpoint used to refresh tokens, if different from the token endpoint.
+    /// The endpoint used to refresh tokens, if different from the token endpoint. Must be a static URL, like the other endpoints.
     public let refreshTokenUrl: String?
     /// Whether PKCE is used during the authorization code flow.
     public let pkceEnabled: Bool?
