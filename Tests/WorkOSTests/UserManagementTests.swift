@@ -257,6 +257,31 @@ import Testing
         #expect(result.data.first?.id == "cors_origin_01HXYZ123456789ABCDEFGHIJ")
     }
 
+    @Test func listCorsOriginsAutoPagingFetchesAllPages() async throws {
+        let (client, recorder) = makeTestClient(stubs: [
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"cors_origin","id":"cors_origin_01HXYZ123456789ABCDEFGHIJ","origin":"https://example.com","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":"cursor_2"}}"#
+                        .utf8), headers: [:]),
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"cors_origin","id":"cors_origin_01HXYZ123456789ABCDEFGHIJ","origin":"https://example.com","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                        .utf8), headers: [:]),
+        ])
+        var items: [CorsOriginResponse] = []
+        for try await item in client.userManagement.listCorsOriginsAutoPaging() {
+            items.append(item)
+        }
+
+        #expect(items.count == 2)
+        #expect(recorder.allRequests.count == 2)
+        let second = try #require(recorder.allRequests.last?.url)
+        let query = URLComponents(url: second, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        #expect(query.contains(URLQueryItem(name: "after", value: "cursor_2")))
+    }
+
     @Test func createCorsOriginSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
@@ -804,5 +829,98 @@ import Testing
         #expect(request.httpMethod == "GET")
         #expect(request.url?.path == "/user_management/users/external_id/sample-external-id")
         #expect(result.id == "user_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func deleteWaitlistEntrySendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.userManagement.deleteWaitlistEntry(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/user_management/waitlist_entries/sample-id")
+    }
+
+    @Test func createWaitlistEntryApproveSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"id":"wl_user_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","state":"pending","approved_at":null,"additional_fields":{"company":"Example Corp"},"waitlist_id":"waitlist_01E4ZCR3C56J083X43JQXF3JK5","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","object":"waitlist_entry"}"#
+        )
+        let result = try await client.userManagement.createWaitlistEntryApprove(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/waitlist_entries/sample-id/approve")
+        #expect(result.id == "wl_user_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func createWaitlistEntryDenySendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"id":"wl_user_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","state":"pending","approved_at":null,"additional_fields":{"company":"Example Corp"},"waitlist_id":"waitlist_01E4ZCR3C56J083X43JQXF3JK5","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","object":"waitlist_entry"}"#
+        )
+        let result = try await client.userManagement.createWaitlistEntryDeny(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/waitlist_entries/sample-id/deny")
+        #expect(result.id == "wl_user_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func listWaitlistsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"waitlist","id":"waitlist_01E4ZCR3C56J083X43JQXF3JK5","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.userManagement.listWaitlists()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/waitlists")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "waitlist_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func getWaitlistSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"waitlist","id":"waitlist_01E4ZCR3C56J083X43JQXF3JK5","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.userManagement.getWaitlist(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/waitlists/sample-id")
+        #expect(result.id == "waitlist_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func listWaitlistEntriesSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"id":"wl_user_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","state":"pending","approved_at":null,"additional_fields":{"company":"Example Corp"},"waitlist_id":"waitlist_01E4ZCR3C56J083X43JQXF3JK5","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","object":"waitlist_entry"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.userManagement.listWaitlistEntries(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/waitlists/sample-id/entries")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "wl_user_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func createWaitlistEntrySendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"id":"wl_user_01E4ZCR3C56J083X43JQXF3JK5","email":"marcelina.davis@example.com","state":"pending","approved_at":null,"additional_fields":{"company":"Example Corp"},"waitlist_id":"waitlist_01E4ZCR3C56J083X43JQXF3JK5","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","object":"waitlist_entry"}"#
+        )
+        let result = try await client.userManagement.createWaitlistEntry(
+            id: "sample-id", email: "test_email")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/waitlists/sample-id/entries")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["email"] != nil)
+        #expect(result.id == "wl_user_01E4ZCR3C56J083X43JQXF3JK5")
     }
 }
