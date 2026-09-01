@@ -29,6 +29,145 @@ import Testing
         #expect(result.data.first?.id == "conn_01E4ZCR3C56J083X43JQXF3JK5")
     }
 
+    @Test func createConnectionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connection","id":"conn_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","connection_type":"OktaSAML","name":"Foo Corp","state":"active","status":"linked","domains":[{"id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","object":"connection_domain","domain":"foo-corp.com"}],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.sso.createConnection(organizationId: "test_organization_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/connections")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["organization_id"] != nil)
+        #expect(result.id == "conn_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func listConnectionSAMLIdpSigningCertsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"list","data":[{"object":"saml_idp_signing_certificate","id":"saml_x509_cert_01E4ZCR3C56J083X43JQXF3JK5","value":"-----BEGIN CERTIFICATE-----MIIC...-----END CERTIFICATE-----","not_before":"2026-01-15T12:00:00.000Z","not_after":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z"}]}"#
+        )
+        let result = try await client.sso.listConnectionSAMLIdpSigningCerts(
+            connectionId: "sample-connectionId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/connections/sample-connectionId/saml_idp_signing_certs")
+        _ = result
+    }
+
+    @Test func createConnectionSAMLIdpSigningCertSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"saml_idp_signing_certificate","id":"saml_x509_cert_01E4ZCR3C56J083X43JQXF3JK5","value":"-----BEGIN CERTIFICATE-----MIIC...-----END CERTIFICATE-----","not_before":"2026-01-15T12:00:00.000Z","not_after":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.sso.createConnectionSAMLIdpSigningCert(
+            connectionId: "sample-connectionId", value: "test_value")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/connections/sample-connectionId/saml_idp_signing_certs")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["value"] != nil)
+        #expect(result.id == "saml_x509_cert_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func deleteConnectionSAMLIdpSigningCertSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.sso.deleteConnectionSAMLIdpSigningCert(
+            connectionId: "sample-connectionId", certificateId: "sample-certificateId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/connections/sample-connectionId/saml_idp_signing_certs/sample-certificateId")
+    }
+
+    @Test func listConnectionSAMLSpEncryptionCertsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"list","data":[{"object":"saml_sp_encryption_certificate","id":"saml_enc_key_pair_01E4ZCR3C56J083X43JQXF3JK5","value":"-----BEGIN CERTIFICATE-----MIIC...-----END CERTIFICATE-----","not_before":"2026-01-15T12:00:00.000Z","not_after":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z"}]}"#
+        )
+        let result = try await client.sso.listConnectionSAMLSpEncryptionCerts(
+            connectionId: "sample-connectionId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/connections/sample-connectionId/saml_sp_encryption_certs")
+        _ = result
+    }
+
+    @Test func createConnectionSAMLSpEncryptionCertSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"saml_sp_encryption_certificate","id":"saml_enc_key_pair_01E4ZCR3C56J083X43JQXF3JK5","value":"-----BEGIN CERTIFICATE-----MIIC...-----END CERTIFICATE-----","not_before":"2026-01-15T12:00:00.000Z","not_after":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.sso.createConnectionSAMLSpEncryptionCert(
+            connectionId: "sample-connectionId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/connections/sample-connectionId/saml_sp_encryption_certs")
+        #expect(result.id == "saml_enc_key_pair_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func deleteConnectionSAMLSpEncryptionCertSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.sso.deleteConnectionSAMLSpEncryptionCert(
+            connectionId: "sample-connectionId", certificateId: "sample-certificateId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/connections/sample-connectionId/saml_sp_encryption_certs/sample-certificateId")
+    }
+
+    @Test func listConnectionSAMLSpSigningCertSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"saml_sp_signing_certificate","id":"saml_party_trust_01E4ZCR3C56J083X43JQXF3JK5","value":"-----BEGIN CERTIFICATE-----MIIC...-----END CERTIFICATE-----","not_before":"2026-01-15T12:00:00.000Z","not_after":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.sso.listConnectionSAMLSpSigningCert(
+            connectionId: "sample-connectionId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/connections/sample-connectionId/saml_sp_signing_cert")
+        #expect(result.id == "saml_party_trust_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func createConnectionSAMLSpSigningCertSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"saml_sp_signing_certificate","id":"saml_party_trust_01E4ZCR3C56J083X43JQXF3JK5","value":"-----BEGIN CERTIFICATE-----MIIC...-----END CERTIFICATE-----","not_before":"2026-01-15T12:00:00.000Z","not_after":"2026-01-15T12:00:00.000Z","created_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.sso.createConnectionSAMLSpSigningCert(
+            connectionId: "sample-connectionId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/connections/sample-connectionId/saml_sp_signing_cert")
+        #expect(result.id == "saml_party_trust_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func deleteConnectionSAMLSpSigningCertSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.sso.deleteConnectionSAMLSpSigningCert(
+            connectionId: "sample-connectionId", certificateId: "sample-certificateId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/connections/sample-connectionId/saml_sp_signing_cert/sample-certificateId")
+    }
+
     @Test func getConnectionSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
@@ -38,6 +177,19 @@ import Testing
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/connections/sample-id")
+        #expect(result.id == "conn_01E4ZCR3C56J083X43JQXF3JK5")
+    }
+
+    @Test func updateConnectionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connection","id":"conn_01E4ZCR3C56J083X43JQXF3JK5","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","connection_type":"OktaSAML","name":"Foo Corp","state":"active","status":"linked","domains":[{"id":"org_domain_01EHZNVPK2QXHMVWCEDQEKY69A","object":"connection_domain","domain":"foo-corp.com"}],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.sso.updateConnection(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PATCH")
         #expect(request.url?.path == "/connections/sample-id")
         #expect(result.id == "conn_01E4ZCR3C56J083X43JQXF3JK5")
     }
@@ -106,18 +258,11 @@ import Testing
             responding:
                 #"{"token_type":"Bearer","access_token":"eyJhbGciOiJSUzI1NiIsImtpZCI6InNzby...","expires_in":600,"profile":{"object":"profile","id":"prof_01DMC79VCBZ0NY2099737PSVF1","organization_id":"org_01EHQMYV6MBK39QC5PZXHY59C3","connection_id":"conn_01E4ZCR3C56J083X43JQXF3JK5","connection_type":"OktaSAML","idp_id":"103456789012345678901","email":"todd@example.com","first_name":"Todd","last_name":"Rundgren","name":"Todd Rundgren","role":{"slug":"admin"},"roles":[{"slug":"admin"}],"groups":["Engineering","Admins"],"custom_attributes":{"key":{}},"raw_attributes":{"key":{}}},"oauth_tokens":{"provider":"GoogleOAuth","refresh_token":"1//04g...","access_token":"ya29.a0ARrdaM...","expires_at":1735141800,"scopes":["profile","email","openid"]}}"#
         )
-        let result = try await client.sso.getProfileAndToken(code: "test_code", code2: "test_code")
+        let result = try await client.sso.getProfileAndToken()
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "POST")
         #expect(request.url?.path == "/sso/token")
-        let body = try #require(recorder.lastBody)
-        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
-        #expect(json?["code"] != nil)
-        let query =
-            URLComponents(url: try #require(request.url), resolvingAgainstBaseURL: false)?
-            .queryItems ?? []
-        #expect(query.contains(URLQueryItem(name: "code", value: "test_code")))
         _ = result
     }
 }

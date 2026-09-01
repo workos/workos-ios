@@ -102,6 +102,246 @@ public struct SSO: Sendable {
         }
     }
 
+    /// Create a Connection
+    ///
+    /// Creates a new connection for an organization. Provide `saml_options` or `oidc_options` to configure the identity provider. When `external_id` matches an existing connection in the organization, that connection is returned instead of creating a duplicate.
+    ///
+    /// - Parameter organizationId: Unique identifier for the Organization in which the Connection resides.
+    /// - Parameter name: A human-readable name for the Connection. This will most commonly be the organization's name.
+    /// - Parameter externalId: The customer-owned identifier for the Connection.
+    /// - Parameter connectionType: The type of the Connection. Only SAML and OIDC connection types may be created. When omitted, the type is inferred from the provided options.
+    /// - Parameter attributeMaps: How IdP attributes or claims map onto WorkOS profile fields. Provided fields override the defaults for the connection type.
+    /// - Parameter samlOptions: Protocol configuration for SAML connections. Mutually exclusive with `oidc_options`.
+    /// - Parameter oidcOptions: Protocol configuration for OIDC connections. Mutually exclusive with `saml_options`.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createConnection(
+        organizationId: String,
+        name: String? = nil,
+        externalId: String? = nil,
+        connectionType: String? = nil,
+        attributeMaps: CreateConnectionAttributeMaps? = nil,
+        samlOptions: CreateConnectionSAMLOptions? = nil,
+        oidcOptions: CreateConnectionOidcOptions? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> Connection {
+        let path = "connections"
+        var body = EncodableBody()
+        body.set("organization_id", organizationId)
+        body.set("name", name)
+        body.set("external_id", externalId)
+        body.set("connection_type", connectionType)
+        body.set("attribute_maps", attributeMaps)
+        body.set("saml_options", samlOptions)
+        body.set("oidc_options", oidcOptions)
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: Connection.self
+        )
+    }
+
+    /// List IdP signing certificates
+    ///
+    /// Lists every Identity Provider signing certificate on the connection, including expired ones, oldest first.
+    ///
+    /// - Parameter connectionId: Unique identifier for the Connection.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listConnectionSAMLIdpSigningCerts(
+        connectionId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> SAMLIdpSigningCertificateList {
+        let path = "connections/\(PathEncoding.segment(connectionId))/saml_idp_signing_certs"
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: SAMLIdpSigningCertificateList.self
+        )
+    }
+
+    /// Create an IdP signing certificate
+    ///
+    /// Adds an Identity Provider signing certificate to the connection, so SAML responses signed with its key can be verified. Use this to import a new certificate ahead of an Identity Provider rotation — the existing certificates keep working until they are deleted or expire.
+    ///
+    /// - Parameter connectionId: Unique identifier for the Connection.
+    /// - Parameter value: The PEM-encoded X.509 certificate.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createConnectionSAMLIdpSigningCert(
+        connectionId: String,
+        value: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> SAMLIdpSigningCertificate {
+        let path = "connections/\(PathEncoding.segment(connectionId))/saml_idp_signing_certs"
+        var body = EncodableBody()
+        body.set("value", value)
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: SAMLIdpSigningCertificate.self
+        )
+    }
+
+    /// Delete an IdP signing certificate
+    ///
+    /// Removes an Identity Provider signing certificate from the connection. The last remaining certificate cannot be deleted. A certificate still published in the Identity Provider metadata may be restored by a metadata refresh.
+    ///
+    /// - Parameter connectionId: Unique identifier for the Connection.
+    /// - Parameter certificateId: Unique identifier for the Identity Provider signing certificate.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func deleteConnectionSAMLIdpSigningCert(
+        connectionId: String,
+        certificateId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path =
+            "connections/\(PathEncoding.segment(connectionId))/saml_idp_signing_certs/\(PathEncoding.segment(certificateId))"
+        try await transport.requestVoid(
+            method: "DELETE",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions
+        )
+    }
+
+    /// List SP encryption certificates
+    ///
+    /// Lists the public certificates the Identity Provider can use to encrypt SAML responses sent to WorkOS, including expired ones, oldest first.
+    ///
+    /// - Parameter connectionId: Unique identifier for the Connection.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listConnectionSAMLSpEncryptionCerts(
+        connectionId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> SAMLSpEncryptionCertificateList {
+        let path = "connections/\(PathEncoding.segment(connectionId))/saml_sp_encryption_certs"
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: SAMLSpEncryptionCertificateList.self
+        )
+    }
+
+    /// Create an SP encryption certificate
+    ///
+    /// Generates a new encryption key pair for the connection and returns its public certificate. WorkOS holds the private key, so the request takes no body — to bring your own key pairs, provide `saml_options.sp_encryption_key_pairs` when creating the connection instead. Creating a certificate appends rather than replaces: every active private key is tried when decrypting, which lets a rotation overlap the old and new certificates.
+    ///
+    /// - Parameter connectionId: Unique identifier for the Connection.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createConnectionSAMLSpEncryptionCert(
+        connectionId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> SAMLSpEncryptionCertificate {
+        let path = "connections/\(PathEncoding.segment(connectionId))/saml_sp_encryption_certs"
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: SAMLSpEncryptionCertificate.self
+        )
+    }
+
+    /// Delete an SP encryption certificate
+    ///
+    /// Removes an encryption key pair from the connection. SAML responses encrypted with its certificate can no longer be decrypted, so remove the certificate from the Identity Provider first when rotating.
+    ///
+    /// - Parameter connectionId: Unique identifier for the Connection.
+    /// - Parameter certificateId: Unique identifier for the Service Provider encryption key pair. WorkOS holds the corresponding private key, which is never exposed.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func deleteConnectionSAMLSpEncryptionCert(
+        connectionId: String,
+        certificateId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path =
+            "connections/\(PathEncoding.segment(connectionId))/saml_sp_encryption_certs/\(PathEncoding.segment(certificateId))"
+        try await transport.requestVoid(
+            method: "DELETE",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions
+        )
+    }
+
+    /// Get the SP signing certificate
+    ///
+    /// Returns the public certificate the Identity Provider can use to verify the signature of SAML requests sent by WorkOS. Responds with `404` when the connection has no request signing key pair.
+    ///
+    /// - Parameter connectionId: Unique identifier for the Connection.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listConnectionSAMLSpSigningCert(
+        connectionId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> SAMLSpSigningCertificate {
+        let path = "connections/\(PathEncoding.segment(connectionId))/saml_sp_signing_cert"
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: SAMLSpSigningCertificate.self
+        )
+    }
+
+    /// Create an SP signing certificate
+    ///
+    /// Generates a new request signing key pair for the connection and returns its public certificate. WorkOS holds the private key, so the request takes no body — to bring your own key pair, provide `saml_options.sp_signing_key_pair` when creating the connection instead. A connection signs with one key pair at a time: delete the existing certificate before creating its replacement.
+    ///
+    /// - Parameter connectionId: Unique identifier for the Connection.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createConnectionSAMLSpSigningCert(
+        connectionId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> SAMLSpSigningCertificate {
+        let path = "connections/\(PathEncoding.segment(connectionId))/saml_sp_signing_cert"
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: SAMLSpSigningCertificate.self
+        )
+    }
+
+    /// Delete the SP signing certificate
+    ///
+    /// Removes the request signing key pair from the connection, after which SAML requests are sent unsigned. Delete the certificate before creating its replacement when rotating.
+    ///
+    /// - Parameter connectionId: Unique identifier for the Connection.
+    /// - Parameter certificateId: Unique identifier for the Service Provider signing key pair. WorkOS holds the corresponding private key, which is never exposed.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func deleteConnectionSAMLSpSigningCert(
+        connectionId: String,
+        certificateId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path =
+            "connections/\(PathEncoding.segment(connectionId))/saml_sp_signing_cert/\(PathEncoding.segment(certificateId))"
+        try await transport.requestVoid(
+            method: "DELETE",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions
+        )
+    }
+
     /// Get a Connection
     ///
     /// Get the details of an existing connection.
@@ -118,6 +358,46 @@ public struct SSO: Sendable {
             path: path,
             query: [],
             body: nil,
+            options: requestOptions,
+            as: Connection.self
+        )
+    }
+
+    /// Update a Connection
+    ///
+    /// Updates an existing connection. Only the provided fields are changed; fields that accept `null` are reset to their default behavior.
+    ///
+    /// - Parameter id: Unique identifier for the Connection.
+    /// - Parameter name: A human-readable name for the Connection.
+    /// - Parameter externalId: The customer-owned identifier for the Connection. Set to `null` to stop tracking one.
+    /// - Parameter connectionType: The type of the Connection. Immutable after creation — it may be sent, but only with the Connection current type.
+    /// - Parameter attributeMaps: How IdP attributes or claims map onto WorkOS profile fields. Only the provided fields are updated.
+    /// - Parameter samlOptions: Protocol configuration for SAML connections. Only the provided fields are updated. Mutually exclusive with `oidc_options`.
+    /// - Parameter oidcOptions: Protocol configuration for OIDC connections. Only the provided fields are updated. Mutually exclusive with `saml_options`.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func updateConnection(
+        id: String,
+        name: String? = nil,
+        externalId: String? = nil,
+        connectionType: String? = nil,
+        attributeMaps: PatchConnectionAttributeMaps? = nil,
+        samlOptions: PatchConnectionSAMLOptions? = nil,
+        oidcOptions: PatchConnectionOidcOptions? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> Connection {
+        let path = "connections/\(PathEncoding.segment(id))"
+        var body = EncodableBody()
+        body.set("name", name)
+        body.set("external_id", externalId)
+        body.set("connection_type", connectionType)
+        body.set("attribute_maps", attributeMaps)
+        body.set("saml_options", samlOptions)
+        body.set("oidc_options", oidcOptions)
+        return try await transport.request(
+            method: "PATCH",
+            path: path,
+            query: [],
+            body: body,
             options: requestOptions,
             as: Connection.self
         )
@@ -281,19 +561,30 @@ public struct SSO: Sendable {
     ///
     /// Get an access token along with the user [Profile](https://workos.com/docs/reference/sso/profile) using the code passed to your [Redirect URI](https://workos.com/docs/reference/sso/get-authorization-url/redirect-uri).
     ///
-    /// - Parameter code: The authorization code received from the authorization callback.
-    /// - Parameter code2: The authorization code received from the authorization callback.
+    /// - Parameter code: The authorization code received from the authorization callback. Required when `grant_type` is `authorization_code`.
+    /// - Parameter subjectToken: The OIDC ID token to exchange. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
+    /// - Parameter subjectTokenType: The type of the subject token. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
+    /// - Parameter organizationId: The ID of the organization whose connection the subject token is validated against. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
+    /// - Parameter code2: The authorization code received from the authorization callback. Required when `grant_type` is `authorization_code`.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getProfileAndToken(
-        code: String,
-        code2: String,
+        code: String? = nil,
+        subjectToken: String? = nil,
+        subjectTokenType: String? = nil,
+        organizationId: String? = nil,
+        code2: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> SSOTokenResponse {
         let path = "sso/token"
         var query: [URLQueryItem] = []
-        query.append(URLQueryItem(name: "code", value: code2))
+        if let code2 {
+            query.append(URLQueryItem(name: "code", value: code2))
+        }
         var body = EncodableBody()
         body.set("code", code)
+        body.set("subject_token", subjectToken)
+        body.set("subject_token_type", subjectTokenType)
+        body.set("organization_id", organizationId)
         body.set("grant_type", "authorization_code")
         body.set("client_id", transport.configuration.clientID)
         body.set("client_secret", transport.configuration.apiKey)
