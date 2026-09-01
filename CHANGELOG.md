@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.6.0](https://github.com/workos/workos-ios/compare/v0.5.0...v0.6.0) (2026-09-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* **agents:** SDK surface change: Parameter "sessionSettings" moved from position 1 to 4 on "Agents.createBlueprint" ([#27](https://github.com/workos/workos-ios/issues/27))
+
+### Features
+
+* **agents:** Add blueprint, instance, and session endpoints ([#23](https://github.com/workos/workos-ios/issues/23)) ([9af71f0](https://github.com/workos/workos-ios/commit/9af71f015b36051b35a40c58f6b3de7945c18e31))
+* **agents:** SDK surface change: Parameter "sessionSettings" moved from position 1 to 4 on "Agents.createBlueprint" ([#27](https://github.com/workos/workos-ios/issues/27)) ([b0b3a37](https://github.com/workos/workos-ios/commit/b0b3a37461a76ba22b16b91c053cbc35c2df002f))
+* **audit_logs:** Change retentionPeriodInDays param to a retention union supporting retention periods ([#23](https://github.com/workos/workos-ios/issues/23)) ([9af71f0](https://github.com/workos/workos-ios/commit/9af71f015b36051b35a40c58f6b3de7945c18e31))
+* **organizations:** Add IT contacts endpoints ([#23](https://github.com/workos/workos-ios/issues/23)) ([9af71f0](https://github.com/workos/workos-ios/commit/9af71f015b36051b35a40c58f6b3de7945c18e31))
+* **platform_teams:** Add Platform Teams service ([#23](https://github.com/workos/workos-ios/issues/23)) ([9af71f0](https://github.com/workos/workos-ios/commit/9af71f015b36051b35a40c58f6b3de7945c18e31))
+* **sso:** Add connection management and SAML certificate endpoints ([#23](https://github.com/workos/workos-ios/issues/23)) ([9af71f0](https://github.com/workos/workos-ios/commit/9af71f015b36051b35a40c58f6b3de7945c18e31))
+* **sso:** Make code optional on getProfileAndToken ([#23](https://github.com/workos/workos-ios/issues/23)) ([9af71f0](https://github.com/workos/workos-ios/commit/9af71f015b36051b35a40c58f6b3de7945c18e31))
+* **user_management:** Add email-completion grant and waitlist endpoints ([#23](https://github.com/workos/workos-ios/issues/23)) ([9af71f0](https://github.com/workos/workos-ios/commit/9af71f015b36051b35a40c58f6b3de7945c18e31))
+* **webhooks:** Add agent instance and blueprint webhook event types ([#23](https://github.com/workos/workos-ios/issues/23)) ([9af71f0](https://github.com/workos/workos-ios/commit/9af71f015b36051b35a40c58f6b3de7945c18e31))
+
+
+### Bug Fixes
+
+* **sso:** Remove DiscordOAuth, GrokOAuth, and XOAuth from connection type enums ([#23](https://github.com/workos/workos-ios/issues/23)) ([9af71f0](https://github.com/workos/workos-ios/commit/9af71f015b36051b35a40c58f6b3de7945c18e31))
+
+
+### Miscellaneous Chores
+
+* release 0.6.0 ([3dfad4a](https://github.com/workos/workos-ios/commit/3dfad4aaf726d828cd903ca822c056886319b2cb))
+
 ## [0.5.0](https://github.com/workos/workos-ios/compare/v0.4.0...v0.5.0) (2026-08-11)
 
 
