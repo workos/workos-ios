@@ -59,10 +59,7 @@ import Testing
             responding:
                 #"{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
-        let result = try await client.agents.createBlueprint(
-            name: "test_name",
-            sessionSettings: AgentBlueprintsCreateRequestSessionSetting(
-                maxAgeSeconds: 1, accessTokenTtlSeconds: 1, refreshTokenTtlSeconds: 1))
+        let result = try await client.agents.createBlueprint(name: "test_name")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "POST")
@@ -125,6 +122,24 @@ import Testing
         let body = try #require(recorder.lastBody)
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
         #expect(json?["type"] != nil)
+        _ = result
+    }
+
+    @Test func validateBlueprintTokenSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"valid":true,"agent_instance_id":"agent_01EHWNCE74X7JSDV0X3SZ3KJNY","agent_instance_session_id":"agent_session_01EHWNCE74X7JSDV0X3SZ3KJNY","organization_id":"org_01EHWNCE74X7JSDV0X3SZ3KJNY","permissions":["crm:read"],"intent":"renew-contract-123","acting_user_id":"userland_user_01EHWNCE74X7JSDV0X3SZ3KJNY","session_expires_at":"2024-01-01T00:00:00.000Z"}"#
+        )
+        let result = try await client.agents.validateBlueprintToken(
+            agentBlueprintId: "sample-agent-blueprint-id",
+            agentAccessToken: "test_agent_access_token")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/agents/blueprints/sample-agent-blueprint-id/tokens/validate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["agent_access_token"] != nil)
         _ = result
     }
 

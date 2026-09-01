@@ -196,6 +196,7 @@
     "Sources/WorkOS/Models/AgentBlueprintsCreateRequestInvocableBy.swift",
     "Sources/WorkOS/Models/AgentBlueprintsCreateRequestSessionSetting.swift",
     "Sources/WorkOS/Models/AgentBlueprintsTokenMintTokenRequest.swift",
+    "Sources/WorkOS/Models/AgentBlueprintsTokenValidateTokenRequest.swift",
     "Sources/WorkOS/Models/AgentBlueprintsUpdateRequest.swift",
     "Sources/WorkOS/Models/AgentBlueprintsUpdateRequestInvocableBy.swift",
     "Sources/WorkOS/Models/AgentBlueprintsUpdateRequestSessionSetting.swift",
@@ -236,6 +237,7 @@
     "Sources/WorkOS/Models/AgentRegistrationRevoked.swift",
     "Sources/WorkOS/Models/AgentRegistrationRevokedData.swift",
     "Sources/WorkOS/Models/AgentToken.swift",
+    "Sources/WorkOS/Models/AgentTokenValidation.swift",
     "Sources/WorkOS/Models/ApiKey.swift",
     "Sources/WorkOS/Models/ApiKeyCreated.swift",
     "Sources/WorkOS/Models/ApiKeyCreatedData.swift",
@@ -1887,6 +1889,10 @@
     "POST /user_management/waitlists/{id}/entries": {
       "sdkMethod": "createWaitlistEntry",
       "service": "userManagement"
+    },
+    "POST /agents/blueprints/{agent_blueprint_id}/tokens/validate": {
+      "sdkMethod": "validateBlueprintToken",
+      "service": "agents"
     }
   }
 }
