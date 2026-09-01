@@ -19,11 +19,11 @@ public struct DataIntegration: Codable, Sendable, Equatable {
     public let state: DataIntegrationState
     /// The OAuth scopes configured for the Data Integration. `null` when the provider's configured scopes are used.
     public let scopes: [String]?
-    /// The OAuth redirect URI to register with the provider when configuring the custom application.
+    /// The OAuth redirect URI to register with the provider when configuring the custom application. Empty for `api_key` and `client_credentials` integrations, which run no authorization redirect.
     public let redirectUri: String
     /// How accounts authenticate with the provider for this Data Integration.
     public let authMethods: [DataIntegrationAuthMethods]
-    /// The integration-level OAuth app credentials. `null` for `api_key` integrations, which hold no OAuth credentials (keys are installed per-tenant).
+    /// The integration-level OAuth app credentials. `null` for `api_key` and `client_credentials` integrations, which hold no integration-level credentials (secrets are installed per-tenant).
     public let credentials: DataIntegrationCredential?
     /// The tenant installation created when an API key was supplied at creation time; `null` otherwise. Not populated on list/get responses.
     public let installation: DataIntegrationInstallation?

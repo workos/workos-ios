@@ -3,51 +3,56 @@
 import Foundation
 
 public struct WaitlistUser: Codable, Sendable, Equatable {
-    /// Distinguishes the Waitlist User object.
-    public let object: String
-    /// The unique ID of the Waitlist User.
+    /// The unique ID of the waitlist entry.
     public let id: String
-    /// The email address of the Waitlist User.
+    /// The email address of the user on the waitlist.
     public let email: String
-    /// The state of the Waitlist User.
+    /// The state of the waitlist entry.
     public let state: WaitlistUserState
-    /// The timestamp when the Waitlist User was approved, or null if not yet approved.
+    /// The timestamp when the entry was approved, or null if not yet approved.
     public let approvedAt: Date?
-    /// The unique ID of the Waitlist that the Waitlist User joined.
+    /// Additional fields submitted when the user joined the waitlist. Values are user-provided — treat them as untrusted input when rendering or exporting.
+    public let additionalFields: [String: String]?
+    /// The unique ID of the waitlist the entry belongs to.
     public let waitlistId: String?
     /// An ISO 8601 timestamp.
     public let createdAt: Date
     /// An ISO 8601 timestamp.
     public let updatedAt: Date
+    /// Distinguishes the Waitlist User object.
+    public let object: String
 
     public init(
-        object: String,
         id: String,
         email: String,
         state: WaitlistUserState,
         createdAt: Date,
         updatedAt: Date,
+        object: String,
         approvedAt: Date? = nil,
+        additionalFields: [String: String]? = nil,
         waitlistId: String? = nil
     ) {
-        self.object = object
         self.id = id
         self.email = email
         self.state = state
         self.approvedAt = approvedAt
+        self.additionalFields = additionalFields
         self.waitlistId = waitlistId
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.object = object
     }
 
     private enum CodingKeys: String, CodingKey {
-        case object
         case id
         case email
         case state
         case approvedAt = "approved_at"
+        case additionalFields = "additional_fields"
         case waitlistId = "waitlist_id"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+        case object
     }
 }

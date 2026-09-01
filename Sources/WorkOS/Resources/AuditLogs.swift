@@ -32,15 +32,18 @@ public struct AuditLogs: Sendable {
     /// Set the event retention period for the given Organization.
     ///
     /// - Parameter id: Unique identifier of the Organization.
-    /// - Parameter retentionPeriodInDays: The number of days Audit Log events will be retained. Valid values are `30` and `365`.
+    /// - Parameter retentionPeriod: The period Audit Log events will be retained. Valid values are `1_MONTH` through `11_MONTHS` in one-month increments and `1_YEAR` through `10_YEARS` in one-year increments. Mutually exclusive with `retention_period_in_days`.
+    /// - Parameter retentionPeriodInDays: Deprecated. The number of days Audit Log events will be retained. Valid values are `30` through `330` in 30-day increments and `365` through `3650` in 365-day increments. Deprecated: use `retention_period` instead. Mutually exclusive with `retention_period`.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateOrganizationAuditLogsRetention(
         id: String,
-        retentionPeriodInDays: Int,
+        retentionPeriod: UpdateAuditLogsRetentionRetentionPeriod? = nil,
+        retentionPeriodInDays: Int? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> AuditLogsRetention {
         let path = "organizations/\(PathEncoding.segment(id))/audit_logs_retention"
         var body = EncodableBody()
+        body.set("retention_period", retentionPeriod)
         body.set("retention_period_in_days", retentionPeriodInDays)
         return try await transport.request(
             method: "PUT",

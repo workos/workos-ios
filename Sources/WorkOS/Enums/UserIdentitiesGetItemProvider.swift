@@ -6,12 +6,9 @@ import Foundation
 public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, Hashable {
     case appleOAuth
     case bitbucketOAuth
-    case discordOAuth
     case githubOAuth
     case gitLabOAuth
     case googleOAuth
-    case grokOAuth
-    case xoAuth
     case intuitOAuth
     case linkedInOAuth
     case microsoftOAuth
@@ -27,12 +24,9 @@ public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, 
         switch rawValue {
         case "AppleOAuth": self = .appleOAuth
         case "BitbucketOAuth": self = .bitbucketOAuth
-        case "DiscordOAuth": self = .discordOAuth
         case "GithubOAuth": self = .githubOAuth
         case "GitLabOAuth": self = .gitLabOAuth
         case "GoogleOAuth": self = .googleOAuth
-        case "GrokOAuth": self = .grokOAuth
-        case "XOAuth": self = .xoAuth
         case "IntuitOAuth": self = .intuitOAuth
         case "LinkedInOAuth": self = .linkedInOAuth
         case "MicrosoftOAuth": self = .microsoftOAuth
@@ -49,12 +43,9 @@ public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, 
         switch self {
         case .appleOAuth: return "AppleOAuth"
         case .bitbucketOAuth: return "BitbucketOAuth"
-        case .discordOAuth: return "DiscordOAuth"
         case .githubOAuth: return "GithubOAuth"
         case .gitLabOAuth: return "GitLabOAuth"
         case .googleOAuth: return "GoogleOAuth"
-        case .grokOAuth: return "GrokOAuth"
-        case .xoAuth: return "XOAuth"
         case .intuitOAuth: return "IntuitOAuth"
         case .linkedInOAuth: return "LinkedInOAuth"
         case .microsoftOAuth: return "MicrosoftOAuth"
@@ -80,12 +71,9 @@ public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, 
     public static let allKnownCases: [UserIdentitiesGetItemProvider] = [
         .appleOAuth,
         .bitbucketOAuth,
-        .discordOAuth,
         .githubOAuth,
         .gitLabOAuth,
         .googleOAuth,
-        .grokOAuth,
-        .xoAuth,
         .intuitOAuth,
         .linkedInOAuth,
         .microsoftOAuth,

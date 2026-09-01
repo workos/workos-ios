@@ -355,7 +355,7 @@ public struct Authorization: Sendable {
 
     /// List effective permissions for an organization membership on a resource
     ///
-    /// Returns all permissions the organization membership effectively has on a resource, including permissions inherited through roles assigned to ancestor resources.
+    /// Returns all permissions the organization membership effectively has on a resource, including permissions inherited through roles assigned to ancestor resources. Results are not filtered by the resource type: a permission is returned whenever a check for it on this resource would be authorized, and each permission is labeled with the resource type it is declared on.
     ///
     /// - Parameter organizationMembershipId: The ID of the organization membership.
     /// - Parameter resourceId: The ID of the authorization resource.
@@ -430,7 +430,7 @@ public struct Authorization: Sendable {
 
     /// List effective permissions for an organization membership on a resource by external ID
     ///
-    /// Returns all permissions the organization membership effectively has on a resource identified by its external ID, including permissions inherited through roles assigned to ancestor resources.
+    /// Returns all permissions the organization membership effectively has on a resource identified by its external ID, including permissions inherited through roles assigned to ancestor resources. Results are not filtered by the resource type: a permission is returned whenever a check for it on this resource would be authorized, and each permission is labeled with the resource type it is declared on.
     ///
     /// - Parameter organizationMembershipId: The ID of the organization membership.
     /// - Parameter resourceTypeSlug: The slug of the resource type.
