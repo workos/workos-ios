@@ -5,7 +5,7 @@ import Foundation
 public struct DataIntegrationsListResponse: Codable, Sendable, Equatable {
     /// Indicates this is a list response.
     public let object: String
-    /// A list of [providers](https://workos.com/docs/reference/pipes/provider), each including a [`connected_account`](https://workos.com/docs/reference/pipes/connected-account) field with the user's connection status.
+    /// A list of [providers](https://workos.com/docs/reference/pipes/provider), each including the legacy `connected_account` field and the additive `connected_accounts` collection.
     public let data: [DataIntegrationsListResponseData]
 
     public init(

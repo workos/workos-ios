@@ -29,6 +29,31 @@ import Testing
         #expect(result.data.first?.id == "data_integration_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
+    @Test func listDataIntegrationsAutoPagingFetchesAllPages() async throws {
+        let (client, recorder) = makeTestClient(stubs: [
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":"cursor_2"}}"#
+                        .utf8), headers: [:]),
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                        .utf8), headers: [:]),
+        ])
+        var items: [DataIntegration] = []
+        for try await item in client.pipes.listDataIntegrationsAutoPaging() {
+            items.append(item)
+        }
+
+        #expect(items.count == 2)
+        #expect(recorder.allRequests.count == 2)
+        let second = try #require(recorder.allRequests.last?.url)
+        let query = URLComponents(url: second, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        #expect(query.contains(URLQueryItem(name: "after", value: "cursor_2")))
+    }
+
     @Test func createDataIntegrationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
@@ -229,7 +254,7 @@ import Testing
     @Test func listUserDataProvidersSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"list","data":[{"object":"data_provider","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","name":"GitHub","description":"Connect your GitHub account to access repositories.","slug":"github","integration_type":"github","credentials_type":"oauth2","scopes":["repo","user:email"],"auth_methods":["oauth"],"ownership":"userland_user","created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","connected_account":{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"}}]}"#
+                #"{"object":"list","data":[{"object":"data_provider","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","name":"GitHub","description":"Connect your GitHub account to access repositories.","slug":"github","integration_type":"github","credentials_type":"oauth2","scopes":["repo","user:email"],"auth_methods":["oauth"],"ownership":"userland_user","created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","connected_account":{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"},"connected_accounts":[{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"}]}]}"#
         )
         let result = try await client.pipes.listUserDataProviders(userId: "sample-user-id")
 
