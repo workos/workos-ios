@@ -29,6 +29,8 @@ public struct DataIntegrationsListResponseData: Codable, Sendable, Equatable {
     public let updatedAt: String
     /// The user's [connected account](https://workos.com/docs/reference/pipes/connected-account) for this provider, or `null` if the user has not connected.
     public let connectedAccount: DataIntegrationsListResponseDataConnectedAccount?
+    /// The user's connected accounts for this provider in the requested ownership context.
+    public let connectedAccounts: [DataIntegrationsListResponseDataConnectedAccount]
 
     public init(
         object: String,
@@ -40,6 +42,7 @@ public struct DataIntegrationsListResponseData: Codable, Sendable, Equatable {
         ownership: DataIntegrationsListResponseDataOwnership,
         createdAt: String,
         updatedAt: String,
+        connectedAccounts: [DataIntegrationsListResponseDataConnectedAccount],
         description: String? = nil,
         scopes: [String]? = nil,
         authMethods: [DataIntegrationsListResponseDataAuthMethods]? = nil,
@@ -58,6 +61,7 @@ public struct DataIntegrationsListResponseData: Codable, Sendable, Equatable {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.connectedAccount = connectedAccount
+        self.connectedAccounts = connectedAccounts
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -74,5 +78,6 @@ public struct DataIntegrationsListResponseData: Codable, Sendable, Equatable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case connectedAccount = "connected_account"
+        case connectedAccounts = "connected_accounts"
     }
 }

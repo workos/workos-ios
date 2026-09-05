@@ -204,14 +204,14 @@ public struct Pipes: Sendable {
     ///
     /// - Parameter slug: The identifier of the integration.
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
-    /// - Parameter secret: The API key secret to store for this integration.
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// - Parameter secret: The API key secret to store for this integration.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateDataIntegrationApiKey(
         slug: String,
         userId: String,
-        secret: String,
         organizationId: String? = nil,
+        secret: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
         let path = "data-integrations/\(PathEncoding.segment(slug))/api-key"
@@ -269,17 +269,17 @@ public struct Pipes: Sendable {
     ///
     /// - Parameter slug: The identifier of the integration.
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
     /// - Parameter clientId: The OAuth client ID to store for this integration.
     /// - Parameter clientSecret: The OAuth client secret to store for this integration.
-    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
     /// - Parameter config: Provider-specific configuration values collected for this installation, keyed by the provider's config field descriptors.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateDataIntegrationClientCredentials(
         slug: String,
         userId: String,
+        organizationId: String? = nil,
         clientId: String,
         clientSecret: String,
-        organizationId: String? = nil,
         config: [String: String]? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
@@ -307,17 +307,20 @@ public struct Pipes: Sendable {
     /// - Parameter slug: The identifier of the integration.
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createDataIntegrationCredential(
         slug: String,
         userId: String,
         organizationId: String? = nil,
+        connectedAccountId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegrationCredentialsResponse {
         let path = "data-integrations/\(PathEncoding.segment(slug))/credentials"
         var body = EncodableBody()
         body.set("user_id", userId)
         body.set("organization_id", organizationId)
+        body.set("connected_account_id", connectedAccountId)
         return try await transport.request(
             method: "POST",
             path: path,
@@ -335,17 +338,20 @@ public struct Pipes: Sendable {
     /// - Parameter provider: The identifier of the integration.
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getAccessToken(
         provider: String,
         userId: String,
         organizationId: String? = nil,
+        connectedAccountId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegrationAccessTokenResponse {
         let path = "data-integrations/\(PathEncoding.segment(provider))/token"
         var body = EncodableBody()
         body.set("user_id", userId)
         body.set("organization_id", organizationId)
+        body.set("connected_account_id", connectedAccountId)
         return try await transport.request(
             method: "POST",
             path: path,
@@ -363,11 +369,13 @@ public struct Pipes: Sendable {
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
     /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+    /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getUserConnectedAccount(
         userId: String,
         slug: String,
         organizationId: String? = nil,
+        connectedAccountId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
         let path =
@@ -375,6 +383,9 @@ public struct Pipes: Sendable {
         var query: [URLQueryItem] = []
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
+        }
+        if let connectedAccountId {
+            query.append(URLQueryItem(name: "connected_account_id", value: connectedAccountId))
         }
         return try await transport.request(
             method: "GET",
@@ -444,6 +455,7 @@ public struct Pipes: Sendable {
     /// - Parameter scopes: The OAuth scopes granted for this connection.
     /// - Parameter state: Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+    /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to update.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateUserConnectedAccount(
         userId: String,
@@ -454,6 +466,7 @@ public struct Pipes: Sendable {
         scopes: [String]? = nil,
         state: ConnectedAccountInputState? = nil,
         organizationId: String? = nil,
+        connectedAccountId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
         let path =
@@ -461,6 +474,9 @@ public struct Pipes: Sendable {
         var query: [URLQueryItem] = []
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
+        }
+        if let connectedAccountId {
+            query.append(URLQueryItem(name: "connected_account_id", value: connectedAccountId))
         }
         var body = EncodableBody()
         body.set("access_token", accessToken)
@@ -485,11 +501,13 @@ public struct Pipes: Sendable {
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
     /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+    /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to delete.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteUserConnectedAccount(
         userId: String,
         slug: String,
         organizationId: String? = nil,
+        connectedAccountId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws {
         let path =
@@ -497,6 +515,9 @@ public struct Pipes: Sendable {
         var query: [URLQueryItem] = []
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
+        }
+        if let connectedAccountId {
+            query.append(URLQueryItem(name: "connected_account_id", value: connectedAccountId))
         }
         try await transport.requestVoid(
             method: "DELETE",
