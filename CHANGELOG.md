@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/workos/workos-ios/compare/v0.6.0...v0.7.0) (2026-09-05)
+
+
+### Features
+
+* **pipes:** SDK surface change: Parameter "requestOptions" moved from position 3 to 4 on "Pipes.createDataIntegrationCredential" ([#28](https://github.com/workos/workos-ios/issues/28)) ([164233e](https://github.com/workos/workos-ios/commit/164233edac998b8f7d9631af043f69a4b02db4c7))
+
 ## [0.6.0](https://github.com/workos/workos-ios/compare/v0.5.0...v0.6.0) (2026-09-01)
 
 
