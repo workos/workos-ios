@@ -256,22 +256,22 @@ public struct Authorization: Sendable {
     /// You must provide either `parent_resource_id` or both `parent_resource_external_id` and `parent_resource_type_slug` to identify the parent resource.
     ///
     /// - Parameter organizationMembershipId: The ID of the organization membership.
-    /// - Parameter permissionSlug: The permission slug to filter by. Only child resources where the organization membership has this permission are returned.
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter permissionSlug: The permission slug to filter by. Only child resources where the organization membership has this permission are returned.
     /// - Parameter parentResourceId: The WorkOS ID of the parent resource. Provide this or both `parent_resource_external_id` and `parent_resource_type_slug`, but not both. Mutually exclusive with `parent_resource_type_slug` and `parent_resource_external_id`.
     /// - Parameter parentResourceTypeSlug: The slug of the parent resource type. Must be provided together with `parent_resource_external_id`. Required with `parent_resource_external_id`. Mutually exclusive with `parent_resource_id`.
     /// - Parameter parentResourceExternalId: The application-specific external identifier of the parent resource. Must be provided together with `parent_resource_type_slug`. Required with `parent_resource_type_slug`. Mutually exclusive with `parent_resource_id`.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listResourcesForMembership(
         organizationMembershipId: String,
-        permissionSlug: String,
         before: String? = nil,
         after: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
+        permissionSlug: String,
         parentResourceId: String? = nil,
         parentResourceTypeSlug: String? = nil,
         parentResourceExternalId: String? = nil,
@@ -318,20 +318,20 @@ public struct Authorization: Sendable {
     /// pages as the sequence is iterated.
     ///
     /// - Parameter organizationMembershipId: The ID of the organization membership.
-    /// - Parameter permissionSlug: The permission slug to filter by. Only child resources where the organization membership has this permission are returned.
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter permissionSlug: The permission slug to filter by. Only child resources where the organization membership has this permission are returned.
     /// - Parameter parentResourceId: The WorkOS ID of the parent resource. Provide this or both `parent_resource_external_id` and `parent_resource_type_slug`, but not both. Mutually exclusive with `parent_resource_type_slug` and `parent_resource_external_id`.
     /// - Parameter parentResourceTypeSlug: The slug of the parent resource type. Must be provided together with `parent_resource_external_id`. Required with `parent_resource_external_id`. Mutually exclusive with `parent_resource_id`.
     /// - Parameter parentResourceExternalId: The application-specific external identifier of the parent resource. Must be provided together with `parent_resource_type_slug`. Required with `parent_resource_type_slug`. Mutually exclusive with `parent_resource_id`.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listResourcesForMembershipAutoPaging(
         organizationMembershipId: String,
-        permissionSlug: String,
         before: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
+        permissionSlug: String,
         parentResourceId: String? = nil,
         parentResourceTypeSlug: String? = nil,
         parentResourceExternalId: String? = nil,
@@ -340,11 +340,11 @@ public struct Authorization: Sendable {
         AutoPagingSequence { cursor in
             try await self.listResourcesForMembership(
                 organizationMembershipId: organizationMembershipId,
-                permissionSlug: permissionSlug,
                 before: before,
                 after: cursor,
                 limit: limit,
                 order: order,
+                permissionSlug: permissionSlug,
                 parentResourceId: parentResourceId,
                 parentResourceTypeSlug: parentResourceTypeSlug,
                 parentResourceExternalId: parentResourceExternalId,
@@ -720,15 +720,15 @@ public struct Authorization: Sendable {
     /// Create a new custom role for this organization.
     ///
     /// - Parameter organizationId: The ID of the organization.
-    /// - Parameter name: A descriptive name for the role.
     /// - Parameter slug: A unique identifier for the role within the organization. When provided, must begin with 'org-' and contain only lowercase letters, numbers, hyphens, and underscores. When omitted, a slug is auto-generated from the role name and a random suffix.
+    /// - Parameter name: A descriptive name for the role.
     /// - Parameter description: An optional description of the role's purpose.
     /// - Parameter resourceTypeSlug: The slug of the resource type the role is scoped to.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createOrganizationRole(
         organizationId: String,
-        name: String,
         slug: String? = nil,
+        name: String,
         description: String? = nil,
         resourceTypeSlug: String? = nil,
         requestOptions: RequestOptions? = nil
@@ -1014,22 +1014,22 @@ public struct Authorization: Sendable {
     /// - Parameter organizationId: The ID of the organization that owns the resource.
     /// - Parameter resourceTypeSlug: The slug of the resource type this resource belongs to.
     /// - Parameter externalId: An identifier you provide to reference the resource in your system.
-    /// - Parameter permissionSlug: The permission slug to filter by. Only users with this permission on the resource are returned.
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter permissionSlug: The permission slug to filter by. Only users with this permission on the resource are returned.
     /// - Parameter assignment: Filter by assignment type. Use "direct" for direct assignments only, or "indirect" to include inherited assignments.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listMembershipsForResourceByExternalId(
         organizationId: String,
         resourceTypeSlug: String,
         externalId: String,
-        permissionSlug: String,
         before: String? = nil,
         after: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
+        permissionSlug: String,
         assignment: AuthorizationAssignment? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<UserOrganizationMembershipBaseListData> {
@@ -1068,20 +1068,20 @@ public struct Authorization: Sendable {
     /// - Parameter organizationId: The ID of the organization that owns the resource.
     /// - Parameter resourceTypeSlug: The slug of the resource type this resource belongs to.
     /// - Parameter externalId: An identifier you provide to reference the resource in your system.
-    /// - Parameter permissionSlug: The permission slug to filter by. Only users with this permission on the resource are returned.
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter permissionSlug: The permission slug to filter by. Only users with this permission on the resource are returned.
     /// - Parameter assignment: Filter by assignment type. Use "direct" for direct assignments only, or "indirect" to include inherited assignments.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listMembershipsForResourceByExternalIdAutoPaging(
         organizationId: String,
         resourceTypeSlug: String,
         externalId: String,
-        permissionSlug: String,
         before: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
+        permissionSlug: String,
         assignment: AuthorizationAssignment? = nil,
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<UserOrganizationMembershipBaseListData> {
@@ -1090,11 +1090,11 @@ public struct Authorization: Sendable {
                 organizationId: organizationId,
                 resourceTypeSlug: resourceTypeSlug,
                 externalId: externalId,
-                permissionSlug: permissionSlug,
                 before: before,
                 after: cursor,
                 limit: limit,
                 order: order,
+                permissionSlug: permissionSlug,
                 assignment: assignment,
                 requestOptions: requestOptions
             )
@@ -1308,9 +1308,9 @@ public struct Authorization: Sendable {
     ///
     /// - Parameter externalId: An external identifier for the resource.
     /// - Parameter name: A display name for the resource.
+    /// - Parameter description: An optional description of the resource.
     /// - Parameter resourceTypeSlug: The slug of the resource type.
     /// - Parameter organizationId: The ID of the organization this resource belongs to.
-    /// - Parameter description: An optional description of the resource.
     /// - Parameter parentResourceId: The ID of the parent resource. Mutually exclusive with `parent_resource_external_id` and `parent_resource_type_slug`.
     /// - Parameter parentResourceExternalId: The external ID of the parent resource. Required with `parent_resource_type_slug`. Mutually exclusive with `parent_resource_id`.
     /// - Parameter parentResourceTypeSlug: The resource type slug of the parent resource. Required with `parent_resource_external_id`. Mutually exclusive with `parent_resource_id`.
@@ -1318,9 +1318,9 @@ public struct Authorization: Sendable {
     public func createResource(
         externalId: String,
         name: String,
+        description: String? = nil,
         resourceTypeSlug: String,
         organizationId: String,
-        description: String? = nil,
         parentResourceId: String? = nil,
         parentResourceExternalId: String? = nil,
         parentResourceTypeSlug: String? = nil,
@@ -1435,20 +1435,20 @@ public struct Authorization: Sendable {
     /// Returns all organization memberships that have a specific permission on a resource instance. This is useful for answering "Who can access this resource?".
     ///
     /// - Parameter resourceId: The ID of the authorization resource.
-    /// - Parameter permissionSlug: The permission slug to filter by. Only users with this permission on the resource are returned.
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter permissionSlug: The permission slug to filter by. Only users with this permission on the resource are returned.
     /// - Parameter assignment: Filter by assignment type. Use `direct` for direct assignments only, or `indirect` to include inherited assignments.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listMembershipsForResource(
         resourceId: String,
-        permissionSlug: String,
         before: String? = nil,
         after: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
+        permissionSlug: String,
         assignment: AuthorizationAssignment? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<UserOrganizationMembershipBaseListData> {
@@ -1485,29 +1485,29 @@ public struct Authorization: Sendable {
     /// pages as the sequence is iterated.
     ///
     /// - Parameter resourceId: The ID of the authorization resource.
-    /// - Parameter permissionSlug: The permission slug to filter by. Only users with this permission on the resource are returned.
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter permissionSlug: The permission slug to filter by. Only users with this permission on the resource are returned.
     /// - Parameter assignment: Filter by assignment type. Use `direct` for direct assignments only, or `indirect` to include inherited assignments.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listMembershipsForResourceAutoPaging(
         resourceId: String,
-        permissionSlug: String,
         before: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
+        permissionSlug: String,
         assignment: AuthorizationAssignment? = nil,
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<UserOrganizationMembershipBaseListData> {
         AutoPagingSequence { cursor in
             try await self.listMembershipsForResource(
                 resourceId: resourceId,
-                permissionSlug: permissionSlug,
                 before: before,
                 after: cursor,
                 limit: limit,
                 order: order,
+                permissionSlug: permissionSlug,
                 assignment: assignment,
                 requestOptions: requestOptions
             )
