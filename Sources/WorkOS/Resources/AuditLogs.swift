@@ -193,14 +193,14 @@ public struct AuditLogs: Sendable {
     /// Creates a new Audit Log schema used to validate the payload of incoming Audit Log Events. If the `action` does not exist, it will also be created.
     ///
     /// - Parameter actionName: The name of the Audit Log action.
-    /// - Parameter targets: The list of targets for the schema.
     /// - Parameter actor: The metadata schema for the actor.
+    /// - Parameter targets: The list of targets for the schema.
     /// - Parameter metadata: Optional JSON schema for event metadata.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createSchema(
         actionName: String,
-        targets: [AuditLogSchemaTargetInput],
         actor: AuditLogSchemaActorInput? = nil,
+        targets: [AuditLogSchemaTargetInput],
         metadata: [String: AnyCodable]? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> AuditLogSchema {
