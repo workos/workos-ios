@@ -420,7 +420,6 @@ public struct UserManagement: Sendable {
     ///
     /// Generates an OAuth 2.0 authorization URL to authenticate a user with AuthKit or SSO.
     ///
-    /// - Parameter redirectUri: The callback URI where the authorization code will be sent after authentication.
     /// - Parameter codeChallengeMethod: The only valid PKCE code challenge method is `"S256"`. Required when specifying a `code_challenge`.
     /// - Parameter codeChallenge: Code challenge derived from the code verifier used for the PKCE flow.
     /// - Parameter domainHint: A domain hint for SSO connection lookup.
@@ -435,8 +434,8 @@ public struct UserManagement: Sendable {
     /// - Parameter prompt: Controls the authentication flow behavior for the user.
     /// - Parameter state: An opaque value used to maintain state between the request and the callback.
     /// - Parameter organizationId: The ID of the organization to authenticate the user against.
+    /// - Parameter redirectUri: The callback URI where the authorization code will be sent after authentication.
     public func getAuthorizationUrl(
-        redirectUri: String,
         codeChallengeMethod: String? = nil,
         codeChallenge: String? = nil,
         domainHint: String? = nil,
@@ -450,7 +449,8 @@ public struct UserManagement: Sendable {
         provider: UserManagementAuthenticationProvider? = nil,
         prompt: String? = nil,
         state: String? = nil,
-        organizationId: String? = nil
+        organizationId: String? = nil,
+        redirectUri: String
     ) -> URL {
         let path = "user_management/authorize"
         var query: [URLQueryItem] = []
