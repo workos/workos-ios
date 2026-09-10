@@ -11,6 +11,8 @@ public struct DataIntegration: Codable, Sendable, Equatable {
     public let slug: String
     /// The integration type derived from the provider.
     public let integrationType: String
+    /// Who owns the Data Integration: `userland_user` when users connect their own accounts, `organization` when organizations connect. Fixed at creation.
+    public let ownership: DataIntegrationOwnership
     /// An optional description of the Data Integration.
     public let description: String?
     /// Whether the Data Integration is enabled.
@@ -41,6 +43,7 @@ public struct DataIntegration: Codable, Sendable, Equatable {
         id: String,
         slug: String,
         integrationType: String,
+        ownership: DataIntegrationOwnership,
         enabled: Bool,
         state: DataIntegrationState,
         redirectUri: String,
@@ -58,6 +61,7 @@ public struct DataIntegration: Codable, Sendable, Equatable {
         self.id = id
         self.slug = slug
         self.integrationType = integrationType
+        self.ownership = ownership
         self.description = description
         self.enabled = enabled
         self.state = state
@@ -77,6 +81,7 @@ public struct DataIntegration: Codable, Sendable, Equatable {
         case id
         case slug
         case integrationType = "integration_type"
+        case ownership
         case description
         case enabled
         case state

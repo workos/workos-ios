@@ -5,8 +5,12 @@ import Foundation
 public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable, Equatable {
     /// A [User](https://workos.com/docs/reference/authkit/user) identifier.
     public let userId: String
-    /// An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
     public let organizationId: String?
+    /// A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to rotate a specific existing connection.
+    public let connectedAccountId: String?
+    /// Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization.
+    public let connectionOwner: DataIntegrationsUpsertClientCredentialsRequestConnectionOwner?
     /// The OAuth client ID to store for this integration.
     public let clientId: String
     /// The OAuth client secret to store for this integration.
@@ -19,10 +23,14 @@ public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable,
         clientId: String,
         clientSecret: String,
         organizationId: String? = nil,
+        connectedAccountId: String? = nil,
+        connectionOwner: DataIntegrationsUpsertClientCredentialsRequestConnectionOwner? = nil,
         config: [String: String]? = nil
     ) {
         self.userId = userId
         self.organizationId = organizationId
+        self.connectedAccountId = connectedAccountId
+        self.connectionOwner = connectionOwner
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.config = config
@@ -31,6 +39,8 @@ public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable,
     private enum CodingKeys: String, CodingKey {
         case userId = "user_id"
         case organizationId = "organization_id"
+        case connectedAccountId = "connected_account_id"
+        case connectionOwner = "connection_owner"
         case clientId = "client_id"
         case clientSecret = "client_secret"
         case config

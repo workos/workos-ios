@@ -5,6 +5,8 @@ import Foundation
 public struct CreateDataIntegration: Codable, Sendable, Equatable {
     /// The provider to create a Data Integration for. For a built-in provider use its slug (e.g. `github`, `slack`). For a custom provider, this is the new provider slug and `custom_provider` must be supplied. A custom provider slug cannot shadow an existing global provider slug.
     public let provider: String
+    /// Who owns the Data Integration. `userland_user` (the default) creates the integration users connect their own accounts to; `organization` creates the root organizations connect to. Ownership is fixed at creation, and one integration of each ownership may exist per provider. Independent of `credentials.type`.
+    public let ownership: CreateDataIntegrationOwnership?
     /// An optional description of the Data Integration.
     public let description: String?
     /// Whether the Data Integration is enabled. Defaults to `false`.
@@ -24,6 +26,7 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
 
     public init(
         provider: String,
+        ownership: CreateDataIntegrationOwnership? = nil,
         description: String? = nil,
         enabled: Bool? = nil,
         scopes: [String]? = nil,
@@ -34,6 +37,7 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
         customProvider: CustomProviderDefinition? = nil
     ) {
         self.provider = provider
+        self.ownership = ownership
         self.description = description
         self.enabled = enabled
         self.scopes = scopes
@@ -46,6 +50,7 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
 
     private enum CodingKeys: String, CodingKey {
         case provider
+        case ownership
         case description
         case enabled
         case scopes
