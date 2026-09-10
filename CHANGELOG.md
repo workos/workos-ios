@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.0.0](https://github.com/workos/workos-ios/compare/v0.6.0...v1.0.0) (2026-09-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **sso:** Change SSO API surface ([#32](https://github.com/workos/workos-ios/issues/32))
+
+### Features
+
+* **admin_portal:** Change admin portal API surface ([#30](https://github.com/workos/workos-ios/issues/30)) ([9d94129](https://github.com/workos/workos-ios/commit/9d94129b6e5c0b279283c0be882ff256df91ed80))
+* **audit_logs:** Change audit log API surface ([#30](https://github.com/workos/workos-ios/issues/30)) ([9d94129](https://github.com/workos/workos-ios/commit/9d94129b6e5c0b279283c0be882ff256df91ed80))
+* **authorization:** Change authorization API surface ([#30](https://github.com/workos/workos-ios/issues/30)) ([9d94129](https://github.com/workos/workos-ios/commit/9d94129b6e5c0b279283c0be882ff256df91ed80))
+* **events:** Change events API surface ([#30](https://github.com/workos/workos-ios/issues/30)) ([9d94129](https://github.com/workos/workos-ios/commit/9d94129b6e5c0b279283c0be882ff256df91ed80))
+* **pipes:** SDK surface change: Parameter "requestOptions" moved from position 3 to 4 on "Pipes.createDataIntegrationCredential" ([#28](https://github.com/workos/workos-ios/issues/28)) ([164233e](https://github.com/workos/workos-ios/commit/164233edac998b8f7d9631af043f69a4b02db4c7))
+* **sso:** Change SSO API surface ([#30](https://github.com/workos/workos-ios/issues/30)) ([9d94129](https://github.com/workos/workos-ios/commit/9d94129b6e5c0b279283c0be882ff256df91ed80))
+* **sso:** Change SSO API surface ([#32](https://github.com/workos/workos-ios/issues/32)) ([1403b3a](https://github.com/workos/workos-ios/commit/1403b3affc84bd2ba2aeecca34e79d77ebd30629))
+* **user_management:** Change user management API surface ([#30](https://github.com/workos/workos-ios/issues/30)) ([9d94129](https://github.com/workos/workos-ios/commit/9d94129b6e5c0b279283c0be882ff256df91ed80))
+
 ## [0.6.0](https://github.com/workos/workos-ios/compare/v0.5.0...v0.6.0) (2026-09-01)
 
 
