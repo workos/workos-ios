@@ -565,21 +565,15 @@ public struct SSO: Sendable {
     /// - Parameter subjectToken: The OIDC ID token to exchange. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
     /// - Parameter subjectTokenType: The type of the subject token. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
     /// - Parameter organizationId: The ID of the organization whose connection the subject token is validated against. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
-    /// - Parameter code2: The authorization code received from the authorization callback. Required when `grant_type` is `authorization_code`.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getProfileAndToken(
         code: String? = nil,
         subjectToken: String? = nil,
         subjectTokenType: String? = nil,
         organizationId: String? = nil,
-        code2: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> SSOTokenResponse {
         let path = "sso/token"
-        var query: [URLQueryItem] = []
-        if let code2 {
-            query.append(URLQueryItem(name: "code", value: code2))
-        }
         var body = EncodableBody()
         body.set("code", code)
         body.set("subject_token", subjectToken)
@@ -591,7 +585,7 @@ public struct SSO: Sendable {
         return try await transport.request(
             method: "POST",
             path: path,
-            query: query,
+            query: [],
             body: body,
             options: requestOptions,
             as: SSOTokenResponse.self
