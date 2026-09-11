@@ -24,7 +24,7 @@ public struct Events: Sendable {
         after: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
-        events: [String]? = nil,
+        events: [String],
         rangeStart: String? = nil,
         rangeEnd: String? = nil,
         organizationId: String? = nil,
@@ -44,10 +44,8 @@ public struct Events: Sendable {
         if let order {
             query.append(URLQueryItem(name: "order", value: order.rawValue))
         }
-        if let events {
-            for value in events {
-                query.append(URLQueryItem(name: "events", value: value))
-            }
+        for value in events {
+            query.append(URLQueryItem(name: "events", value: value))
         }
         if let rangeStart {
             query.append(URLQueryItem(name: "range_start", value: rangeStart))
@@ -83,7 +81,7 @@ public struct Events: Sendable {
         before: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
-        events: [String]? = nil,
+        events: [String],
         rangeStart: String? = nil,
         rangeEnd: String? = nil,
         organizationId: String? = nil,

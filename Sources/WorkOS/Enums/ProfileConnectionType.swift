@@ -17,7 +17,6 @@ public enum ProfileConnectionType: RawRepresentable, Codable, Sendable, Hashable
     case cleverOidc
     case cloudflareSAML
     case cyberArkSAML
-    case discordOAuth
     case duoSAML
     case entraIdOidc
     case genericOidc
@@ -73,7 +72,6 @@ public enum ProfileConnectionType: RawRepresentable, Codable, Sendable, Hashable
         case "CleverOIDC": self = .cleverOidc
         case "CloudflareSAML": self = .cloudflareSAML
         case "CyberArkSAML": self = .cyberArkSAML
-        case "DiscordOAuth": self = .discordOAuth
         case "DuoSAML": self = .duoSAML
         case "EntraIdOIDC": self = .entraIdOidc
         case "GenericOIDC": self = .genericOidc
@@ -130,7 +128,6 @@ public enum ProfileConnectionType: RawRepresentable, Codable, Sendable, Hashable
         case .cleverOidc: return "CleverOIDC"
         case .cloudflareSAML: return "CloudflareSAML"
         case .cyberArkSAML: return "CyberArkSAML"
-        case .discordOAuth: return "DiscordOAuth"
         case .duoSAML: return "DuoSAML"
         case .entraIdOidc: return "EntraIdOIDC"
         case .genericOidc: return "GenericOIDC"
@@ -196,7 +193,6 @@ public enum ProfileConnectionType: RawRepresentable, Codable, Sendable, Hashable
         .cleverOidc,
         .cloudflareSAML,
         .cyberArkSAML,
-        .discordOAuth,
         .duoSAML,
         .entraIdOidc,
         .genericOidc,

@@ -11,7 +11,6 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
     case appleOAuth
     case bitbucketOAuth
     case crossAppAuth
-    case discordOAuth
     case externalAuth
     case gitHubOAuth
     case gitLabOAuth
@@ -38,7 +37,6 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
         case "AppleOAuth": self = .appleOAuth
         case "BitbucketOAuth": self = .bitbucketOAuth
         case "CrossAppAuth": self = .crossAppAuth
-        case "DiscordOAuth": self = .discordOAuth
         case "ExternalAuth": self = .externalAuth
         case "GitHubOAuth": self = .gitHubOAuth
         case "GitLabOAuth": self = .gitLabOAuth
@@ -66,7 +64,6 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
         case .appleOAuth: return "AppleOAuth"
         case .bitbucketOAuth: return "BitbucketOAuth"
         case .crossAppAuth: return "CrossAppAuth"
-        case .discordOAuth: return "DiscordOAuth"
         case .externalAuth: return "ExternalAuth"
         case .gitHubOAuth: return "GitHubOAuth"
         case .gitLabOAuth: return "GitLabOAuth"
@@ -103,7 +100,6 @@ public enum AuthenticateResponseAuthenticationMethod: RawRepresentable, Codable,
         .appleOAuth,
         .bitbucketOAuth,
         .crossAppAuth,
-        .discordOAuth,
         .externalAuth,
         .gitHubOAuth,
         .gitLabOAuth,

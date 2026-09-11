@@ -60,6 +60,9 @@ extension WorkOSClient {
     /// Operations for the PipesProvider API.
     public var pipesProvider: PipesProvider { PipesProvider(transport: transport) }
 
+    /// Operations for the PlatformTeams API.
+    public var platformTeams: PlatformTeams { PlatformTeams(transport: transport) }
+
     /// Operations for the Radar API.
     public var radar: Radar { Radar(transport: transport) }
 

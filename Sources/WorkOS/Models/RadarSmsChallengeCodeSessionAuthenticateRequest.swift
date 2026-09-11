@@ -10,10 +10,10 @@ public struct RadarSmsChallengeCodeSessionAuthenticateRequest: Codable, Sendable
     public let grantType: String
     /// The one-time code from the Radar SMS challenge.
     public let code: String
-    /// The ID of the Radar SMS verification being confirmed.
-    public let verificationId: String
-    /// The phone number the Radar SMS challenge was sent to.
-    public let phoneNumber: String
+    /// The ID of the Radar SMS verification being confirmed. Required for sign-up challenges; omitted for sign-in challenges, where the verification is resolved server-side.
+    public let verificationId: String?
+    /// The phone number the Radar SMS challenge was sent to. Required for sign-up challenges; omitted for sign-in challenges, where the phone number on file is resolved server-side.
+    public let phoneNumber: String?
     /// The pending authentication token from a previous authentication attempt.
     public let pendingAuthenticationToken: String
     /// The IP address of the user's request.
@@ -28,9 +28,9 @@ public struct RadarSmsChallengeCodeSessionAuthenticateRequest: Codable, Sendable
         clientSecret: String,
         grantType: String,
         code: String,
-        verificationId: String,
-        phoneNumber: String,
         pendingAuthenticationToken: String,
+        verificationId: String? = nil,
+        phoneNumber: String? = nil,
         ipAddress: String? = nil,
         deviceId: String? = nil,
         userAgent: String? = nil

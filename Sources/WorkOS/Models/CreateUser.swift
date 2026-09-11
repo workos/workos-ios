@@ -23,12 +23,14 @@ public struct CreateUser: Codable, Sendable, Equatable {
     public let userAgent: String?
     /// An optional Radar signals ID to correlate client-side signals with this request.
     public let signalsId: String?
-    /// The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`.
+    /// The password to set for the user. Mutually exclusive with `password_hash`, `password_hash_type`, and `password_salt_position`.
     public let password: String?
     /// The hashed password to set for the user. Required with `password_hash_type`. Mutually exclusive with `password`.
     public let passwordHash: String?
     /// The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`.
     public let passwordHashType: CreateUserPasswordHashType?
+    /// The position of the salt relative to the password when the `password_hash` digest was computed: `prefix` for `hash(salt + password)` or `suffix` for `hash(password + salt)`. Only supported with the `ssha256` hash type and only valid when a `password_hash` is provided. Defaults to `suffix`. Mutually exclusive with `password`.
+    public let passwordSaltPosition: CreateUserPasswordSaltPosition?
 
     public init(
         email: String,
@@ -43,7 +45,8 @@ public struct CreateUser: Codable, Sendable, Equatable {
         signalsId: String? = nil,
         password: String? = nil,
         passwordHash: String? = nil,
-        passwordHashType: CreateUserPasswordHashType? = nil
+        passwordHashType: CreateUserPasswordHashType? = nil,
+        passwordSaltPosition: CreateUserPasswordSaltPosition? = nil
     ) {
         self.email = email
         self.firstName = firstName
@@ -58,6 +61,7 @@ public struct CreateUser: Codable, Sendable, Equatable {
         self.password = password
         self.passwordHash = passwordHash
         self.passwordHashType = passwordHashType
+        self.passwordSaltPosition = passwordSaltPosition
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -74,5 +78,6 @@ public struct CreateUser: Codable, Sendable, Equatable {
         case password
         case passwordHash = "password_hash"
         case passwordHashType = "password_hash_type"
+        case passwordSaltPosition = "password_salt_position"
     }
 }

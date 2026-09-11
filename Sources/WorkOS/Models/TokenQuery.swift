@@ -7,21 +7,33 @@ public struct TokenQuery: Codable, Sendable, Equatable {
     public let clientId: String
     /// The client secret of the WorkOS environment.
     public let clientSecret: String
-    /// The authorization code received from the authorization callback.
-    public let code: String
+    /// The authorization code received from the authorization callback. Required when `grant_type` is `authorization_code`.
+    public let code: String?
     /// The grant type for the token request.
-    public let grantType: String
+    public let grantType: TokenQueryGrantType
+    /// The OIDC ID token to exchange. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
+    public let subjectToken: String?
+    /// The type of the subject token. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
+    public let subjectTokenType: String?
+    /// The ID of the organization whose connection the subject token is validated against. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
+    public let organizationId: String?
 
     public init(
         clientId: String,
         clientSecret: String,
-        code: String,
-        grantType: String
+        grantType: TokenQueryGrantType,
+        code: String? = nil,
+        subjectToken: String? = nil,
+        subjectTokenType: String? = nil,
+        organizationId: String? = nil
     ) {
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.code = code
         self.grantType = grantType
+        self.subjectToken = subjectToken
+        self.subjectTokenType = subjectTokenType
+        self.organizationId = organizationId
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -29,5 +41,8 @@ public struct TokenQuery: Codable, Sendable, Equatable {
         case clientSecret = "client_secret"
         case code
         case grantType = "grant_type"
+        case subjectToken = "subject_token"
+        case subjectTokenType = "subject_token_type"
+        case organizationId = "organization_id"
     }
 }

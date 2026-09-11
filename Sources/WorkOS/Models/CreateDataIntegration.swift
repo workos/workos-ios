@@ -11,9 +11,9 @@ public struct CreateDataIntegration: Codable, Sendable, Equatable {
     public let enabled: Bool?
     /// The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
     public let scopes: [String]?
-    /// How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request).
+    /// How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request). Use `["client_credentials"]` to declare a client-credentials integration; `credentials` is likewise not required and client credentials are supplied per-tenant.
     public let authMethods: [CreateDataIntegrationAuthMethods]?
-    /// Provider-specific config values (e.g. a Snowflake `account_identifier`), keyed by the config field. Only fields the built-in provider declares are accepted.
+    /// Provider-specific config values (e.g. a Snowflake `account`), keyed by the config field. Only fields the built-in provider declares are accepted.
     public let config: [String: String]?
     /// The OAuth credentials to configure for the Data Integration. Required for OAuth integrations; omit when `auth_methods` is `["api_key"]`.
     public let credentials: DataIntegrationCredentialsInput?

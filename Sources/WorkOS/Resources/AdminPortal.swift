@@ -10,16 +10,16 @@ public struct AdminPortal: Sendable {
     ///
     /// Generate a Portal Link scoped to an Organization.
     ///
+    /// - Parameter returnUrl: The URL to go to when an admin clicks on your logo in the Admin Portal. If not specified, the return URL configured on the [Admin Portal](https://dashboard.workos.com/admin-portal) page will be used.
+    /// - Parameter successUrl: The URL to redirect the admin to when they finish setup. If not specified, the success URL configured on the [Admin Portal](https://dashboard.workos.com/admin-portal) page will be used.
     /// - Parameter organization: An [Organization](https://workos.com/docs/reference/organization) identifier.
-    /// - Parameter returnUrl: The URL to go to when an admin clicks on your logo in the Admin Portal. If not specified, the return URL configured on the [Redirects](https://dashboard.workos.com/redirects) page will be used.
-    /// - Parameter successUrl: The URL to redirect the admin to when they finish setup. If not specified, the success URL configured on the [Redirects](https://dashboard.workos.com/redirects) page will be used.
     /// - Parameter intent: The intent of the Admin Portal.
     /// - Parameter itContactEmails: The email addresses of the IT contacts to grant access to the Admin Portal for the given organization. Accepts up to 20 emails.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func generateLink(
-        organization: String,
         returnUrl: String? = nil,
         successUrl: String? = nil,
+        organization: String,
         intent: GenerateLinkIntent? = nil,
         itContactEmails: [String]? = nil,
         requestOptions: RequestOptions? = nil

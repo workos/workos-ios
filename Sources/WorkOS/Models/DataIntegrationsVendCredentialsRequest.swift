@@ -7,17 +7,22 @@ public struct DataIntegrationsVendCredentialsRequest: Codable, Sendable, Equatab
     public let userId: String
     /// An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
     public let organizationId: String?
+    /// A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
+    public let connectedAccountId: String?
 
     public init(
         userId: String,
-        organizationId: String? = nil
+        organizationId: String? = nil,
+        connectedAccountId: String? = nil
     ) {
         self.userId = userId
         self.organizationId = organizationId
+        self.connectedAccountId = connectedAccountId
     }
 
     private enum CodingKeys: String, CodingKey {
         case userId = "user_id"
         case organizationId = "organization_id"
+        case connectedAccountId = "connected_account_id"
     }
 }

@@ -109,6 +109,77 @@ import Testing
         #expect(result.data.first?.id == "authorized_connect_app_01HXYZ123456789ABCDEFGHIJ")
     }
 
+    @Test func listItContactsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"list","data":[{"object":"it_contact","id":"it_contact_01HXYZ123456789ABCDEFGHIJ","email":"it-contact@example.com","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":"it_contact_01HXYZ123456789ABCDEFGHIJ","after":"it_contact_01HXYZ987654321KJIHGFEDCBA"}}"#
+        )
+        let result = try await client.organizations.listItContacts(
+            organizationId: "sample-organization-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/organizations/sample-organization-id/it_contacts")
+        _ = result
+    }
+
+    @Test func createItContactSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"it_contact","id":"it_contact_01HXYZ123456789ABCDEFGHIJ","email":"it-contact@example.com","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.organizations.createItContact(
+            organizationId: "sample-organization-id", email: "test_email")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/organizations/sample-organization-id/it_contacts")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["email"] != nil)
+        #expect(result.id == "it_contact_01HXYZ123456789ABCDEFGHIJ")
+    }
+
+    @Test func deleteItContactSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.organizations.deleteItContact(
+            organizationId: "sample-organization-id", contactId: "sample-contact-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/organizations/sample-organization-id/it_contacts/sample-contact-id")
+    }
+
+    @Test func inviteItContactSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.organizations.inviteItContact(
+            organizationId: "sample-organization-id", contactId: "sample-contact-id",
+            intents: [InviteItContactIntents(rawValue: "sso")])
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(
+            request.url?.path
+                == "/organizations/sample-organization-id/it_contacts/sample-contact-id/invite")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["intents"] != nil)
+    }
+
+    @Test func revokeItContactSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.organizations.revokeItContact(
+            organizationId: "sample-organization-id", contactId: "sample-contact-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(
+            request.url?.path
+                == "/organizations/sample-organization-id/it_contacts/sample-contact-id/revoke")
+    }
+
     @Test func getByExternalIdSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:

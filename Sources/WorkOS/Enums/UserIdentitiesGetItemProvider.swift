@@ -6,7 +6,6 @@ import Foundation
 public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, Hashable {
     case appleOAuth
     case bitbucketOAuth
-    case discordOAuth
     case githubOAuth
     case gitLabOAuth
     case googleOAuth
@@ -25,7 +24,6 @@ public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, 
         switch rawValue {
         case "AppleOAuth": self = .appleOAuth
         case "BitbucketOAuth": self = .bitbucketOAuth
-        case "DiscordOAuth": self = .discordOAuth
         case "GithubOAuth": self = .githubOAuth
         case "GitLabOAuth": self = .gitLabOAuth
         case "GoogleOAuth": self = .googleOAuth
@@ -45,7 +43,6 @@ public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, 
         switch self {
         case .appleOAuth: return "AppleOAuth"
         case .bitbucketOAuth: return "BitbucketOAuth"
-        case .discordOAuth: return "DiscordOAuth"
         case .githubOAuth: return "GithubOAuth"
         case .gitLabOAuth: return "GitLabOAuth"
         case .googleOAuth: return "GoogleOAuth"
@@ -74,7 +71,6 @@ public enum UserIdentitiesGetItemProvider: RawRepresentable, Codable, Sendable, 
     public static let allKnownCases: [UserIdentitiesGetItemProvider] = [
         .appleOAuth,
         .bitbucketOAuth,
-        .discordOAuth,
         .githubOAuth,
         .gitLabOAuth,
         .googleOAuth,

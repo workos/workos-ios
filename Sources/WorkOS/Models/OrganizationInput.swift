@@ -8,6 +8,7 @@ public struct OrganizationInput: Codable, Sendable, Equatable {
     /// Whether the organization allows profiles from outside the organization to sign in.
     public let allowProfilesOutsideOrganization: Bool?
     /// The domains associated with the organization. Deprecated in favor of `domain_data`.
+    @available(*, deprecated)
     public let domains: [String]?
     /// The domains associated with the organization, including verification state.
     public let domainData: [OrganizationDomainData]?

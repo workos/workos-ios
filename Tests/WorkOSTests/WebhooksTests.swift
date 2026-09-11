@@ -36,7 +36,7 @@ import Testing
         )
         let result = try await client.webhooks.createEndpoint(
             endpointUrl: "test_endpoint_url",
-            events: [CreateWebhookEndpointEvents(rawValue: "agent.registration.created")])
+            events: [CreateWebhookEndpointEvents(rawValue: "agent.blueprint.created")])
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "POST")

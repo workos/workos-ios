@@ -94,7 +94,7 @@ public struct Organizations: Sendable {
     ///
     /// - Parameter name: The name of the organization.
     /// - Parameter allowProfilesOutsideOrganization: Whether the organization allows profiles from outside the organization to sign in.
-    /// - Parameter domains: The domains associated with the organization. Deprecated in favor of `domain_data`.
+    /// - Parameter domains: Deprecated. The domains associated with the organization. Deprecated in favor of `domain_data`.
     /// - Parameter domainData: The domains associated with the organization, including verification state.
     /// - Parameter metadata: Object containing [metadata](https://workos.com/docs/authkit/metadata) key/value pairs associated with the Organization.
     /// - Parameter externalId: An external identifier for the Organization.
@@ -319,5 +319,124 @@ public struct Organizations: Sendable {
                 requestOptions: requestOptions
             )
         }
+    }
+
+    /// List IT contacts
+    ///
+    /// Get the IT contacts for an organization.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listItContacts(
+        organizationId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> ItContactList {
+        let path = "organizations/\(PathEncoding.segment(organizationId))/it_contacts"
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: ItContactList.self
+        )
+    }
+
+    /// Create an IT contact
+    ///
+    /// Add an IT contact to an organization. No Admin Portal invitation is sent, though the contact is notified if the organization has a connection certificate nearing expiry.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter email: The email address of the IT contact.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createItContact(
+        organizationId: String,
+        email: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> ItContact {
+        let path = "organizations/\(PathEncoding.segment(organizationId))/it_contacts"
+        var body = EncodableBody()
+        body.set("email", email)
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: ItContact.self
+        )
+    }
+
+    /// Delete an IT contact
+    ///
+    /// Remove an IT contact from an organization and revoke the contact's active setup links.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter contactId: The ID of the IT contact.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func deleteItContact(
+        organizationId: String,
+        contactId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/it_contacts/\(PathEncoding.segment(contactId))"
+        try await transport.requestVoid(
+            method: "DELETE",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions
+        )
+    }
+
+    /// Invite an IT contact
+    ///
+    /// Create an Admin Portal setup link and email it to the IT contact. An organization can have at most one active invitation.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter contactId: The ID of the IT contact.
+    /// - Parameter intents: The Admin Portal features that the IT contact can configure.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func inviteItContact(
+        organizationId: String,
+        contactId: String,
+        intents: [InviteItContactIntents],
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/it_contacts/\(PathEncoding.segment(contactId))/invite"
+        var body = EncodableBody()
+        body.set("intents", intents)
+        try await transport.requestVoid(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions
+        )
+    }
+
+    /// Revoke an IT contact's invitation
+    ///
+    /// Revoke the organization's active Admin Portal invitation.
+    ///
+    /// - Parameter organizationId: The ID of the organization.
+    /// - Parameter contactId: The ID of the IT contact.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func revokeItContact(
+        organizationId: String,
+        contactId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/it_contacts/\(PathEncoding.segment(contactId))/revoke"
+        try await transport.requestVoid(
+            method: "POST",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions
+        )
     }
 }
