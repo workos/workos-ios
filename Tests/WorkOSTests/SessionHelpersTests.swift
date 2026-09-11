@@ -68,6 +68,36 @@ import Testing
         #expect(result.reason == nil)
     }
 
+    @Test(arguments: ["missing", "null", "string"])
+    func authenticateRejectsInvalidExpiration(expiration: String) throws {
+        var claims: [String: Any] = [
+            "sid": "session_forged", "org_id": "org_VICTIM", "role": "admin",
+            "permissions": ["billing:write"],
+        ]
+        if expiration == "null" { claims["exp"] = NSNull() }
+        if expiration == "string" { claims["exp"] = "4102444800" }
+        let sealed = try Session.sealSession(
+            accessToken: makeTestJWT(claims: claims), refreshToken: "rt_forged",
+            cookiePassword: Self.cookiePassword)
+        let session = Session(sessionData: sealed, cookiePassword: Self.cookiePassword)
+        let results = [
+            session.authenticate(),
+            Session.authenticate(sealedSession: sealed, cookiePassword: Self.cookiePassword),
+        ]
+        for result in results {
+            #expect(!result.authenticated)
+            #expect(result.reason == "invalid_jwt")
+            #expect(!result.needsRefresh)
+            #expect(result.sessionId == nil)
+            #expect(result.organizationId == nil)
+            #expect(result.role == nil)
+            #expect(result.permissions.isEmpty)
+            #expect(result.entitlements.isEmpty)
+            #expect(result.user == nil)
+            #expect(result.impersonator == nil)
+        }
+    }
+
     @Test func authenticateFlagsExpiredTokenForRefresh() throws {
         let sealed = try Self.makeSealedSession(expiresIn: -3600)
         let result = Session.authenticate(

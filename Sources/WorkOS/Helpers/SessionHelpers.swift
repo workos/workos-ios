@@ -64,7 +64,8 @@ public struct AuthenticateSessionResult: Sendable {
     /// the user as unauthenticated.
     public let needsRefresh: Bool
     /// Populated on failure: `no_session_cookie_provided`,
-    /// `invalid_session_cookie`, `invalid_jwt`, or `session_expired`.
+    /// `invalid_session_cookie`, `invalid_jwt`, `session_expired`, or (for
+    /// verified authentication) `client_required` / `invalid_cookie_password`.
     public let reason: String?
 
     init(
@@ -123,6 +124,10 @@ public enum SessionError: Error, Equatable, Sendable {
     case missingSessionID
     /// The operation requires a `WorkOSClient`, but the session was created without one.
     case clientRequired
+    /// Verified sessions require a password of at least 32 characters.
+    case invalidCookiePassword
+    /// The access token could not be cryptographically validated.
+    case invalidJWT
 }
 
 /// Session-cookie management: load a sealed session, authenticate it,
@@ -134,15 +139,99 @@ public struct Session: Sendable {
     /// The sealed session cookie value.
     public let sessionData: String
 
+    @available(
+        *, deprecated,
+        message:
+            "Use init(client:sessionData:validatingCookiePassword:) and authenticateVerified()."
+    )
     public init(client: WorkOSClient? = nil, sessionData: String, cookiePassword: String) {
+        self.init(client: client, sessionData: sessionData, uncheckedCookiePassword: cookiePassword)
+    }
+
+    // Retain legacy password compatibility for refresh without using a deprecated API.
+    fileprivate init(
+        client: WorkOSClient?, sessionData: String, uncheckedCookiePassword cookiePassword: String
+    ) {
         self.client = client
         self.sessionData = sessionData
         self.cookiePassword = cookiePassword
     }
 
+    /// Construct a session with a password of at least 32 characters. Use a
+    /// cryptographically random password; length alone does not ensure entropy.
+    public init(
+        client: WorkOSClient, sessionData: String, validatingCookiePassword cookiePassword: String
+    ) throws {
+        guard cookiePassword.count >= 32 else { throw SessionError.invalidCookiePassword }
+        self.init(client: client, sessionData: sessionData, uncheckedCookiePassword: cookiePassword)
+    }
+
+    /// Authenticate against the configured client's JWKS. Requires a signed
+    /// RS256 token with `sub` and `exp`. A cookie user must match the signed sub;
+    /// its other profile fields remain cookie data, not verified JWT claims.
+    /// Cookie impersonator data is not returned because it is not signed.
+    /// Fetches JWKS on every call (no cache). Fetch/verification failures fail
+    /// closed with `invalid_jwt`.
+    public func authenticateVerified() async -> AuthenticateSessionResult {
+        guard cookiePassword.count >= 32 else {
+            return AuthenticateSessionResult(
+                authenticated: false, reason: "invalid_cookie_password")
+        }
+        guard !sessionData.isEmpty else {
+            return AuthenticateSessionResult(
+                authenticated: false, reason: "no_session_cookie_provided")
+        }
+        guard let client else {
+            return AuthenticateSessionResult(authenticated: false, reason: "client_required")
+        }
+        guard
+            let session = try? SessionSealing.unseal(
+                sessionData, password: cookiePassword, as: SessionData.self)
+        else {
+            return AuthenticateSessionResult(authenticated: false, reason: "invalid_session_cookie")
+        }
+        guard
+            let (claims, verified) = try? await SessionTokenVerification.verify(
+                session.accessToken, client: client),
+            session.user.map({ $0.id == verified.sub }) ?? true
+        else {
+            return AuthenticateSessionResult(authenticated: false, reason: "invalid_jwt")
+        }
+        let expired = Date().timeIntervalSince1970 >= Double(verified.exp)
+        return AuthenticateSessionResult(
+            authenticated: !expired,
+            sessionId: claims.sessionId,
+            organizationId: claims.organizationId,
+            role: claims.role,
+            permissions: claims.permissions ?? [],
+            entitlements: claims.entitlements ?? [],
+            user: session.user,
+            needsRefresh: expired,
+            reason: expired ? "session_expired" : nil
+        )
+    }
+
+    /// One-shot cryptographically verified authentication.
+    public static func authenticateVerified(
+        client: WorkOSClient, sealedSession: String, cookiePassword: String
+    ) async -> AuthenticateSessionResult {
+        guard
+            let session = try? Session(
+                client: client, sessionData: sealedSession, validatingCookiePassword: cookiePassword
+            )
+        else {
+            return AuthenticateSessionResult(
+                authenticated: false, reason: "invalid_cookie_password")
+        }
+        return await session.authenticateVerified()
+    }
+
     /// Validate the sealed session: unseal it, check the access token, and
     /// extract the JWT claims. Never throws — failures are reported through
     /// `authenticated == false` plus `reason`.
+    @available(
+        *, deprecated, message: "Does not verify JWT signatures. Use await authenticateVerified()."
+    )
     public func authenticate() -> AuthenticateSessionResult {
         guard !sessionData.isEmpty else {
             return AuthenticateSessionResult(
@@ -165,7 +254,10 @@ public struct Session: Sendable {
 
         // Enforce JWT expiration: an expired access token signals the caller
         // to refresh the session rather than treat the user as logged out.
-        if let exp = claims.exp, Date().timeIntervalSince1970 >= Double(exp) {
+        guard let exp = claims.exp else {
+            return AuthenticateSessionResult(authenticated: false, reason: "invalid_jwt")
+        }
+        if Date().timeIntervalSince1970 >= Double(exp) {
             return AuthenticateSessionResult(
                 authenticated: false,
                 sessionId: claims.sessionId,
@@ -264,6 +356,9 @@ public struct Session: Sendable {
 
     /// Build the logout URL for this session. An expired access token is
     /// fine — the logout endpoint only needs the session ID.
+    @available(
+        *, deprecated, message: "Uses unverified claims. Use await getVerifiedLogoutUrl(returnTo:)."
+    )
     public func getLogoutUrl(returnTo: String? = nil) throws -> URL {
         guard !sessionData.isEmpty else { throw SessionError.noSessionData }
 
@@ -284,8 +379,32 @@ public struct Session: Sendable {
         return components.url!
     }
 
+    /// Build a logout URL using a cryptographically verified session ID.
+    /// Expired but validly signed tokens can still be used to log out.
+    public func getVerifiedLogoutUrl(returnTo: String? = nil) async throws -> URL {
+        guard !sessionData.isEmpty else { throw SessionError.noSessionData }
+        guard let client else { throw SessionError.clientRequired }
+        let result = await authenticateVerified()
+        guard result.authenticated || result.needsRefresh else { throw SessionError.invalidJWT }
+        guard let sessionID = result.sessionId, !sessionID.isEmpty else {
+            throw SessionError.missingSessionID
+        }
+        var base = client.configuration.baseURL.absoluteString
+        if base.hasSuffix("/") { base.removeLast() }
+        var components = URLComponents(string: "\(base)/user_management/sessions/logout")!
+        var query = [URLQueryItem(name: "session_id", value: sessionID)]
+        if let returnTo { query.append(URLQueryItem(name: "return_to", value: returnTo)) }
+        components.queryItems = query
+        return components.url!
+    }
+
     /// One-shot session authentication that needs no client — only the
     /// sealed session and the cookie password.
+    @available(
+        *, deprecated,
+        message:
+            "Does not verify JWT signatures. Use await authenticateVerified(client:sealedSession:cookiePassword:)."
+    )
     public static func authenticate(
         sealedSession: String, cookiePassword: String
     ) -> AuthenticateSessionResult {
@@ -323,8 +442,8 @@ public struct Session: Sendable {
     }
 
     /// Decode the payload (claims) of a JWT without verifying its signature.
-    /// Acceptable because the token was sealed by us and is trusted after
-    /// unsealing.
+    /// Used only by legacy authentication and as a refresh request hint.
+    /// These claims MUST NOT be trusted for authentication or authorization.
     static func parseJWTPayload(_ token: String) throws -> JWTClaims {
         let parts = token.split(separator: ".", omittingEmptySubsequences: false)
         guard parts.count == 3 else {
@@ -340,8 +459,20 @@ public struct Session: Sendable {
 
 extension WorkOSClient {
     /// Load a sealed session cookie into a `Session` bound to this client.
+    @available(
+        *, deprecated,
+        message:
+            "Use try loadVerifiedSession(sessionData:cookiePassword:) and await authenticateVerified()."
+    )
     public func loadSealedSession(sessionData: String, cookiePassword: String) -> Session {
         Session(client: self, sessionData: sessionData, cookiePassword: cookiePassword)
+    }
+
+    /// Load a session with password validation. Authenticate it with
+    /// `await session.authenticateVerified()` before trusting its claims.
+    public func loadVerifiedSession(sessionData: String, cookiePassword: String) throws -> Session {
+        try Session(
+            client: self, sessionData: sessionData, validatingCookiePassword: cookiePassword)
     }
 
     /// One-shot refresh of a sealed session.
@@ -349,7 +480,7 @@ extension WorkOSClient {
         sealedSession: String, cookiePassword: String, requestOptions: RequestOptions? = nil
     ) async throws -> RefreshSessionResult {
         try await Session(
-            client: self, sessionData: sealedSession, cookiePassword: cookiePassword
+            client: self, sessionData: sealedSession, uncheckedCookiePassword: cookiePassword
         ).refresh(requestOptions: requestOptions)
     }
 }
