@@ -1,5 +1,6 @@
 // @oagen-ignore-file — hand-maintained; oagen must never overwrite this file.
 
+import CommonCrypto
 import CryptoKit
 import Foundation
 
@@ -15,10 +16,12 @@ public enum SessionSealingError: Error, Equatable, Sendable {
 
 /// Raw seal/unseal helpers for session payloads.
 ///
-/// `seal` encrypts any JSON-serializable value with AES-256-GCM and returns a
-/// base64 string of `nonce(12) || ciphertext || tag`. The password is used
-/// directly as the key when it is a hex-encoded 32-byte string (64 hex
-/// characters); otherwise it is hashed with SHA-256 to derive the key.
+/// New seals use `wos2.` followed by base64 `salt(16) || nonce(12) || ciphertext || tag`.
+/// Keys are derived with PBKDF2-HMAC-SHA256 (600,000 iterations), costing roughly
+/// 100–300 ms of CPU per seal/unseal depending on the device. These synchronous
+/// operations should run off the UI thread. Legacy seals remain readable and
+/// are upgraded the next time the session is sealed.
+/// Use a cryptographically random password of at least 32 characters.
 public enum SessionSealing {
     /// Encrypt a JSON-serializable value into a sealed base64 string.
     public static func seal<T: Encodable>(_ value: T, password: String) throws -> String {
@@ -36,13 +39,16 @@ public enum SessionSealing {
 
     /// Encrypt raw bytes with AES-256-GCM using the derived key.
     static func sealBytes(_ plaintext: Data, password: String) throws -> String {
-        let key = deriveKey(password)
+        let salt = SymmetricKey(size: .bits128).withUnsafeBytes { Data($0) }
+        let key = try deriveKey(password, salt: salt)
         do {
-            let sealedBox = try AES.GCM.seal(plaintext, using: key, nonce: AES.GCM.Nonce())
-            var output = Data(sealedBox.nonce)
+            let sealedBox = try AES.GCM.seal(
+                plaintext, using: key, authenticating: Data("wos2.".utf8))
+            var output = salt
+            output.append(contentsOf: sealedBox.nonce)
             output.append(sealedBox.ciphertext)
             output.append(sealedBox.tag)
-            return output.base64EncodedString()
+            return "wos2." + output.base64EncodedString()
         } catch {
             throw SessionSealingError.cryptoFailure("encryption failed: \(error)")
         }
@@ -50,28 +56,51 @@ public enum SessionSealing {
 
     /// Decrypt a sealed base64 string back to raw bytes.
     static func unsealBytes(_ sealed: String, password: String) throws -> Data {
-        guard let raw = Data(base64Encoded: sealed) else {
+        let versioned = sealed.hasPrefix("wos2.")
+        guard let raw = Data(base64Encoded: versioned ? String(sealed.dropFirst(5)) : sealed) else {
             throw SessionSealingError.invalidSealedData
         }
         // nonce(12) plus tag(16) with at least some ciphertext.
-        guard raw.count > 28 else {
+        guard raw.count > (versioned ? 44 : 28) else {
             throw SessionSealingError.sealedDataTooShort
         }
 
-        let key = deriveKey(password)
+        let key =
+            versioned ? try deriveKey(password, salt: Data(raw.prefix(16))) : deriveKey(password)
+        let payload = versioned ? Data(raw.dropFirst(16)) : raw
         do {
             let sealedBox = try AES.GCM.SealedBox(
-                nonce: AES.GCM.Nonce(data: raw.prefix(12)),
-                ciphertext: raw.dropFirst(12).dropLast(16),
-                tag: raw.suffix(16)
+                nonce: AES.GCM.Nonce(data: payload.prefix(12)),
+                ciphertext: payload.dropFirst(12).dropLast(16),
+                tag: payload.suffix(16)
             )
-            return try AES.GCM.open(sealedBox, using: key)
+            return try AES.GCM.open(
+                sealedBox, using: key, authenticating: versioned ? Data("wos2.".utf8) : Data())
         } catch {
             throw SessionSealingError.cryptoFailure("decryption failed: \(error)")
         }
     }
 
-    /// Derive a 32-byte AES key from the password: hex-decode when the
+    private static func deriveKey(_ password: String, salt: Data) throws -> SymmetricKey {
+        let passwordBytes = Array(password.utf8)
+        var key = [UInt8](repeating: 0, count: 32)
+        let status = passwordBytes.withUnsafeBytes { passwordBuffer in
+            salt.withUnsafeBytes { saltBuffer in
+                CCKeyDerivationPBKDF(
+                    CCPBKDFAlgorithm(kCCPBKDF2),
+                    passwordBuffer.baseAddress?.assumingMemoryBound(to: Int8.self),
+                    passwordBytes.count,
+                    saltBuffer.baseAddress?.assumingMemoryBound(to: UInt8.self), salt.count,
+                    CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA256), 600_000, &key, key.count)
+            }
+        }
+        guard status == kCCSuccess else {
+            throw SessionSealingError.cryptoFailure("key derivation failed")
+        }
+        return SymmetricKey(data: key)
+    }
+
+    /// Legacy read-only derivation. Derive a 32-byte AES key from the password: hex-decode when the
     /// password is exactly 64 hex characters, otherwise SHA-256 the UTF-8 bytes.
     static func deriveKey(_ password: String) -> SymmetricKey {
         if password.count == 64, let decoded = decodeHex(password), decoded.count == 32 {
