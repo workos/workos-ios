@@ -27,9 +27,9 @@ public struct DataIntegrationsListResponseData: Codable, Sendable, Equatable {
     public let createdAt: String
     /// The timestamp when the provider was last updated.
     public let updatedAt: String
-    /// The user's [connected account](https://workos.com/docs/reference/pipes/connected-account) for this provider, or `null` if the user has not connected.
+    /// The user's compatibility [connected account](https://workos.com/docs/reference/pipes/connected-account) for this provider, or `null` when the compatibility slot is empty. This legacy field never selects a standard connection.
     public let connectedAccount: DataIntegrationsListResponseDataConnectedAccount?
-    /// The user's connected accounts for this provider in the requested ownership context.
+    /// The user's connected accounts for this provider in the requested ownership context. This contains only the compatibility connection unless `supports_multiple_connections` is `true`.
     public let connectedAccounts: [DataIntegrationsListResponseDataConnectedAccount]
 
     public init(
