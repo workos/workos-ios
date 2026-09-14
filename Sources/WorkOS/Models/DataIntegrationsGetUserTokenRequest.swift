@@ -3,26 +3,36 @@
 import Foundation
 
 public struct DataIntegrationsGetUserTokenRequest: Codable, Sendable, Equatable {
-    /// A [User](https://workos.com/docs/reference/authkit/user) identifier.
+    /// A [User](https://workos.com/docs/reference/authkit/user) identifier. When `connection_owner` is `organization`, this is the user the credentials are vended on behalf of; they must be an active member of the organization.
     public let userId: String
-    /// An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
     public let organizationId: String?
     /// A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
     public let connectedAccountId: String?
+    /// Which connection to vend from. `user` (the default) vends the user's own connection and requires `user_id`. `organization` vends the organization's shared connection and requires `organization_id`.
+    public let connectionOwner: DataIntegrationsGetUserTokenRequestConnectionOwner?
+    /// Set to `true` to use the plural connection contract. If no `connected_account_id` is supplied and several connections match, the request returns `account_selection_required`. When omitted or `false`, only the compatibility connection is considered.
+    public let supportsMultipleConnections: Bool?
 
     public init(
         userId: String,
         organizationId: String? = nil,
-        connectedAccountId: String? = nil
+        connectedAccountId: String? = nil,
+        connectionOwner: DataIntegrationsGetUserTokenRequestConnectionOwner? = nil,
+        supportsMultipleConnections: Bool? = nil
     ) {
         self.userId = userId
         self.organizationId = organizationId
         self.connectedAccountId = connectedAccountId
+        self.connectionOwner = connectionOwner
+        self.supportsMultipleConnections = supportsMultipleConnections
     }
 
     private enum CodingKeys: String, CodingKey {
         case userId = "user_id"
         case organizationId = "organization_id"
         case connectedAccountId = "connected_account_id"
+        case connectionOwner = "connection_owner"
+        case supportsMultipleConnections = "supports_multiple_connections"
     }
 }

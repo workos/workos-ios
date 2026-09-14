@@ -8,18 +8,20 @@ public struct Pipes: Sendable {
 
     /// List data integrations
     ///
-    /// Lists the environment's data integrations configured with `custom` or `organization` credentials, including custom providers and API key integrations.
+    /// Lists the environment's data integrations configured with `custom` or `organization` credentials, including custom providers and API key integrations. Both user-owned and organization-owned roots are returned, each as its own row with an `ownership`; filter with `ownership` to return only one kind.
     ///
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter ownership: Only return Data Integrations with this ownership: `user` for the integrations users connect their own accounts to, or `organization` for the roots organizations connect to. Omit to return both.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listDataIntegrations(
         before: String? = nil,
         after: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
+        ownership: PipesOwnership? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<DataIntegration> {
         let path = "data-integrations"
@@ -35,6 +37,9 @@ public struct Pipes: Sendable {
         }
         if let order {
             query.append(URLQueryItem(name: "order", value: order.rawValue))
+        }
+        if let ownership {
+            query.append(URLQueryItem(name: "ownership", value: ownership.rawValue))
         }
         return try await transport.request(
             method: "GET",
@@ -52,11 +57,13 @@ public struct Pipes: Sendable {
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter ownership: Only return Data Integrations with this ownership: `user` for the integrations users connect their own accounts to, or `organization` for the roots organizations connect to. Omit to return both.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listDataIntegrationsAutoPaging(
         before: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
+        ownership: PipesOwnership? = nil,
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<DataIntegration> {
         AutoPagingSequence { cursor in
@@ -65,6 +72,7 @@ public struct Pipes: Sendable {
                 after: cursor,
                 limit: limit,
                 order: order,
+                ownership: ownership,
                 requestOptions: requestOptions
             )
         }
@@ -72,9 +80,10 @@ public struct Pipes: Sendable {
 
     /// Create a data integration
     ///
-    /// Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials or `organization` to have each organization supply its own. Set `auth_methods` to `["api_key"]` to create an API key integration; you may optionally supply an `api_key` block to install a first tenant in the same call. Set `auth_methods` to `["client_credentials"]` to create a client-credentials integration; client credentials are installed per-tenant afterwards. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
+    /// Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials or `organization` to have each organization supply its own. Set `auth_methods` to `["api_key"]` to create an API key integration; you may optionally supply an `api_key` block to install a first tenant in the same call. Set `auth_methods` to `["client_credentials"]` to create a client-credentials integration; client credentials are installed per-tenant afterwards. Set `ownership` to `organization` to create the integration organizations connect to instead of the default user-owned one; a provider may have one of each. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition, or the slug of an existing custom provider (without `custom_provider`) to add the other ownership.
     ///
     /// - Parameter provider: The provider to create a Data Integration for. For a built-in provider use its slug (e.g. `github`, `slack`). For a custom provider, this is the new provider slug and `custom_provider` must be supplied. A custom provider slug cannot shadow an existing global provider slug.
+    /// - Parameter ownership: Who owns the Data Integration. `user` (the default) creates the integration users connect their own accounts to; `organization` creates the root organizations connect to. Ownership is fixed at creation, and one integration of each ownership may exist per provider. Independent of `credentials.type`.
     /// - Parameter description: An optional description of the Data Integration.
     /// - Parameter enabled: Whether the Data Integration is enabled. Defaults to `false`.
     /// - Parameter scopes: The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
@@ -86,6 +95,7 @@ public struct Pipes: Sendable {
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createDataIntegration(
         provider: String,
+        ownership: CreateDataIntegrationOwnership? = nil,
         description: String? = nil,
         enabled: Bool? = nil,
         scopes: [String]? = nil,
@@ -99,6 +109,7 @@ public struct Pipes: Sendable {
         let path = "data-integrations"
         var body = EncodableBody()
         body.set("provider", provider)
+        body.set("ownership", ownership)
         body.set("description", description)
         body.set("enabled", enabled)
         body.set("scopes", scopes)
@@ -119,7 +130,7 @@ public struct Pipes: Sendable {
 
     /// Get a data integration
     ///
-    /// Retrieves a data integration by its slug.
+    /// Retrieves the user-owned data integration by its slug.
     ///
     /// - Parameter slug: The slug identifier of the data integration.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
@@ -140,7 +151,7 @@ public struct Pipes: Sendable {
 
     /// Update a data integration
     ///
-    /// Updates the description, enabled state, or custom credentials of a data integration. For custom providers, `custom_provider` updates the OAuth definition.
+    /// Updates the description, enabled state, or custom credentials of the user-owned data integration. For custom providers, `custom_provider` updates the OAuth definition.
     ///
     /// - Parameter slug: The slug identifier of the data integration.
     /// - Parameter description: An optional description of the Data Integration.
@@ -180,7 +191,7 @@ public struct Pipes: Sendable {
 
     /// Delete a data integration
     ///
-    /// Deletes a data integration and all of its connected installations. For a custom provider, also deletes the custom provider definition.
+    /// Deletes the user-owned data integration and all of its connected installations. For a custom provider, the provider definition is deleted once no organization-owned root references it either.
     ///
     /// - Parameter slug: The slug identifier of the data integration.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
@@ -200,17 +211,21 @@ public struct Pipes: Sendable {
 
     /// Upsert an API key for a connected account
     ///
-    /// Creates or updates an API-key-based installation for the specified integration and user. If an installation already exists, the stored API key is rotated to the new value.
+    /// Creates or updates an API-key-based installation for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. If an installation already exists, the stored API key is rotated to the new value.
     ///
     /// - Parameter slug: The identifier of the integration.
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
-    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
+    /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to rotate a specific existing connection.
+    /// - Parameter connectionOwner: Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization.
     /// - Parameter secret: The API key secret to store for this integration.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateDataIntegrationApiKey(
         slug: String,
         userId: String,
         organizationId: String? = nil,
+        connectedAccountId: String? = nil,
+        connectionOwner: DataIntegrationsUpsertApiKeyRequestConnectionOwner? = nil,
         secret: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
@@ -218,6 +233,8 @@ public struct Pipes: Sendable {
         var body = EncodableBody()
         body.set("user_id", userId)
         body.set("organization_id", organizationId)
+        body.set("connected_account_id", connectedAccountId)
+        body.set("connection_owner", connectionOwner)
         body.set("secret", secret)
         return try await transport.request(
             method: "PUT",
@@ -265,11 +282,13 @@ public struct Pipes: Sendable {
 
     /// Upsert client credentials for a connected account
     ///
-    /// Creates or updates a client-credentials-based installation for the specified integration and user. If an installation already exists, the stored client credentials are rotated to the new values.
+    /// Creates or updates a client-credentials-based installation for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. If an installation already exists, the stored client credentials are rotated to the new values.
     ///
     /// - Parameter slug: The identifier of the integration.
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
-    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
+    /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to rotate a specific existing connection.
+    /// - Parameter connectionOwner: Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization.
     /// - Parameter clientId: The OAuth client ID to store for this integration.
     /// - Parameter clientSecret: The OAuth client secret to store for this integration.
     /// - Parameter config: Provider-specific configuration values collected for this installation, keyed by the provider's config field descriptors.
@@ -278,6 +297,8 @@ public struct Pipes: Sendable {
         slug: String,
         userId: String,
         organizationId: String? = nil,
+        connectedAccountId: String? = nil,
+        connectionOwner: DataIntegrationsUpsertClientCredentialsRequestConnectionOwner? = nil,
         clientId: String,
         clientSecret: String,
         config: [String: String]? = nil,
@@ -287,6 +308,8 @@ public struct Pipes: Sendable {
         var body = EncodableBody()
         body.set("user_id", userId)
         body.set("organization_id", organizationId)
+        body.set("connected_account_id", connectedAccountId)
+        body.set("connection_owner", connectionOwner)
         body.set("client_id", clientId)
         body.set("client_secret", clientSecret)
         body.set("config", config)
@@ -305,15 +328,19 @@ public struct Pipes: Sendable {
     /// Returns credentials for a user's connected account. Branches on the installation's `auth_method`: OAuth installations return an access token (refreshed if needed); API-key installations return the stored secret.
     ///
     /// - Parameter slug: The identifier of the integration.
-    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
-    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier. When `connection_owner` is `organization`, this is the user the credentials are vended on behalf of; they must be an active member of the organization.
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
     /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
+    /// - Parameter connectionOwner: Which connection to vend from. `user` (the default) vends the user's own connection and requires `user_id`. `organization` vends the organization's shared connection and requires `organization_id`.
+    /// - Parameter supportsMultipleConnections: Set to `true` to use the plural connection contract. If no `connected_account_id` is supplied and several connections match, the request returns `account_selection_required`. When omitted or `false`, only the compatibility connection is considered.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createDataIntegrationCredential(
         slug: String,
         userId: String,
         organizationId: String? = nil,
         connectedAccountId: String? = nil,
+        connectionOwner: DataIntegrationsVendCredentialsRequestConnectionOwner? = nil,
+        supportsMultipleConnections: Bool? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegrationCredentialsResponse {
         let path = "data-integrations/\(PathEncoding.segment(slug))/credentials"
@@ -321,6 +348,8 @@ public struct Pipes: Sendable {
         body.set("user_id", userId)
         body.set("organization_id", organizationId)
         body.set("connected_account_id", connectedAccountId)
+        body.set("connection_owner", connectionOwner)
+        body.set("supports_multiple_connections", supportsMultipleConnections)
         return try await transport.request(
             method: "POST",
             path: path,
@@ -331,20 +360,105 @@ public struct Pipes: Sendable {
         )
     }
 
+    /// Get an organization-owned data integration
+    ///
+    /// Retrieves the organization-owned data integration for a provider by its slug. The `/organization` suffix selects the environment-level organization-owned root for the provider; it does not name a particular organization.
+    ///
+    /// - Parameter slug: The slug identifier of the data integration.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listDataIntegrationOrganization(
+        slug: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> DataIntegration {
+        let path = "data-integrations/\(PathEncoding.segment(slug))/organization"
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: DataIntegration.self
+        )
+    }
+
+    /// Update an organization-owned data integration
+    ///
+    /// Updates the description, enabled state, or custom credentials of the organization-owned data integration for a provider. For custom providers, `custom_provider` updates the OAuth definition, which is shared with the user-owned root. The `/organization` suffix selects the environment-level organization-owned root for the provider; it does not name a particular organization.
+    ///
+    /// - Parameter slug: The slug identifier of the data integration.
+    /// - Parameter description: An optional description of the Data Integration.
+    /// - Parameter enabled: Whether the Data Integration is enabled.
+    /// - Parameter scopes: The OAuth scopes to request for the Data Integration. Pass `null` to reset to the provider's configured scopes.
+    /// - Parameter credentials: New OAuth credentials for the Data Integration. When provided, rotates the stored client secret. Mutually exclusive with `api_key`.
+    /// - Parameter apiKey: An API key to install or rotate for a tenant on an `api_key` integration. Upserts the tenant installation identified by `user_id` (and optional `organization_id`).
+    /// - Parameter customProvider: Updates to a custom provider's OAuth definition. Only valid for custom-provider integrations.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func updateDataIntegrationOrganization(
+        slug: String,
+        description: String? = nil,
+        enabled: Bool? = nil,
+        scopes: [String]? = nil,
+        credentials: DataIntegrationCredentialsInput? = nil,
+        apiKey: ApiKeyInstallation? = nil,
+        customProvider: UpdateCustomProviderDefinition? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> DataIntegration {
+        let path = "data-integrations/\(PathEncoding.segment(slug))/organization"
+        var body = EncodableBody()
+        body.set("description", description)
+        body.set("enabled", enabled)
+        body.set("scopes", scopes)
+        body.set("credentials", credentials)
+        body.set("api_key", apiKey)
+        body.set("custom_provider", customProvider)
+        return try await transport.request(
+            method: "PUT",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: DataIntegration.self
+        )
+    }
+
+    /// Delete an organization-owned data integration
+    ///
+    /// Deletes the organization-owned data integration for a provider and all of its connected installations. For a custom provider, the provider definition is deleted once no user-owned root references it either. The `/organization` suffix selects the environment-level organization-owned root for the provider; it does not name a particular organization.
+    ///
+    /// - Parameter slug: The slug identifier of the data integration.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func deleteDataIntegrationOrganization(
+        slug: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path = "data-integrations/\(PathEncoding.segment(slug))/organization"
+        try await transport.requestVoid(
+            method: "DELETE",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions
+        )
+    }
+
     /// Get an access token for a connected account
     ///
     /// Fetches a valid OAuth access token for a user's connected account. WorkOS automatically handles token refresh, ensuring you always receive a valid, non-expired token.
     ///
     /// - Parameter provider: The identifier of the integration.
-    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
-    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+    /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier. When `connection_owner` is `organization`, this is the user the credentials are vended on behalf of; they must be an active member of the organization.
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
     /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
+    /// - Parameter connectionOwner: Which connection to vend from. `user` (the default) vends the user's own connection and requires `user_id`. `organization` vends the organization's shared connection and requires `organization_id`.
+    /// - Parameter supportsMultipleConnections: Set to `true` to use the plural connection contract. If no `connected_account_id` is supplied and several connections match, the request returns `account_selection_required`. When omitted or `false`, only the compatibility connection is considered.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getAccessToken(
         provider: String,
         userId: String,
         organizationId: String? = nil,
         connectedAccountId: String? = nil,
+        connectionOwner: DataIntegrationsGetUserTokenRequestConnectionOwner? = nil,
+        supportsMultipleConnections: Bool? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegrationAccessTokenResponse {
         let path = "data-integrations/\(PathEncoding.segment(provider))/token"
@@ -352,6 +466,8 @@ public struct Pipes: Sendable {
         body.set("user_id", userId)
         body.set("organization_id", organizationId)
         body.set("connected_account_id", connectedAccountId)
+        body.set("connection_owner", connectionOwner)
+        body.set("supports_multiple_connections", supportsMultipleConnections)
         return try await transport.request(
             method: "POST",
             path: path,
@@ -369,12 +485,14 @@ public struct Pipes: Sendable {
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
     /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+    /// - Parameter supportsMultipleConnections: Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
     /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getUserConnectedAccount(
         userId: String,
         slug: String,
         organizationId: String? = nil,
+        supportsMultipleConnections: Bool? = nil,
         connectedAccountId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
@@ -383,6 +501,11 @@ public struct Pipes: Sendable {
         var query: [URLQueryItem] = []
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
+        }
+        if let supportsMultipleConnections {
+            query.append(
+                URLQueryItem(
+                    name: "supports_multiple_connections", value: "\(supportsMultipleConnections)"))
         }
         if let connectedAccountId {
             query.append(URLQueryItem(name: "connected_account_id", value: connectedAccountId))
@@ -455,6 +578,7 @@ public struct Pipes: Sendable {
     /// - Parameter scopes: The OAuth scopes granted for this connection.
     /// - Parameter state: Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+    /// - Parameter supportsMultipleConnections: Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
     /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to update.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateUserConnectedAccount(
@@ -466,6 +590,7 @@ public struct Pipes: Sendable {
         scopes: [String]? = nil,
         state: ConnectedAccountInputState? = nil,
         organizationId: String? = nil,
+        supportsMultipleConnections: Bool? = nil,
         connectedAccountId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
@@ -474,6 +599,11 @@ public struct Pipes: Sendable {
         var query: [URLQueryItem] = []
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
+        }
+        if let supportsMultipleConnections {
+            query.append(
+                URLQueryItem(
+                    name: "supports_multiple_connections", value: "\(supportsMultipleConnections)"))
         }
         if let connectedAccountId {
             query.append(URLQueryItem(name: "connected_account_id", value: connectedAccountId))
@@ -496,17 +626,19 @@ public struct Pipes: Sendable {
 
     /// Delete a connected account
     ///
-    /// Disconnects WorkOS's account for the user, including removing any stored access and refresh tokens. The user will need to reauthorize if they want to reconnect. This does not revoke access on the provider side.
+    /// Disconnects WorkOS's account for the user, including removing any stored access and refresh tokens. The user will need to reauthorize if they want to reconnect. Access is not revoked on the provider side, except for the WorkOS OAuth provider, whose underlying AuthKit grant is revoked.
     ///
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
     /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+    /// - Parameter supportsMultipleConnections: Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
     /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to delete.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func deleteUserConnectedAccount(
         userId: String,
         slug: String,
         organizationId: String? = nil,
+        supportsMultipleConnections: Bool? = nil,
         connectedAccountId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws {
@@ -515,6 +647,11 @@ public struct Pipes: Sendable {
         var query: [URLQueryItem] = []
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
+        }
+        if let supportsMultipleConnections {
+            query.append(
+                URLQueryItem(
+                    name: "supports_multiple_connections", value: "\(supportsMultipleConnections)"))
         }
         if let connectedAccountId {
             query.append(URLQueryItem(name: "connected_account_id", value: connectedAccountId))
@@ -534,16 +671,23 @@ public struct Pipes: Sendable {
     ///
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier to list providers and connected accounts for.
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to filter connections for a specific organization.
+    /// - Parameter supportsMultipleConnections: Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listUserDataProviders(
         userId: String,
         organizationId: String? = nil,
+        supportsMultipleConnections: Bool? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegrationsListResponse {
         let path = "user_management/users/\(PathEncoding.segment(userId))/data_providers"
         var query: [URLQueryItem] = []
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
+        }
+        if let supportsMultipleConnections {
+            query.append(
+                URLQueryItem(
+                    name: "supports_multiple_connections", value: "\(supportsMultipleConnections)"))
         }
         return try await transport.request(
             method: "GET",

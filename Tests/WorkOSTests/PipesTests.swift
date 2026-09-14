@@ -18,7 +18,7 @@ import Testing
     @Test func listDataIntegrationsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"data":[{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                #"{"data":[{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","ownership":"user","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
         let result = try await client.pipes.listDataIntegrations()
 
@@ -32,7 +32,7 @@ import Testing
     @Test func createDataIntegrationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","ownership":"user","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.pipes.createDataIntegration(provider: "test_provider")
 
@@ -65,7 +65,7 @@ import Testing
     @Test func getDataIntegrationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","ownership":"user","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.pipes.getDataIntegration(slug: "sample-slug")
 
@@ -78,7 +78,7 @@ import Testing
     @Test func updateDataIntegrationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","ownership":"user","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.pipes.updateDataIntegration(slug: "sample-slug")
 
@@ -164,6 +164,41 @@ import Testing
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
         #expect(json?["user_id"] != nil)
         _ = result
+    }
+
+    @Test func listDataIntegrationOrganizationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","ownership":"user","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.pipes.listDataIntegrationOrganization(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/data-integrations/sample-slug/organization")
+        #expect(result.id == "data_integration_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func updateDataIntegrationOrganizationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","ownership":"user","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.pipes.updateDataIntegrationOrganization(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(request.url?.path == "/data-integrations/sample-slug/organization")
+        #expect(result.id == "data_integration_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func deleteDataIntegrationOrganizationSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.pipes.deleteDataIntegrationOrganization(slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/data-integrations/sample-slug/organization")
     }
 
     @Test func getUserConnectedAccountSendsExpectedRequest() async throws {

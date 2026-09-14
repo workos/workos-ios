@@ -627,6 +627,116 @@ public struct UserManagement: Sendable {
         )
     }
 
+    /// List MCP resource indicators
+    ///
+    /// Lists the MCP resource indicators configured for an environment.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listAuthkitOAuthResources(
+        before: String? = nil,
+        after: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> Page<AuthkitOAuthResource> {
+        let path = "user_management/authkit_oauth_resources"
+        var query: [URLQueryItem] = []
+        if let before {
+            query.append(URLQueryItem(name: "before", value: before))
+        }
+        if let after {
+            query.append(URLQueryItem(name: "after", value: after))
+        }
+        if let limit {
+            query.append(URLQueryItem(name: "limit", value: "\(limit)"))
+        }
+        if let order {
+            query.append(URLQueryItem(name: "order", value: order.rawValue))
+        }
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: query,
+            body: nil,
+            options: requestOptions,
+            as: Page<AuthkitOAuthResource>.self
+        )
+    }
+
+    /// Auto-paginating variant of `listAuthkitOAuthResources`: fetches successive
+    /// pages as the sequence is iterated.
+    ///
+    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+    /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
+    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listAuthkitOAuthResourcesAutoPaging(
+        before: String? = nil,
+        limit: Int? = nil,
+        order: PaginationOrder? = nil,
+        requestOptions: RequestOptions? = nil
+    ) -> AutoPagingSequence<AuthkitOAuthResource> {
+        AutoPagingSequence { cursor in
+            try await self.listAuthkitOAuthResources(
+                before: before,
+                after: cursor,
+                limit: limit,
+                order: order,
+                requestOptions: requestOptions
+            )
+        }
+    }
+
+    /// Create an MCP resource indicator
+    ///
+    /// Adds an MCP resource indicator (RFC 8707) to an environment, leaving any others in place.
+    ///
+    /// - Parameter uri: The resource URI. May be a wildcard pattern with a single `*` in the leftmost hostname label, where enabled for the environment.
+    /// - Parameter `default`: Whether the resource being created becomes the environment default, clearing any previous default. Applies at creation only — this API has no update endpoint yet, so changing the default on an existing resource is done from the dashboard. A wildcard pattern cannot be the default.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createAuthkitOAuthResource(
+        uri: String,
+        `default`: Bool? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> AuthkitOAuthResource {
+        let path = "user_management/authkit_oauth_resources"
+        var body = EncodableBody()
+        body.set("uri", uri)
+        body.set("default", `default`)
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: AuthkitOAuthResource.self
+        )
+    }
+
+    /// Delete an MCP resource indicator
+    ///
+    /// Removes an MCP resource indicator from an environment. Any application consents granted against it are removed too.
+    ///
+    /// - Parameter id: The ID of the MCP resource indicator to delete.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func deleteAuthkitOAuthResource(
+        id: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path = "user_management/authkit_oauth_resources/\(PathEncoding.segment(id))"
+        try await transport.requestVoid(
+            method: "DELETE",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions
+        )
+    }
+
     /// List CORS origins
     ///
     /// Lists the CORS origins for the current environment.

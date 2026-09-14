@@ -216,6 +216,45 @@ import Testing
         _ = result
     }
 
+    @Test func listAuthkitOAuthResourcesSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"data":[{"object":"authkit_oauth_resource","id":"authkit_oauth_resource_01EHZNVPK3SFK441A1RGBFSHRT","uri":"https://api.example.com","default":false,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+        )
+        let result = try await client.userManagement.listAuthkitOAuthResources()
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/user_management/authkit_oauth_resources")
+        #expect(result.data.count == 1)
+        #expect(result.data.first?.id == "authkit_oauth_resource_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func createAuthkitOAuthResourceSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"authkit_oauth_resource","id":"authkit_oauth_resource_01EHZNVPK3SFK441A1RGBFSHRT","uri":"https://api.example.com","default":false,"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.userManagement.createAuthkitOAuthResource(uri: "test_uri")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authkit_oauth_resources")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["uri"] != nil)
+        #expect(result.id == "authkit_oauth_resource_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func deleteAuthkitOAuthResourceSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.userManagement.deleteAuthkitOAuthResource(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/user_management/authkit_oauth_resources/sample-id")
+    }
+
     @Test func getAuthorizationUrlBuildsExpectedUrl() throws {
         let (client, _) = makeTestClient()
         let url = client.userManagement.getAuthorizationUrl(redirectUri: "test_redirect_uri")

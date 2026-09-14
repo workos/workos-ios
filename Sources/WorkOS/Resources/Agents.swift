@@ -459,6 +459,7 @@ public struct Agents: Sendable {
     /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter organizationId: Only return sessions of instances acting within this organization.
     /// - Parameter agentBlueprintId: Only return sessions of instances minted from this blueprint.
     /// - Parameter agentInstanceId: Only return sessions belonging to this agent instance.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
@@ -467,6 +468,7 @@ public struct Agents: Sendable {
         after: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
+        organizationId: String? = nil,
         agentBlueprintId: String? = nil,
         agentInstanceId: String? = nil,
         requestOptions: RequestOptions? = nil
@@ -484,6 +486,9 @@ public struct Agents: Sendable {
         }
         if let order {
             query.append(URLQueryItem(name: "order", value: order.rawValue))
+        }
+        if let organizationId {
+            query.append(URLQueryItem(name: "organization_id", value: organizationId))
         }
         if let agentBlueprintId {
             query.append(URLQueryItem(name: "agent_blueprint_id", value: agentBlueprintId))
@@ -507,6 +512,7 @@ public struct Agents: Sendable {
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
+    /// - Parameter organizationId: Only return sessions of instances acting within this organization.
     /// - Parameter agentBlueprintId: Only return sessions of instances minted from this blueprint.
     /// - Parameter agentInstanceId: Only return sessions belonging to this agent instance.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
@@ -514,6 +520,7 @@ public struct Agents: Sendable {
         before: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
+        organizationId: String? = nil,
         agentBlueprintId: String? = nil,
         agentInstanceId: String? = nil,
         requestOptions: RequestOptions? = nil
@@ -524,6 +531,7 @@ public struct Agents: Sendable {
                 after: cursor,
                 limit: limit,
                 order: order,
+                organizationId: organizationId,
                 agentBlueprintId: agentBlueprintId,
                 agentInstanceId: agentInstanceId,
                 requestOptions: requestOptions
