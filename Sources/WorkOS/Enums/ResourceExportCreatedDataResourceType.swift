@@ -9,6 +9,7 @@ public enum ResourceExportCreatedDataResourceType: RawRepresentable, Codable, Se
     case events
     case sessions
     case auditLogEvents
+    case connections
     /// A value not known at SDK generation time.
     case unknown(String)
 
@@ -19,6 +20,7 @@ public enum ResourceExportCreatedDataResourceType: RawRepresentable, Codable, Se
         case "events": self = .events
         case "sessions": self = .sessions
         case "auditLogEvents": self = .auditLogEvents
+        case "connections": self = .connections
         default: self = .unknown(rawValue)
         }
     }
@@ -30,6 +32,7 @@ public enum ResourceExportCreatedDataResourceType: RawRepresentable, Codable, Se
         case .events: return "events"
         case .sessions: return "sessions"
         case .auditLogEvents: return "auditLogEvents"
+        case .connections: return "connections"
         case .unknown(let value): return value
         }
     }
@@ -50,5 +53,6 @@ public enum ResourceExportCreatedDataResourceType: RawRepresentable, Codable, Se
         .events,
         .sessions,
         .auditLogEvents,
+        .connections,
     ]
 }

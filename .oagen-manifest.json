@@ -46,6 +46,7 @@
     "Sources/WorkOS/Enums/CreateConnectionOidcOptionsIdTokenSignatureAlgorithm.swift",
     "Sources/WorkOS/Enums/CreateConnectionOidcOptionsTokenAuthenticationMethod.swift",
     "Sources/WorkOS/Enums/CreateDataIntegrationAuthMethods.swift",
+    "Sources/WorkOS/Enums/CreateDataIntegrationOwnership.swift",
     "Sources/WorkOS/Enums/CreateUserInviteOptionsLocale.swift",
     "Sources/WorkOS/Enums/CreateUserPasswordHashType.swift",
     "Sources/WorkOS/Enums/CreateUserPasswordSaltPosition.swift",
@@ -58,11 +59,16 @@
     "Sources/WorkOS/Enums/DataIntegrationCredentialsInputType.swift",
     "Sources/WorkOS/Enums/DataIntegrationCredentialsResponseError.swift",
     "Sources/WorkOS/Enums/DataIntegrationCustomProviderAuthenticateVia.swift",
+    "Sources/WorkOS/Enums/DataIntegrationOwnership.swift",
     "Sources/WorkOS/Enums/DataIntegrationState.swift",
+    "Sources/WorkOS/Enums/DataIntegrationsGetUserTokenRequestConnectionOwner.swift",
     "Sources/WorkOS/Enums/DataIntegrationsListResponseDataAuthMethods.swift",
     "Sources/WorkOS/Enums/DataIntegrationsListResponseDataConnectedAccountAuthMethod.swift",
     "Sources/WorkOS/Enums/DataIntegrationsListResponseDataConnectedAccountState.swift",
     "Sources/WorkOS/Enums/DataIntegrationsListResponseDataOwnership.swift",
+    "Sources/WorkOS/Enums/DataIntegrationsUpsertApiKeyRequestConnectionOwner.swift",
+    "Sources/WorkOS/Enums/DataIntegrationsUpsertClientCredentialsRequestConnectionOwner.swift",
+    "Sources/WorkOS/Enums/DataIntegrationsVendCredentialsRequestConnectionOwner.swift",
     "Sources/WorkOS/Enums/DirectoryState.swift",
     "Sources/WorkOS/Enums/DirectoryType.swift",
     "Sources/WorkOS/Enums/DirectoryUserState.swift",
@@ -114,6 +120,7 @@
     "Sources/WorkOS/Enums/PatchConnectionOidcOptionsIdTokenSignatureAlgorithm.swift",
     "Sources/WorkOS/Enums/PatchConnectionOidcOptionsTokenAuthenticationMethod.swift",
     "Sources/WorkOS/Enums/PipeConnectedAccountState.swift",
+    "Sources/WorkOS/Enums/PipesOwnership.swift",
     "Sources/WorkOS/Enums/ProfileConnectionType.swift",
     "Sources/WorkOS/Enums/RadarListAction.swift",
     "Sources/WorkOS/Enums/RadarListType.swift",
@@ -170,6 +177,7 @@
     "Sources/WorkOS/Enums/WebhookEndpointStatus.swift",
     "Sources/WorkOS/Enums/WidgetSessionTokenScopes.swift",
     "Sources/WorkOS/Models/AccessTokenAgentRegistrationCredentialIssuedDataDetail.swift",
+    "Sources/WorkOS/Models/AccountSelectionRequiredError.swift",
     "Sources/WorkOS/Models/ActionAuthenticationDenied.swift",
     "Sources/WorkOS/Models/ActionAuthenticationDeniedData.swift",
     "Sources/WorkOS/Models/ActionUserRegistrationDenied.swift",
@@ -334,6 +342,7 @@
     "Sources/WorkOS/Models/AuthenticationSSOTimedOutData.swift",
     "Sources/WorkOS/Models/AuthenticationSSOTimedOutDataError.swift",
     "Sources/WorkOS/Models/AuthenticationSSOTimedOutDataSSO.swift",
+    "Sources/WorkOS/Models/AuthkitOAuthResource.swift",
     "Sources/WorkOS/Models/AuthorizationCheck.swift",
     "Sources/WorkOS/Models/AuthorizationCodeSessionAuthenticateRequest.swift",
     "Sources/WorkOS/Models/AuthorizationPermission.swift",
@@ -384,6 +393,7 @@
     "Sources/WorkOS/Models/ConnectionSAMLCertificateRenewedDataConnection.swift",
     "Sources/WorkOS/Models/CorsOriginResponse.swift",
     "Sources/WorkOS/Models/CreateApplicationSecret.swift",
+    "Sources/WorkOS/Models/CreateAuthkitOAuthResource.swift",
     "Sources/WorkOS/Models/CreateAuthorizationPermission.swift",
     "Sources/WorkOS/Models/CreateAuthorizationResource.swift",
     "Sources/WorkOS/Models/CreateConnection.swift",
@@ -1893,6 +1903,30 @@
     "POST /agents/blueprints/{agent_blueprint_id}/tokens/validate": {
       "sdkMethod": "validateBlueprintToken",
       "service": "agents"
+    },
+    "GET /data-integrations/{slug}/organization": {
+      "sdkMethod": "listDataIntegrationOrganization",
+      "service": "pipes"
+    },
+    "PUT /data-integrations/{slug}/organization": {
+      "sdkMethod": "updateDataIntegrationOrganization",
+      "service": "pipes"
+    },
+    "DELETE /data-integrations/{slug}/organization": {
+      "sdkMethod": "deleteDataIntegrationOrganization",
+      "service": "pipes"
+    },
+    "GET /user_management/authkit_oauth_resources": {
+      "sdkMethod": "listAuthkitOAuthResources",
+      "service": "userManagement"
+    },
+    "POST /user_management/authkit_oauth_resources": {
+      "sdkMethod": "createAuthkitOAuthResource",
+      "service": "userManagement"
+    },
+    "DELETE /user_management/authkit_oauth_resources/{id}": {
+      "sdkMethod": "deleteAuthkitOAuthResource",
+      "service": "userManagement"
     }
   }
 }

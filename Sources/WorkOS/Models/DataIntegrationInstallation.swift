@@ -5,16 +5,16 @@ import Foundation
 public struct DataIntegrationInstallation: Codable, Sendable, Equatable {
     /// Unique identifier of the installation.
     public let id: String
-    /// The User the API key was installed for.
-    public let userId: String
-    /// The Organization the installation is scoped to, or null when unscoped.
+    /// The User the API key was installed for. Null on an `organization`-owned integration, whose installations belong to the organization.
+    public let userId: String?
+    /// The Organization the installation is scoped to (or owned by, on an `organization`-owned integration), or null when unscoped.
     public let organizationId: String?
     /// The last four characters of the stored API key. The full key is never returned.
     public let apiKeyLast4: String?
 
     public init(
         id: String,
-        userId: String,
+        userId: String? = nil,
         organizationId: String? = nil,
         apiKeyLast4: String? = nil
     ) {
