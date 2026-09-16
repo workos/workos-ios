@@ -54,6 +54,11 @@ extension WorkOSClient {
     /// Operations for the Organizations API.
     public var organizations: Organizations { Organizations(transport: transport) }
 
+    /// Operations for the OrganizationsDataProviders API.
+    public var organizationsDataProviders: OrganizationsDataProviders {
+        OrganizationsDataProviders(transport: transport)
+    }
+
     /// Operations for the Pipes API.
     public var pipes: Pipes { Pipes(transport: transport) }
 

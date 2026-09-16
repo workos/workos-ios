@@ -3,7 +3,7 @@
 import Foundation
 
 /// The event payload.
-public struct PipesConnectedAccountConnectionFailedData: Codable, Sendable, Equatable {
+public struct PipesAccountConnectionAddFailedData: Codable, Sendable, Equatable {
     /// The object type.
     public let object: String
     /// The unique ID of the data integration.

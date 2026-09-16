@@ -27,6 +27,7 @@
     "Sources/WorkOS/Enums/AuthorizationAssignment.swift",
     "Sources/WorkOS/Enums/ClaimViewResponseStatus.swift",
     "Sources/WorkOS/Enums/ConnectedAccountAuthMethod.swift",
+    "Sources/WorkOS/Enums/ConnectedAccountConnectionRole.swift",
     "Sources/WorkOS/Enums/ConnectedAccountInputState.swift",
     "Sources/WorkOS/Enums/ConnectedAccountState.swift",
     "Sources/WorkOS/Enums/ConnectionActivatedDataConnectionType.swift",
@@ -59,12 +60,16 @@
     "Sources/WorkOS/Enums/DataIntegrationCredentialsInputType.swift",
     "Sources/WorkOS/Enums/DataIntegrationCredentialsResponseError.swift",
     "Sources/WorkOS/Enums/DataIntegrationCustomProviderAuthenticateVia.swift",
+    "Sources/WorkOS/Enums/DataIntegrationInstallationConnectionRole.swift",
     "Sources/WorkOS/Enums/DataIntegrationOwnership.swift",
     "Sources/WorkOS/Enums/DataIntegrationState.swift",
+    "Sources/WorkOS/Enums/DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionOwner.swift",
     "Sources/WorkOS/Enums/DataIntegrationsGetUserTokenRequestConnectionOwner.swift",
     "Sources/WorkOS/Enums/DataIntegrationsListResponseDataAuthMethods.swift",
     "Sources/WorkOS/Enums/DataIntegrationsListResponseDataConnectedAccountAuthMethod.swift",
+    "Sources/WorkOS/Enums/DataIntegrationsListResponseDataConnectedAccountConnectionRole.swift",
     "Sources/WorkOS/Enums/DataIntegrationsListResponseDataConnectedAccountState.swift",
+    "Sources/WorkOS/Enums/DataIntegrationsListResponseDataConnectionOwner.swift",
     "Sources/WorkOS/Enums/DataIntegrationsListResponseDataOwnership.swift",
     "Sources/WorkOS/Enums/DataIntegrationsUpsertApiKeyRequestConnectionOwner.swift",
     "Sources/WorkOS/Enums/DataIntegrationsUpsertClientCredentialsRequestConnectionOwner.swift",
@@ -119,6 +124,8 @@
     "Sources/WorkOS/Enums/PaginationOrder.swift",
     "Sources/WorkOS/Enums/PatchConnectionOidcOptionsIdTokenSignatureAlgorithm.swift",
     "Sources/WorkOS/Enums/PatchConnectionOidcOptionsTokenAuthenticationMethod.swift",
+    "Sources/WorkOS/Enums/PipeConnectedAccountAuthMethod.swift",
+    "Sources/WorkOS/Enums/PipeConnectedAccountConnectionRole.swift",
     "Sources/WorkOS/Enums/PipeConnectedAccountState.swift",
     "Sources/WorkOS/Enums/PipesOwnership.swift",
     "Sources/WorkOS/Enums/ProfileConnectionType.swift",
@@ -661,6 +668,13 @@
     "Sources/WorkOS/Models/PermissionUpdated.swift",
     "Sources/WorkOS/Models/PermissionUpdatedData.swift",
     "Sources/WorkOS/Models/PipeConnectedAccount.swift",
+    "Sources/WorkOS/Models/PipesAccountConnectionAddFailed.swift",
+    "Sources/WorkOS/Models/PipesAccountConnectionAddFailedData.swift",
+    "Sources/WorkOS/Models/PipesAccountConnectionConnected.swift",
+    "Sources/WorkOS/Models/PipesAccountConnectionConnectionFailed.swift",
+    "Sources/WorkOS/Models/PipesAccountConnectionConnectionFailedData.swift",
+    "Sources/WorkOS/Models/PipesAccountConnectionDisconnected.swift",
+    "Sources/WorkOS/Models/PipesAccountConnectionReauthorizationNeeded.swift",
     "Sources/WorkOS/Models/PipesConnectedAccountConnected.swift",
     "Sources/WorkOS/Models/PipesConnectedAccountConnectionFailed.swift",
     "Sources/WorkOS/Models/PipesConnectedAccountConnectionFailedData.swift",
@@ -840,6 +854,7 @@
     "Sources/WorkOS/Resources/OrganizationDomains.swift",
     "Sources/WorkOS/Resources/OrganizationMembershipResource.swift",
     "Sources/WorkOS/Resources/Organizations.swift",
+    "Sources/WorkOS/Resources/OrganizationsDataProviders.swift",
     "Sources/WorkOS/Resources/Pipes.swift",
     "Sources/WorkOS/Resources/PipesProvider.swift",
     "Sources/WorkOS/Resources/PlatformTeams.swift",
@@ -864,6 +879,7 @@
     "Tests/WorkOSTests/MultiFactorAuthTests.swift",
     "Tests/WorkOSTests/OrganizationDomainsTests.swift",
     "Tests/WorkOSTests/OrganizationMembershipTests.swift",
+    "Tests/WorkOSTests/OrganizationsDataProvidersTests.swift",
     "Tests/WorkOSTests/OrganizationsTests.swift",
     "Tests/WorkOSTests/PipesProviderTests.swift",
     "Tests/WorkOSTests/PipesTests.swift",
@@ -1927,6 +1943,26 @@
     "DELETE /user_management/authkit_oauth_resources/{id}": {
       "sdkMethod": "deleteAuthkitOAuthResource",
       "service": "userManagement"
+    },
+    "GET /organizations/{organization_id}/connected_accounts/{slug}": {
+      "sdkMethod": "getConnectedAccount",
+      "service": "organizationsDataProviders"
+    },
+    "POST /organizations/{organization_id}/connected_accounts/{slug}": {
+      "sdkMethod": "createConnectedAccount",
+      "service": "organizationsDataProviders"
+    },
+    "PUT /organizations/{organization_id}/connected_accounts/{slug}": {
+      "sdkMethod": "updateConnectedAccount",
+      "service": "organizationsDataProviders"
+    },
+    "DELETE /organizations/{organization_id}/connected_accounts/{slug}": {
+      "sdkMethod": "deleteConnectedAccount",
+      "service": "organizationsDataProviders"
+    },
+    "GET /organizations/{organization_id}/data_providers": {
+      "sdkMethod": "list",
+      "service": "organizationsDataProviders"
     }
   }
 }

@@ -95,6 +95,11 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
     case permissionCreated
     case permissionDeleted
     case permissionUpdated
+    case pipesAccountConnectionAddFailed
+    case pipesAccountConnectionConnected
+    case pipesAccountConnectionConnectionFailed
+    case pipesAccountConnectionDisconnected
+    case pipesAccountConnectionReauthorizationNeeded
     case pipesConnectedAccountConnected
     case pipesConnectedAccountConnectionFailed
     case pipesConnectedAccountDisconnected
@@ -205,6 +210,13 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case "permission.created": self = .permissionCreated
         case "permission.deleted": self = .permissionDeleted
         case "permission.updated": self = .permissionUpdated
+        case "pipes.account_connection.add_failed": self = .pipesAccountConnectionAddFailed
+        case "pipes.account_connection.connected": self = .pipesAccountConnectionConnected
+        case "pipes.account_connection.connection_failed":
+            self = .pipesAccountConnectionConnectionFailed
+        case "pipes.account_connection.disconnected": self = .pipesAccountConnectionDisconnected
+        case "pipes.account_connection.reauthorization_needed":
+            self = .pipesAccountConnectionReauthorizationNeeded
         case "pipes.connected_account.connected": self = .pipesConnectedAccountConnected
         case "pipes.connected_account.connection_failed":
             self = .pipesConnectedAccountConnectionFailed
@@ -318,6 +330,13 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case .permissionCreated: return "permission.created"
         case .permissionDeleted: return "permission.deleted"
         case .permissionUpdated: return "permission.updated"
+        case .pipesAccountConnectionAddFailed: return "pipes.account_connection.add_failed"
+        case .pipesAccountConnectionConnected: return "pipes.account_connection.connected"
+        case .pipesAccountConnectionConnectionFailed:
+            return "pipes.account_connection.connection_failed"
+        case .pipesAccountConnectionDisconnected: return "pipes.account_connection.disconnected"
+        case .pipesAccountConnectionReauthorizationNeeded:
+            return "pipes.account_connection.reauthorization_needed"
         case .pipesConnectedAccountConnected: return "pipes.connected_account.connected"
         case .pipesConnectedAccountConnectionFailed:
             return "pipes.connected_account.connection_failed"
@@ -435,6 +454,11 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         .permissionCreated,
         .permissionDeleted,
         .permissionUpdated,
+        .pipesAccountConnectionAddFailed,
+        .pipesAccountConnectionConnected,
+        .pipesAccountConnectionConnectionFailed,
+        .pipesAccountConnectionDisconnected,
+        .pipesAccountConnectionReauthorizationNeeded,
         .pipesConnectedAccountConnected,
         .pipesConnectedAccountConnectionFailed,
         .pipesConnectedAccountDisconnected,

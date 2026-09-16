@@ -7,6 +7,12 @@ public struct PipeConnectedAccount: Codable, Sendable, Equatable {
     public let object: String
     /// The unique ID of the connected account.
     public let id: String
+    /// Whether this is the compatibility connection visible to undeclared clients or a standard connection for plural-aware clients. Historical events may omit this field.
+    public let connectionRole: PipeConnectedAccountConnectionRole?
+    /// A best-effort identifier for the provider account this connection points at. It is not the connection identifier or a selector. Historical events may omit this field.
+    public let accountIdentifier: String?
+    /// A mutable, non-unique display name for the provider account connection. Historical events may omit this field.
+    public let accountDisplayName: String?
     /// The unique ID of the data integration.
     public let dataIntegrationId: String
     /// The provider slug for this connected account.
@@ -17,6 +23,10 @@ public struct PipeConnectedAccount: Codable, Sendable, Equatable {
     public let organizationId: String?
     /// The OAuth scopes granted for this connected account.
     public let scopes: [String]
+    /// How the connection authenticates. Historical events may omit this field.
+    public let authMethod: PipeConnectedAccountAuthMethod?
+    /// The last four characters of the API key, or null for other authentication methods. Historical events may omit this field.
+    public let apiKeyLast4: String?
     /// The state of the connected account.
     public let state: PipeConnectedAccountState
     /// An ISO 8601 timestamp.
@@ -33,16 +43,26 @@ public struct PipeConnectedAccount: Codable, Sendable, Equatable {
         state: PipeConnectedAccountState,
         createdAt: Date,
         updatedAt: Date,
+        connectionRole: PipeConnectedAccountConnectionRole? = nil,
+        accountIdentifier: String? = nil,
+        accountDisplayName: String? = nil,
         userId: String? = nil,
-        organizationId: String? = nil
+        organizationId: String? = nil,
+        authMethod: PipeConnectedAccountAuthMethod? = nil,
+        apiKeyLast4: String? = nil
     ) {
         self.object = object
         self.id = id
+        self.connectionRole = connectionRole
+        self.accountIdentifier = accountIdentifier
+        self.accountDisplayName = accountDisplayName
         self.dataIntegrationId = dataIntegrationId
         self.providerSlug = providerSlug
         self.userId = userId
         self.organizationId = organizationId
         self.scopes = scopes
+        self.authMethod = authMethod
+        self.apiKeyLast4 = apiKeyLast4
         self.state = state
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -51,11 +71,16 @@ public struct PipeConnectedAccount: Codable, Sendable, Equatable {
     private enum CodingKeys: String, CodingKey {
         case object
         case id
+        case connectionRole = "connection_role"
+        case accountIdentifier = "account_identifier"
+        case accountDisplayName = "account_display_name"
         case dataIntegrationId = "data_integration_id"
         case providerSlug = "provider_slug"
         case userId = "user_id"
         case organizationId = "organization_id"
         case scopes
+        case authMethod = "auth_method"
+        case apiKeyLast4 = "api_key_last_4"
         case state
         case createdAt = "created_at"
         case updatedAt = "updated_at"
