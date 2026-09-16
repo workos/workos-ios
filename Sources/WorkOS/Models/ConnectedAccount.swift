@@ -7,6 +7,12 @@ public struct ConnectedAccount: Codable, Sendable, Equatable {
     public let object: String
     /// The unique identifier of the connected account.
     public let id: String
+    /// Whether this row is the compatibility connection visible to undeclared clients or a standard peer for plural-aware clients. The role does not indicate preference or creation order.
+    public let connectionRole: ConnectedAccountConnectionRole
+    /// A best-effort identifier for the provider account this connection points at. It is correlation metadata, not the connection identifier or a selector.
+    public let accountIdentifier: String?
+    /// A mutable, non-unique display name for the provider account connection.
+    public let accountDisplayName: String?
     /// The [User](https://workos.com/docs/reference/authkit/user) identifier associated with this connection.
     public let userId: String?
     /// The [Organization](https://workos.com/docs/reference/organization) identifier associated with this connection, or `null` if not scoped to an organization.
@@ -36,10 +42,13 @@ public struct ConnectedAccount: Codable, Sendable, Equatable {
     public init(
         object: String,
         id: String,
+        connectionRole: ConnectedAccountConnectionRole,
         scopes: [String],
         state: ConnectedAccountState,
         createdAt: String,
         updatedAt: String,
+        accountIdentifier: String? = nil,
+        accountDisplayName: String? = nil,
         userId: String? = nil,
         organizationId: String? = nil,
         authMethod: ConnectedAccountAuthMethod? = nil,
@@ -50,6 +59,9 @@ public struct ConnectedAccount: Codable, Sendable, Equatable {
     ) {
         self.object = object
         self.id = id
+        self.connectionRole = connectionRole
+        self.accountIdentifier = accountIdentifier
+        self.accountDisplayName = accountDisplayName
         self.userId = userId
         self.organizationId = organizationId
         self.scopes = scopes
@@ -66,6 +78,9 @@ public struct ConnectedAccount: Codable, Sendable, Equatable {
     private enum CodingKeys: String, CodingKey {
         case object
         case id
+        case connectionRole = "connection_role"
+        case accountIdentifier = "account_identifier"
+        case accountDisplayName = "account_display_name"
         case userId = "user_id"
         case organizationId = "organization_id"
         case scopes

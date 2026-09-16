@@ -21,7 +21,10 @@ public struct DataIntegrationsListResponseData: Codable, Sendable, Equatable {
     public let scopes: [String]?
     /// The authentication methods supported by this provider (`oauth`, `api_key`, `client_credentials`, or a combination). Defaults to `["oauth"]` if absent.
     public let authMethods: [DataIntegrationsListResponseDataAuthMethods]?
-    /// Whether the provider is owned by a user or organization.
+    /// Who owns connections made through this provider: `user` for connections owned by individual users, or `organization` for a connection shared by every member of the organization. A provider row can exist before any connected account does.
+    public let connectionOwner: DataIntegrationsListResponseDataConnectionOwner
+    /// Use `connection_owner` instead. Legacy spelling of the same value: `userland_user` corresponds to `connection_owner: "user"` and `organization` to `connection_owner: "organization"`.
+    @available(*, deprecated)
     public let ownership: DataIntegrationsListResponseDataOwnership
     /// The timestamp when the provider was created.
     public let createdAt: String
@@ -39,6 +42,7 @@ public struct DataIntegrationsListResponseData: Codable, Sendable, Equatable {
         slug: String,
         integrationType: String,
         credentialsType: String,
+        connectionOwner: DataIntegrationsListResponseDataConnectionOwner,
         ownership: DataIntegrationsListResponseDataOwnership,
         createdAt: String,
         updatedAt: String,
@@ -57,6 +61,7 @@ public struct DataIntegrationsListResponseData: Codable, Sendable, Equatable {
         self.credentialsType = credentialsType
         self.scopes = scopes
         self.authMethods = authMethods
+        self.connectionOwner = connectionOwner
         self.ownership = ownership
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -74,6 +79,7 @@ public struct DataIntegrationsListResponseData: Codable, Sendable, Equatable {
         case credentialsType = "credentials_type"
         case scopes
         case authMethods = "auth_methods"
+        case connectionOwner = "connection_owner"
         case ownership
         case createdAt = "created_at"
         case updatedAt = "updated_at"

@@ -3,10 +3,13 @@
 import Foundation
 
 public struct DataIntegrationsGetDataIntegrationAuthorizeUrlRequest: Codable, Sendable, Equatable {
-    /// The ID of the user to authorize.
+    /// The ID of the user to authorize. When `connection_owner` is `organization`, this is the user authorizing on behalf of the organization; they must be an active member of the organization and do not become the owner of the resulting connected account.
     public let userId: String
-    /// An organization ID to scope the authorization to a specific organization.
+    /// An organization ID to scope the authorization to a specific organization. Required when `connection_owner` is `organization`.
     public let organizationId: String?
+    /// Who will own the connected account. `user` (the default) connects the user's own account. `organization` connects the organization's shared account and requires `organization_id`.
+    public let connectionOwner:
+        DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionOwner?
     /// The URL to redirect the user to after authorization.
     public let returnTo: String?
     /// Connect-time config values for the provider-declared `installation`-scope fields (e.g. a Zendesk `subdomain`), keyed by the config field. Only fields the provider declares may be supplied, and required fields must be provided unless already pinned on the integration.
@@ -15,11 +18,14 @@ public struct DataIntegrationsGetDataIntegrationAuthorizeUrlRequest: Codable, Se
     public init(
         userId: String,
         organizationId: String? = nil,
+        connectionOwner: DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionOwner? =
+            nil,
         returnTo: String? = nil,
         config: [String: String]? = nil
     ) {
         self.userId = userId
         self.organizationId = organizationId
+        self.connectionOwner = connectionOwner
         self.returnTo = returnTo
         self.config = config
     }
@@ -27,6 +33,7 @@ public struct DataIntegrationsGetDataIntegrationAuthorizeUrlRequest: Codable, Se
     private enum CodingKeys: String, CodingKey {
         case userId = "user_id"
         case organizationId = "organization_id"
+        case connectionOwner = "connection_owner"
         case returnTo = "return_to"
         case config
     }

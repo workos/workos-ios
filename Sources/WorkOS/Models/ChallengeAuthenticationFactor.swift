@@ -3,7 +3,7 @@
 import Foundation
 
 public struct ChallengeAuthenticationFactor: Codable, Sendable, Equatable {
-    /// A custom template for the SMS message. Use the {{code}} placeholder to include the verification code.
+    /// A custom template for the SMS message. Use the {{code}} placeholder to include the verification code. Must not contain URLs or domain names.
     public let smsTemplate: String?
 
     public init(

@@ -5,6 +5,12 @@ import Foundation
 public struct DataIntegrationInstallation: Codable, Sendable, Equatable {
     /// Unique identifier of the installation.
     public let id: String
+    /// Whether this is the compatibility connection visible to undeclared clients or a standard connection for plural-aware clients.
+    public let connectionRole: DataIntegrationInstallationConnectionRole
+    /// A best-effort provider account identifier used for correlation, not connection selection.
+    public let accountIdentifier: String?
+    /// A mutable, non-unique display name for this connection.
+    public let accountDisplayName: String?
     /// The User the API key was installed for. Null on an `organization`-owned integration, whose installations belong to the organization.
     public let userId: String?
     /// The Organization the installation is scoped to (or owned by, on an `organization`-owned integration), or null when unscoped.
@@ -14,11 +20,17 @@ public struct DataIntegrationInstallation: Codable, Sendable, Equatable {
 
     public init(
         id: String,
+        connectionRole: DataIntegrationInstallationConnectionRole,
+        accountIdentifier: String? = nil,
+        accountDisplayName: String? = nil,
         userId: String? = nil,
         organizationId: String? = nil,
         apiKeyLast4: String? = nil
     ) {
         self.id = id
+        self.connectionRole = connectionRole
+        self.accountIdentifier = accountIdentifier
+        self.accountDisplayName = accountDisplayName
         self.userId = userId
         self.organizationId = organizationId
         self.apiKeyLast4 = apiKeyLast4
@@ -26,6 +38,9 @@ public struct DataIntegrationInstallation: Codable, Sendable, Equatable {
 
     private enum CodingKeys: String, CodingKey {
         case id
+        case connectionRole = "connection_role"
+        case accountIdentifier = "account_identifier"
+        case accountDisplayName = "account_display_name"
         case userId = "user_id"
         case organizationId = "organization_id"
         case apiKeyLast4 = "api_key_last_4"

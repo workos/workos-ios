@@ -100,7 +100,7 @@ import Testing
     @Test func updateDataIntegrationApiKeySendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.updateDataIntegrationApiKey(
             slug: "sample-slug", userId: "test_user_id", secret: "test_secret")
@@ -134,7 +134,7 @@ import Testing
     @Test func updateDataIntegrationClientCredentialsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.updateDataIntegrationClientCredentials(
             slug: "sample-slug", userId: "test_user_id", clientId: "test_client_id",
@@ -204,7 +204,7 @@ import Testing
     @Test func getUserConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.getUserConnectedAccount(
             userId: "sample-user-id", slug: "sample-slug")
@@ -220,7 +220,7 @@ import Testing
     @Test func createUserConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.createUserConnectedAccount(
             userId: "sample-user-id", slug: "sample-slug")
@@ -236,7 +236,7 @@ import Testing
     @Test func updateUserConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.updateUserConnectedAccount(
             userId: "sample-user-id", slug: "sample-slug")
@@ -264,7 +264,7 @@ import Testing
     @Test func listUserDataProvidersSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"list","data":[{"object":"data_provider","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","name":"GitHub","description":"Connect your GitHub account to access repositories.","slug":"github","integration_type":"github","credentials_type":"oauth2","scopes":["repo","user:email"],"auth_methods":["oauth"],"ownership":"userland_user","created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","connected_account":{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"},"connected_accounts":[{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"}]}]}"#
+                #"{"object":"list","data":[{"object":"data_provider","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","name":"GitHub","description":"Connect your GitHub account to access repositories.","slug":"github","integration_type":"github","credentials_type":"oauth2","scopes":["repo","user:email"],"auth_methods":["oauth"],"connection_owner":"user","ownership":"userland_user","created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","connected_account":{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"},"connected_accounts":[{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"}]}]}"#
         )
         let result = try await client.pipes.listUserDataProviders(userId: "sample-user-id")
 
