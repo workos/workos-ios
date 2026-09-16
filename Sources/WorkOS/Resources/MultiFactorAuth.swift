@@ -112,7 +112,7 @@ public struct MultiFactorAuth: Sendable {
     /// Creates a Challenge for an Authentication Factor.
     ///
     /// - Parameter id: The unique ID of the Authentication Factor to be challenged.
-    /// - Parameter smsTemplate: A custom template for the SMS message. Use the {{code}} placeholder to include the verification code.
+    /// - Parameter smsTemplate: A custom template for the SMS message. Use the {{code}} placeholder to include the verification code. Must not contain URLs or domain names.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func challengeFactor(
         id: String,
