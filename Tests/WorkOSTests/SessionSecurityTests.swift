@@ -345,9 +345,35 @@ import Testing
         let sealed = try #require(legacy.combined).base64EncodedString()
         let decoded: [String: String] = try SessionSealing.unseal(sealed, password: password)
         #expect(decoded == ["key": "value"])
+        // Strong passwords upgrade to wos2 on reseal; short legacy passwords stay legacy.
         let upgraded = try SessionSealing.seal(decoded, password: password)
-        #expect(upgraded.hasPrefix("wos2."))
+        #expect(upgraded.hasPrefix("wos2.") == (password.count >= 32))
         let restored: [String: String] = try SessionSealing.unseal(upgraded, password: password)
         #expect(restored == decoded)
+    }
+
+    @Test(arguments: ["", "short", String(repeating: "a", count: 31)])
+    func shortPasswordsNeverUseVersionedSeals(password: String) throws {
+        // The fixed-salt master key is never derived for a password weak enough to
+        // precompute: sealing stays on the legacy format and wos2 cookies are rejected
+        // before any derivation.
+        #expect(throws: SessionSealingError.self) {
+            _ = try SessionSealing.masterKey(for: password)
+        }
+        let sealed = try SessionSealing.seal(["key": "value"], password: password)
+        #expect(!sealed.hasPrefix("wos2."))
+        let raw = try #require(Data(base64Encoded: sealed))
+        let opened = try AES.GCM.open(
+            AES.GCM.SealedBox(combined: raw), using: SessionSealing.deriveKey(password))
+        #expect(
+            try Coding.makeDecoder().decode([String: String].self, from: opened) == ["key": "value"]
+        )
+        let decoded: [String: String] = try SessionSealing.unseal(sealed, password: password)
+        #expect(decoded == ["key": "value"])
+
+        let versioned = try SessionSealing.seal(["key": "value"], password: Self.password)
+        #expect(throws: SessionSealingError.self) {
+            let _: [String: String] = try SessionSealing.unseal(versioned, password: password)
+        }
     }
 }

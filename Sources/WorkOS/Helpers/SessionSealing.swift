@@ -16,16 +16,25 @@ public enum SessionSealingError: Error, Equatable, Sendable {
 
 /// Raw seal/unseal helpers for session payloads.
 ///
-/// New seals use `wos2.` followed by base64 `salt(16) || nonce(12) || ciphertext || tag`.
-/// The password is stretched once with PBKDF2-HMAC-SHA256 (600,000 iterations, roughly
-/// 100–300 ms of CPU depending on the device) into a master key that is cached per process.
-/// Each seal then derives its AES-256-GCM key from that master key with HKDF-SHA256 over the
-/// per-seal salt, which is cheap. Untrusted cookie bytes never reach the expensive derivation,
-/// so a forged cookie costs only an HKDF expansion and a failed AES-GCM open. The first
-/// seal/unseal for a given password is synchronous and should run off the UI thread.
-/// Legacy seals remain readable and are upgraded the next time the session is sealed.
-/// Use a cryptographically random password of at least 32 characters.
+/// Passwords of at least ``minimumPasswordLength`` characters produce `wos2.` seals: `wos2.`
+/// followed by base64 `salt(16) || nonce(12) || ciphertext || tag`. The password is stretched
+/// once with PBKDF2-HMAC-SHA256 (600,000 iterations, roughly 100–300 ms of CPU depending on the
+/// device) into a master key that is cached per process, and each seal derives its AES-256-GCM
+/// key from that master key with HKDF-SHA256 over the per-seal salt, which is cheap. Untrusted
+/// cookie bytes never reach the expensive derivation, so a forged cookie costs only an HKDF
+/// expansion and a failed AES-GCM open. The first seal/unseal for a given password is
+/// synchronous and should run off the UI thread.
+///
+/// Shorter legacy passwords keep producing and reading legacy `nonce(12) || ciphertext || tag`
+/// seals keyed by SHA-256 of the password, so existing deployments are not logged out. They
+/// never receive `wos2.` seals, and verified authentication rejects them. Legacy seals under a
+/// password of at least ``minimumPasswordLength`` characters are upgraded to `wos2.` the next
+/// time the session is sealed. Use a cryptographically random password of at least 32 characters.
 public enum SessionSealing {
+    /// Minimum password length for verified sessions and for `wos2.` seals. The fixed-salt
+    /// master-key derivation is only ever applied to passwords at least this long.
+    static let minimumPasswordLength = 32
+
     /// Encrypt a JSON-serializable value into a sealed base64 string.
     public static func seal<T: Encodable>(_ value: T, password: String) throws -> String {
         let plaintext = try Coding.makeEncoder().encode(value)
@@ -42,6 +51,9 @@ public enum SessionSealing {
 
     /// Encrypt raw bytes with AES-256-GCM using the derived key.
     static func sealBytes(_ plaintext: Data, password: String) throws -> String {
+        guard password.count >= minimumPasswordLength else {
+            return try sealLegacyBytes(plaintext, password: password)
+        }
         let salt = SymmetricKey(size: .bits128).withUnsafeBytes { Data($0) }
         let key = try deriveKey(password, salt: salt)
         do {
@@ -55,6 +67,23 @@ public enum SessionSealing {
         } catch {
             throw SessionSealingError.cryptoFailure("encryption failed: \(error)")
         }
+    }
+
+    /// Legacy `nonce(12) || ciphertext || tag` seal for passwords shorter than
+    /// ``minimumPasswordLength``. Deployments on short legacy passwords keep refreshing
+    /// sessions without forced logouts, and because they never receive `wos2.` seals the
+    /// fixed-salt master-key derivation never runs on a password weak enough to precompute.
+    private static func sealLegacyBytes(_ plaintext: Data, password: String) throws -> String {
+        let sealedBox: AES.GCM.SealedBox
+        do {
+            sealedBox = try AES.GCM.seal(plaintext, using: deriveKey(password))
+        } catch {
+            throw SessionSealingError.cryptoFailure("encryption failed: \(error)")
+        }
+        guard let combined = sealedBox.combined else {
+            throw SessionSealingError.cryptoFailure("encryption failed: non-standard nonce")
+        }
+        return combined.base64EncodedString()
     }
 
     /// Decrypt a sealed base64 string back to raw bytes.
@@ -93,12 +122,18 @@ public enum SessionSealing {
             info: Data("wos2.aes-256-gcm".utf8), outputByteCount: 32)
     }
 
-    /// The PBKDF2-stretched master key for a password, derived at most once per process
-    /// and cached. The PBKDF2 salt is a fixed domain-separation constant rather than a
-    /// per-cookie value, so the cost can never be triggered by request data: the input is a
-    /// random, high-entropy password, and per-seal key separation comes from HKDF instead.
+    /// The PBKDF2-stretched master key for a password, derived at most once per process and
+    /// cached. The PBKDF2 salt is a fixed domain-separation constant rather than a per-cookie
+    /// value, so the cost can never be triggered by request data. That is only safe for
+    /// passwords of at least ``minimumPasswordLength`` characters, where a precomputed
+    /// dictionary is infeasible, so shorter passwords are rejected here before any derivation;
+    /// per-seal key separation comes from HKDF instead.
     static func masterKey(for password: String) throws -> SymmetricKey {
-        try masterKeys.key(for: password)
+        guard password.count >= minimumPasswordLength else {
+            throw SessionSealingError.cryptoFailure(
+                "wos2 seals require a password of at least \(minimumPasswordLength) characters")
+        }
+        return try masterKeys.key(for: password)
     }
 
     private static let masterKeys = MasterKeyCache()
@@ -125,8 +160,9 @@ public enum SessionSealing {
         return SymmetricKey(data: key)
     }
 
-    /// Legacy read-only derivation. Derive a 32-byte AES key from the password: hex-decode when the
-    /// password is exactly 64 hex characters, otherwise SHA-256 the UTF-8 bytes.
+    /// Legacy derivation, used to read every legacy seal and to write seals for passwords shorter
+    /// than ``minimumPasswordLength``. Derive a 32-byte AES key from the password: hex-decode
+    /// when the password is exactly 64 hex characters, otherwise SHA-256 the UTF-8 bytes.
     static func deriveKey(_ password: String) -> SymmetricKey {
         if password.count == 64, let decoded = decodeHex(password), decoded.count == 32 {
             return SymmetricKey(data: decoded)

@@ -162,7 +162,9 @@ public struct Session: Sendable {
     public init(
         client: WorkOSClient, sessionData: String, validatingCookiePassword cookiePassword: String
     ) throws {
-        guard cookiePassword.count >= 32 else { throw SessionError.invalidCookiePassword }
+        guard cookiePassword.count >= SessionSealing.minimumPasswordLength else {
+            throw SessionError.invalidCookiePassword
+        }
         self.init(client: client, sessionData: sessionData, uncheckedCookiePassword: cookiePassword)
     }
 
@@ -173,7 +175,7 @@ public struct Session: Sendable {
     /// Fetches JWKS on every call (no cache). Fetch/verification failures fail
     /// closed with `invalid_jwt`.
     public func authenticateVerified() async -> AuthenticateSessionResult {
-        guard cookiePassword.count >= 32 else {
+        guard cookiePassword.count >= SessionSealing.minimumPasswordLength else {
             return AuthenticateSessionResult(
                 authenticated: false, reason: "invalid_cookie_password")
         }
@@ -288,6 +290,8 @@ public struct Session: Sendable {
     /// session on success. Authentication-level failures (revoked refresh
     /// token, upstream errors) are reported through `authenticated == false`
     /// plus `reason`; check `authenticated`, not just the absence of a throw.
+    /// Passwords shorter than 32 characters reseal in the legacy format so
+    /// existing deployments keep working; see `SessionSealing`.
     public func refresh(requestOptions: RequestOptions? = nil) async throws
         -> RefreshSessionResult
     {
