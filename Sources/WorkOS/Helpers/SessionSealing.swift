@@ -17,10 +17,13 @@ public enum SessionSealingError: Error, Equatable, Sendable {
 /// Raw seal/unseal helpers for session payloads.
 ///
 /// New seals use `wos2.` followed by base64 `salt(16) || nonce(12) || ciphertext || tag`.
-/// Keys are derived with PBKDF2-HMAC-SHA256 (600,000 iterations), costing roughly
-/// 100–300 ms of CPU per seal/unseal depending on the device. These synchronous
-/// operations should run off the UI thread. Legacy seals remain readable and
-/// are upgraded the next time the session is sealed.
+/// The password is stretched once with PBKDF2-HMAC-SHA256 (600,000 iterations, roughly
+/// 100–300 ms of CPU depending on the device) into a master key that is cached per process.
+/// Each seal then derives its AES-256-GCM key from that master key with HKDF-SHA256 over the
+/// per-seal salt, which is cheap. Untrusted cookie bytes never reach the expensive derivation,
+/// so a forged cookie costs only an HKDF expansion and a failed AES-GCM open. The first
+/// seal/unseal for a given password is synchronous and should run off the UI thread.
+/// Legacy seals remain readable and are upgraded the next time the session is sealed.
 /// Use a cryptographically random password of at least 32 characters.
 public enum SessionSealing {
     /// Encrypt a JSON-serializable value into a sealed base64 string.
@@ -81,8 +84,30 @@ public enum SessionSealing {
         }
     }
 
-    private static func deriveKey(_ password: String, salt: Data) throws -> SymmetricKey {
+    /// Derive the per-seal AES-256-GCM key by expanding the cached master key over the
+    /// per-seal salt with HKDF-SHA256. This is the only derivation that untrusted cookie
+    /// bytes can influence, and it costs a few HMAC invocations.
+    static func deriveKey(_ password: String, salt: Data) throws -> SymmetricKey {
+        HKDF<SHA256>.deriveKey(
+            inputKeyMaterial: try masterKey(for: password), salt: salt,
+            info: Data("wos2.aes-256-gcm".utf8), outputByteCount: 32)
+    }
+
+    /// The PBKDF2-stretched master key for a password, derived at most once per process
+    /// and cached. The PBKDF2 salt is a fixed domain-separation constant rather than a
+    /// per-cookie value, so the cost can never be triggered by request data: the input is a
+    /// random, high-entropy password, and per-seal key separation comes from HKDF instead.
+    static func masterKey(for password: String) throws -> SymmetricKey {
+        try masterKeys.key(for: password)
+    }
+
+    private static let masterKeys = MasterKeyCache()
+
+    /// PBKDF2-HMAC-SHA256 with 600,000 iterations over the password and the fixed
+    /// `wos2` domain salt.
+    fileprivate static func stretch(_ password: String) throws -> SymmetricKey {
         let passwordBytes = Array(password.utf8)
+        let salt = Data("workos-ios/session-seal/wos2".utf8)
         var key = [UInt8](repeating: 0, count: 32)
         let status = passwordBytes.withUnsafeBytes { passwordBuffer in
             salt.withUnsafeBytes { saltBuffer in
@@ -120,5 +145,45 @@ public enum SessionSealing {
             index = next
         }
         return data
+    }
+}
+
+/// Bounded cache of PBKDF2 master keys keyed by SHA-256 of the password, so the raw password
+/// is not retained. Only server-configured passwords ever reach the cache; cookie contents
+/// cannot add or evict entries. Concurrent first-use callers for one password share a single
+/// stretch, and lookups for already-cached passwords never wait behind a stretch in progress.
+private final class MasterKeyCache: @unchecked Sendable {
+    private static let capacity = 16
+    private let lock = NSLock()
+    private var keys: [Data: SymmetricKey] = [:]
+    private var insertionOrder: [Data] = []
+    private var pendingStretches: [Data: NSLock] = [:]
+
+    func key(for password: String) throws -> SymmetricKey {
+        let id = Data(SHA256.hash(data: Data(password.utf8)))
+        if let cached = lock.withLock({ keys[id] }) { return cached }
+
+        // Serialize first-use callers per password so exactly one of them stretches
+        // while the others wait for its result, without holding the cache lock.
+        let stretchLock: NSLock = lock.withLock {
+            if let pending = pendingStretches[id] { return pending }
+            let pending = NSLock()
+            pendingStretches[id] = pending
+            return pending
+        }
+        stretchLock.lock()
+        defer { stretchLock.unlock() }
+        if let cached = lock.withLock({ keys[id] }) { return cached }
+
+        let key = try SessionSealing.stretch(password)
+        lock.withLock {
+            if insertionOrder.count >= Self.capacity {
+                keys.removeValue(forKey: insertionOrder.removeFirst())
+            }
+            keys[id] = key
+            insertionOrder.append(id)
+            pendingStretches.removeValue(forKey: id)
+        }
+        return key
     }
 }

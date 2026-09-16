@@ -238,20 +238,56 @@ import Testing
     }
 
     @Test func opensIndependentPBKDF2Fixture() throws {
-        // Produced with Node crypto.pbkdf2Sync(..., 600000, 32, "sha256") and
-        // createCipheriv("aes-256-gcm"), with salt 00...0f and nonce 00...0b.
+        // Produced with Node crypto: pbkdf2Sync(password, "workos-ios/session-seal/wos2",
+        // 600000, 32, "sha256"), then hkdfSync("sha256", master, salt, "wos2.aes-256-gcm", 32),
+        // then createCipheriv("aes-256-gcm") with salt 00...0f and nonce 00...0b.
         let fixture =
-            "wos2.AAECAwQFBgcICQoLDA0ODwABAgMEBQYHCAkKCxs633xXNNoSZr9AxAQ3mA5NkFaPlITBhb3s4h5v3hs="
+            "wos2.AAECAwQFBgcICQoLDA0ODwABAgMEBQYHCAkKC+nrisKXjjw5VLgumoF9Fy734DdG+eKrPQ3J6HmlwPc="
         let decoded: [String: String] = try SessionSealing.unseal(fixture, password: Self.password)
         #expect(decoded == ["key": "value"])
 
         // Same independent fixture, but encrypted without the version as AAD.
         let withoutAAD =
-            "wos2.AAECAwQFBgcICQoLDA0ODwABAgMEBQYHCAkKCxs633xXNNoSZr9AxAQ3mLMvh3EFuu4CXJu/elSmrHA="
+            "wos2.AAECAwQFBgcICQoLDA0ODwABAgMEBQYHCAkKC+nrisKXjjw5VLgumoF9F70Ptg2kEo7RuSo3q7FPw+s="
         #expect(throws: SessionSealingError.self) {
             let _: [String: String] = try SessionSealing.unseal(
                 withoutAAD, password: Self.password)
         }
+    }
+
+    @Test func forgedSealsDoNotTriggerPasswordStretching() throws {
+        // Warm the cached master key, then reject forged cookies carrying attacker-chosen
+        // salts. Each rejection costs an HKDF expansion and a failed AES-GCM open, never a
+        // 600,000-iteration PBKDF2, so 64 of them finish in a fraction of one PBKDF2.
+        _ = try SessionSealing.seal(["key": "value"], password: Self.password)
+        let forged = (0..<64).map { _ in
+            "wos2."
+                + SymmetricKey(size: .bits256).withUnsafeBytes { Data($0) + Data($0) }
+                .base64EncodedString()
+        }
+        let elapsed = ContinuousClock().measure {
+            for cookie in forged {
+                #expect(throws: SessionSealingError.self) {
+                    let _: [String: String] = try SessionSealing.unseal(
+                        cookie, password: Self.password)
+                }
+            }
+        }
+        #expect(elapsed < .seconds(2))
+    }
+
+    @Test func perSealKeysDependOnSaltAndPasswordOnly() throws {
+        let other = String(repeating: "b", count: 32)
+        let zero = Data(repeating: 0, count: 16)
+        let one = Data(repeating: 1, count: 16)
+        let master = try SessionSealing.masterKey(for: Self.password)
+        #expect(try SessionSealing.masterKey(for: Self.password) == master)
+        #expect(try SessionSealing.masterKey(for: other) != master)
+        let key = try SessionSealing.deriveKey(Self.password, salt: zero)
+        #expect(try SessionSealing.deriveKey(Self.password, salt: zero) == key)
+        #expect(try SessionSealing.deriveKey(Self.password, salt: one) != key)
+        #expect(try SessionSealing.deriveKey(other, salt: zero) != key)
+        #expect(key != master)
     }
 
     @Test func verifiedLogoutRejectsForgedToken() async throws {
