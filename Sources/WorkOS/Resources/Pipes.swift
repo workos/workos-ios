@@ -482,6 +482,201 @@ public struct Pipes: Sendable {
         )
     }
 
+    /// Get an organization connected account
+    ///
+    /// Retrieves an organization's [connected account](https://workos.com/docs/reference/pipes/connected-account) for a specific provider.
+    ///
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier.
+    /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+    /// - Parameter supportsMultipleConnections: Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
+    /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the organization has several for this provider.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func getOrganizationConnectedAccount(
+        organizationId: String,
+        slug: String,
+        supportsMultipleConnections: Bool? = nil,
+        connectedAccountId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> ConnectedAccount {
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/connected_accounts/\(PathEncoding.segment(slug))"
+        var query: [URLQueryItem] = []
+        if let supportsMultipleConnections {
+            query.append(
+                URLQueryItem(
+                    name: "supports_multiple_connections", value: "\(supportsMultipleConnections)"))
+        }
+        if let connectedAccountId {
+            query.append(URLQueryItem(name: "connected_account_id", value: connectedAccountId))
+        }
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: query,
+            body: nil,
+            options: requestOptions,
+            as: ConnectedAccount.self
+        )
+    }
+
+    /// Import an organization connected account
+    ///
+    /// Imports an organization-owned [connected account](https://workos.com/docs/reference/pipes/connected-account) by providing OAuth tokens directly. Use this to migrate existing connections or set up connections without going through the OAuth flow.
+    ///
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier.
+    /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+    /// - Parameter accessToken: The OAuth access token for the connected account.
+    /// - Parameter refreshToken: The OAuth refresh token for the connected account.
+    /// - Parameter expiresAt: The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
+    /// - Parameter scopes: The OAuth scopes granted for this connection.
+    /// - Parameter state: Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createOrganizationConnectedAccount(
+        organizationId: String,
+        slug: String,
+        accessToken: String? = nil,
+        refreshToken: String? = nil,
+        expiresAt: Date? = nil,
+        scopes: [String]? = nil,
+        state: ConnectedAccountInputState? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> ConnectedAccount {
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/connected_accounts/\(PathEncoding.segment(slug))"
+        var body = EncodableBody()
+        body.set("access_token", accessToken)
+        body.set("refresh_token", refreshToken)
+        body.set("expires_at", expiresAt)
+        body.set("scopes", scopes)
+        body.set("state", state)
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: ConnectedAccount.self
+        )
+    }
+
+    /// Update an organization connected account
+    ///
+    /// Updates an organization's [connected account](https://workos.com/docs/reference/pipes/connected-account) tokens, scopes, or state for a specific provider.
+    ///
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier.
+    /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+    /// - Parameter accessToken: The OAuth access token for the connected account.
+    /// - Parameter refreshToken: The OAuth refresh token for the connected account.
+    /// - Parameter expiresAt: The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
+    /// - Parameter scopes: The OAuth scopes granted for this connection.
+    /// - Parameter state: Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+    /// - Parameter supportsMultipleConnections: Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
+    /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to update.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func updateOrganizationConnectedAccount(
+        organizationId: String,
+        slug: String,
+        accessToken: String? = nil,
+        refreshToken: String? = nil,
+        expiresAt: Date? = nil,
+        scopes: [String]? = nil,
+        state: ConnectedAccountInputState? = nil,
+        supportsMultipleConnections: Bool? = nil,
+        connectedAccountId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> ConnectedAccount {
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/connected_accounts/\(PathEncoding.segment(slug))"
+        var query: [URLQueryItem] = []
+        if let supportsMultipleConnections {
+            query.append(
+                URLQueryItem(
+                    name: "supports_multiple_connections", value: "\(supportsMultipleConnections)"))
+        }
+        if let connectedAccountId {
+            query.append(URLQueryItem(name: "connected_account_id", value: connectedAccountId))
+        }
+        var body = EncodableBody()
+        body.set("access_token", accessToken)
+        body.set("refresh_token", refreshToken)
+        body.set("expires_at", expiresAt)
+        body.set("scopes", scopes)
+        body.set("state", state)
+        return try await transport.request(
+            method: "PUT",
+            path: path,
+            query: query,
+            body: body,
+            options: requestOptions,
+            as: ConnectedAccount.self
+        )
+    }
+
+    /// Delete an organization connected account
+    ///
+    /// Disconnects the organization's account for the provider, including removing any stored access and refresh tokens. A member will need to reauthorize if the organization wants to reconnect. This does not revoke access on the provider side.
+    ///
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier.
+    /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+    /// - Parameter supportsMultipleConnections: Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
+    /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to delete.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func deleteOrganizationConnectedAccount(
+        organizationId: String,
+        slug: String,
+        supportsMultipleConnections: Bool? = nil,
+        connectedAccountId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/connected_accounts/\(PathEncoding.segment(slug))"
+        var query: [URLQueryItem] = []
+        if let supportsMultipleConnections {
+            query.append(
+                URLQueryItem(
+                    name: "supports_multiple_connections", value: "\(supportsMultipleConnections)"))
+        }
+        if let connectedAccountId {
+            query.append(URLQueryItem(name: "connected_account_id", value: connectedAccountId))
+        }
+        try await transport.requestVoid(
+            method: "DELETE",
+            path: path,
+            query: query,
+            body: nil,
+            options: requestOptions
+        )
+    }
+
+    /// List providers for an organization
+    ///
+    /// Retrieves the organization-owned providers configured for your environment and the organization's [connected account](https://workos.com/docs/reference/pipes/connected-account) information for each. Providers owned by individual users are not included.
+    ///
+    /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier to list providers and connected accounts for.
+    /// - Parameter supportsMultipleConnections: Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func listOrganizationDataProviders(
+        organizationId: String,
+        supportsMultipleConnections: Bool? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> DataIntegrationsListResponse {
+        let path = "organizations/\(PathEncoding.segment(organizationId))/data_providers"
+        var query: [URLQueryItem] = []
+        if let supportsMultipleConnections {
+            query.append(
+                URLQueryItem(
+                    name: "supports_multiple_connections", value: "\(supportsMultipleConnections)"))
+        }
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: query,
+            body: nil,
+            options: requestOptions,
+            as: DataIntegrationsListResponse.self
+        )
+    }
+
     /// Get a connected account
     ///
     /// Retrieves a user's [connected account](https://workos.com/docs/reference/pipes/connected-account) for a specific provider.

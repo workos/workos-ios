@@ -201,6 +201,80 @@ import Testing
         #expect(request.url?.path == "/data-integrations/sample-slug/organization")
     }
 
+    @Test func getOrganizationConnectedAccountSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+        )
+        let result = try await client.pipes.getOrganizationConnectedAccount(
+            organizationId: "sample-organization-id", slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(
+            request.url?.path
+                == "/organizations/sample-organization-id/connected_accounts/sample-slug")
+        #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func createOrganizationConnectedAccountSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+        )
+        let result = try await client.pipes.createOrganizationConnectedAccount(
+            organizationId: "sample-organization-id", slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(
+            request.url?.path
+                == "/organizations/sample-organization-id/connected_accounts/sample-slug")
+        #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func updateOrganizationConnectedAccountSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+        )
+        let result = try await client.pipes.updateOrganizationConnectedAccount(
+            organizationId: "sample-organization-id", slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PUT")
+        #expect(
+            request.url?.path
+                == "/organizations/sample-organization-id/connected_accounts/sample-slug")
+        #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
+    }
+
+    @Test func deleteOrganizationConnectedAccountSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.pipes.deleteOrganizationConnectedAccount(
+            organizationId: "sample-organization-id", slug: "sample-slug")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(
+            request.url?.path
+                == "/organizations/sample-organization-id/connected_accounts/sample-slug")
+    }
+
+    @Test func listOrganizationDataProvidersSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"list","data":[{"object":"data_provider","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","name":"GitHub","description":"Connect your GitHub account to access repositories.","slug":"github","integration_type":"github","credentials_type":"oauth2","scopes":["repo","user:email"],"auth_methods":["oauth"],"connection_owner":"user","ownership":"userland_user","created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","connected_account":{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"},"connected_accounts":[{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"}]}]}"#
+        )
+        let result = try await client.pipes.listOrganizationDataProviders(
+            organizationId: "sample-organization-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/organizations/sample-organization-id/data_providers")
+        _ = result
+    }
+
     @Test func getUserConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
