@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.7.0](https://github.com/workos/workos-ios/compare/v0.6.0...v0.7.0) (2026-09-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **sso:** Change SSO API surface ([#32](https://github.com/workos/workos-ios/issues/32))
+
+### Features
+
+* **admin_portal:** Change admin portal API surface ([#30](https://github.com/workos/workos-ios/issues/30)) ([9d94129](https://github.com/workos/workos-ios/commit/9d94129b6e5c0b279283c0be882ff256df91ed80))
+* **agents:** Add parameter `AgentsSessions.list.organization_id` ([#34](https://github.com/workos/workos-ios/issues/34)) ([75cb82b](https://github.com/workos/workos-ios/commit/75cb82b321c3e24ad425c06bc3227655ed10f073))
+* **audit_logs:** Change audit log API surface ([#30](https://github.com/workos/workos-ios/issues/30)) ([9d94129](https://github.com/workos/workos-ios/commit/9d94129b6e5c0b279283c0be882ff256df91ed80))
+* **authorization:** Change authorization API surface ([#30](https://github.com/workos/workos-ios/issues/30)) ([9d94129](https://github.com/workos/workos-ios/commit/9d94129b6e5c0b279283c0be882ff256df91ed80))
+* **events:** Change events API surface ([#30](https://github.com/workos/workos-ios/issues/30)) ([9d94129](https://github.com/workos/workos-ios/commit/9d94129b6e5c0b279283c0be882ff256df91ed80))
+* **pipes:** SDK surface change: Parameter "requestOptions" moved from position 3 to 4 on "Pipes.createDataIntegrationCredential" ([#28](https://github.com/workos/workos-ios/issues/28)) ([164233e](https://github.com/workos/workos-ios/commit/164233edac998b8f7d9631af043f69a4b02db4c7))
+* **pipes:** Update Pipes API surface ([#34](https://github.com/workos/workos-ios/issues/34)) ([75cb82b](https://github.com/workos/workos-ios/commit/75cb82b321c3e24ad425c06bc3227655ed10f073))
+* **sso:** Change SSO API surface ([#30](https://github.com/workos/workos-ios/issues/30)) ([9d94129](https://github.com/workos/workos-ios/commit/9d94129b6e5c0b279283c0be882ff256df91ed80))
+* **sso:** Change SSO API surface ([#32](https://github.com/workos/workos-ios/issues/32)) ([1403b3a](https://github.com/workos/workos-ios/commit/1403b3affc84bd2ba2aeecca34e79d77ebd30629))
+* **user_management:** Add user management API surface ([#34](https://github.com/workos/workos-ios/issues/34)) ([75cb82b](https://github.com/workos/workos-ios/commit/75cb82b321c3e24ad425c06bc3227655ed10f073))
+* **user_management:** Change user management API surface ([#30](https://github.com/workos/workos-ios/issues/30)) ([9d94129](https://github.com/workos/workos-ios/commit/9d94129b6e5c0b279283c0be882ff256df91ed80))
+
+
+### Bug Fixes
+
+* **auth:** verify sealed-session access tokens ([#33](https://github.com/workos/workos-ios/issues/33)) ([2b1da37](https://github.com/workos/workos-ios/commit/2b1da37c3ae4108e5658fd114e43caaf6c33f036))
+* **multi_factor_auth:** Change errors for endpoint `POST /auth/factors/{id}/challenge` ([#36](https://github.com/workos/workos-ios/issues/36)) ([f332606](https://github.com/workos/workos-ios/commit/f33260622ecb299458e074d9eb29847f0ddfdab8))
+* **multi_factor_auth:** Change errors for endpoint `POST /auth/factors/{id}/challenge` ([#37](https://github.com/workos/workos-ios/issues/37)) ([9da3c08](https://github.com/workos/workos-ios/commit/9da3c08901da1c311de2911648953829af100328))
+* **pipes:** Move organization connected-account operations onto Pipes ([#37](https://github.com/workos/workos-ios/issues/37)) ([9da3c08](https://github.com/workos/workos-ios/commit/9da3c08901da1c311de2911648953829af100328))
+* **pipes:** Update Pipes API surface ([#34](https://github.com/workos/workos-ios/issues/34)) ([75cb82b](https://github.com/workos/workos-ios/commit/75cb82b321c3e24ad425c06bc3227655ed10f073))
+
 ## [0.6.0](https://github.com/workos/workos-ios/compare/v0.5.0...v0.6.0) (2026-09-01)
 
 
