@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/workos/workos-ios/compare/v0.7.0...v0.8.0) (2026-09-24)
+
+
+### Features
+
+* **generated:** Authorization (batch c64ce1e7) ([#38](https://github.com/workos/workos-ios/issues/38)) ([fd9162a](https://github.com/workos/workos-ios/commit/fd9162ae193c8a87bad495f1496535dcfb8f93e3))
+
 ## [0.7.0](https://github.com/workos/workos-ios/compare/v0.6.0...v0.7.0) (2026-09-18)
 
 
