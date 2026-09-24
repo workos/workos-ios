@@ -796,6 +796,7 @@
     "Sources/WorkOS/Models/UserRoleAssignmentListListMetadata.swift",
     "Sources/WorkOS/Models/UserRoleAssignmentResource.swift",
     "Sources/WorkOS/Models/UserRoleAssignmentSource.swift",
+    "Sources/WorkOS/Models/UserRoleAssignmentSourceGroup.swift",
     "Sources/WorkOS/Models/UserSessionsImpersonator.swift",
     "Sources/WorkOS/Models/UserSessionsListItem.swift",
     "Sources/WorkOS/Models/UserUpdated.swift",
