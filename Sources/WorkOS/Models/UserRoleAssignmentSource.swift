@@ -8,17 +8,22 @@ public struct UserRoleAssignmentSource: Codable, Sendable, Equatable {
     public let type: UserRoleAssignmentSourceType
     /// The ID of the group role assignment the role was derived from, or null if direct.
     public let groupRoleAssignmentId: String?
+    /// The group the role was derived from, or null if direct.
+    public let group: UserRoleAssignmentSourceGroup?
 
     public init(
         type: UserRoleAssignmentSourceType,
-        groupRoleAssignmentId: String? = nil
+        groupRoleAssignmentId: String? = nil,
+        group: UserRoleAssignmentSourceGroup? = nil
     ) {
         self.type = type
         self.groupRoleAssignmentId = groupRoleAssignmentId
+        self.group = group
     }
 
     private enum CodingKeys: String, CodingKey {
         case type
         case groupRoleAssignmentId = "group_role_assignment_id"
+        case group
     }
 }

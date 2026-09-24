@@ -191,7 +191,7 @@ import Testing
     @Test func listRoleAssignmentsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"data":[{"object":"role_assignment","id":"role_assignment_01HXYZ123456789ABCDEFGH","organization_membership_id":"om_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"source":{"type":"direct","group_role_assignment_id":null},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                #"{"data":[{"object":"role_assignment","id":"role_assignment_01HXYZ123456789ABCDEFGH","organization_membership_id":"om_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"source":{"type":"direct","group_role_assignment_id":null,"group":null},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
         let result = try await client.authorization.listRoleAssignments(
             organizationMembershipId: "sample-organization-membership-id")
@@ -209,7 +209,7 @@ import Testing
     @Test func assignRoleSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"role_assignment","id":"role_assignment_01HXYZ123456789ABCDEFGH","organization_membership_id":"om_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"source":{"type":"direct","group_role_assignment_id":null},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"role_assignment","id":"role_assignment_01HXYZ123456789ABCDEFGH","organization_membership_id":"om_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"source":{"type":"direct","group_role_assignment_id":null,"group":null},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.authorization.assignRole(
             organizationMembershipId: "sample-organization-membership-id",
@@ -335,7 +335,7 @@ import Testing
     @Test func listRoleAssignmentsForResourceByExternalIdSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"data":[{"object":"role_assignment","id":"role_assignment_01HXYZ123456789ABCDEFGH","organization_membership_id":"om_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"source":{"type":"direct","group_role_assignment_id":null},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                #"{"data":[{"object":"role_assignment","id":"role_assignment_01HXYZ123456789ABCDEFGH","organization_membership_id":"om_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"source":{"type":"direct","group_role_assignment_id":null,"group":null},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
         let result = try await client.authorization.listRoleAssignmentsForResourceByExternalId(
             organizationId: "sample-organization-id", resourceTypeSlug: "sample-resource-type-slug",
@@ -495,6 +495,31 @@ import Testing
         #expect(result.data.first?.id == "perm_01HXYZ123456789ABCDEFGHIJ")
     }
 
+    @Test func listPermissionsAutoPagingFetchesAllPages() async throws {
+        let (client, recorder) = makeTestClient(stubs: [
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"permission","id":"perm_01HXYZ123456789ABCDEFGHIJ","slug":"documents:read","name":"View Documents","description":"Allows viewing document contents","system":false,"resource_type_slug":"workspace","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":"cursor_2"}}"#
+                        .utf8), headers: [:]),
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"permission","id":"perm_01HXYZ123456789ABCDEFGHIJ","slug":"documents:read","name":"View Documents","description":"Allows viewing document contents","system":false,"resource_type_slug":"workspace","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                        .utf8), headers: [:]),
+        ])
+        var items: [AuthorizationPermission] = []
+        for try await item in client.authorization.listPermissionsAutoPaging() {
+            items.append(item)
+        }
+
+        #expect(items.count == 2)
+        #expect(recorder.allRequests.count == 2)
+        let second = try #require(recorder.allRequests.last?.url)
+        let query = URLComponents(url: second, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        #expect(query.contains(URLQueryItem(name: "after", value: "cursor_2")))
+    }
+
     @Test func createPermissionSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
@@ -639,7 +664,7 @@ import Testing
     @Test func listRoleAssignmentsForResourceSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"data":[{"object":"role_assignment","id":"role_assignment_01HXYZ123456789ABCDEFGH","organization_membership_id":"om_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"source":{"type":"direct","group_role_assignment_id":null},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                #"{"data":[{"object":"role_assignment","id":"role_assignment_01HXYZ123456789ABCDEFGH","organization_membership_id":"om_01HXYZ123456789ABCDEFGHIJ","role":{"slug":"admin"},"resource":{"id":"authz_resource_01HXYZ123456789ABCDEFGH","external_id":"proj-456","resource_type_slug":"project"},"source":{"type":"direct","group_role_assignment_id":null,"group":null},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
         let result = try await client.authorization.listRoleAssignmentsForResource(
             resourceId: "sample-resource-id")
