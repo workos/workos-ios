@@ -209,33 +209,56 @@ public struct Pipes: Sendable {
         )
     }
 
-    /// Upsert an API key for a connected account
+    /// Create another API key connected account
     ///
-    /// Creates or updates an API-key-based installation for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. If an installation already exists, the stored API key is rotated to the new value.
+    /// Creates another API key-based connected account for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. Requires `connection_intent: add` and does not accept `connected_account_id`; use PUT to create or rotate the compatibility connection or to update an exact connection. Creating an additional connection is not yet available: until it is, this endpoint succeeds only when the owner has no connection for this integration, which creates the compatibility connection, and otherwise returns 404 `multiple_connections_unavailable`.
     ///
     /// - Parameter slug: The identifier of the integration.
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
-    /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to rotate a specific existing connection.
     /// - Parameter connectionOwner: Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization.
     /// - Parameter secret: The API key secret to store for this integration.
+    /// - Parameter connectionIntent: Must be `add`: this endpoint only creates another connection. The first connection for an owner shape fills the compatibility slot; later connections are standard. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration and otherwise returns 404 `multiple_connections_unavailable`.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
-    public func updateDataIntegrationApiKey(
+    public func createDataIntegrationApiKey(
         slug: String,
         userId: String,
         organizationId: String? = nil,
-        connectedAccountId: String? = nil,
-        connectionOwner: DataIntegrationsUpsertApiKeyRequestConnectionOwner? = nil,
+        connectionOwner: DataIntegrationsCreateApiKeyConnectionRequestConnectionOwner? = nil,
         secret: String,
+        connectionIntent: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
         let path = "data-integrations/\(PathEncoding.segment(slug))/api-key"
         var body = EncodableBody()
         body.set("user_id", userId)
         body.set("organization_id", organizationId)
-        body.set("connected_account_id", connectedAccountId)
         body.set("connection_owner", connectionOwner)
         body.set("secret", secret)
+        body.set("connection_intent", connectionIntent)
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: ConnectedAccount.self
+        )
+    }
+
+    /// Upsert an API key for a connected account
+    ///
+    /// Creates or updates an API-key-based installation for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. If an installation already exists, the stored API key is rotated to the new value. To create another connection, use POST.
+    ///
+    /// - Parameter slug: The identifier of the integration.
+    /// - Parameter body: The body value.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func updateDataIntegrationApiKey(
+        slug: String,
+        body: AnyCodable,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> ConnectedAccount {
+        let path = "data-integrations/\(PathEncoding.segment(slug))/api-key"
         return try await transport.request(
             method: "PUT",
             path: path,
@@ -284,39 +307,63 @@ public struct Pipes: Sendable {
         )
     }
 
-    /// Upsert client credentials for a connected account
+    /// Create another client credentials connected account
     ///
-    /// Creates or updates a client-credentials-based installation for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. If an installation already exists, the stored client credentials are rotated to the new values.
+    /// Creates another client credentials-based connected account for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. Requires `connection_intent: add` and does not accept `connected_account_id`; use PUT to create or rotate the compatibility connection or to update an exact connection. Creating an additional connection is not yet available: until it is, this endpoint succeeds only when the owner has no connection for this integration, which creates the compatibility connection, and otherwise returns 404 `multiple_connections_unavailable`.
     ///
     /// - Parameter slug: The identifier of the integration.
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier.
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
-    /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to rotate a specific existing connection.
     /// - Parameter connectionOwner: Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization.
     /// - Parameter clientId: The OAuth client ID to store for this integration.
     /// - Parameter clientSecret: The OAuth client secret to store for this integration.
     /// - Parameter config: Provider-specific configuration values collected for this installation, keyed by the provider's config field descriptors.
+    /// - Parameter connectionIntent: Must be `add`: this endpoint only creates another connection. The first connection for an owner shape fills the compatibility slot; later connections are standard. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration and otherwise returns 404 `multiple_connections_unavailable`.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
-    public func updateDataIntegrationClientCredentials(
+    public func createDataIntegrationClientCredential(
         slug: String,
         userId: String,
         organizationId: String? = nil,
-        connectedAccountId: String? = nil,
-        connectionOwner: DataIntegrationsUpsertClientCredentialsRequestConnectionOwner? = nil,
+        connectionOwner: DataIntegrationsCreateClientCredentialsConnectionRequestConnectionOwner? =
+            nil,
         clientId: String,
         clientSecret: String,
         config: [String: String]? = nil,
+        connectionIntent: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
         let path = "data-integrations/\(PathEncoding.segment(slug))/client-credentials"
         var body = EncodableBody()
         body.set("user_id", userId)
         body.set("organization_id", organizationId)
-        body.set("connected_account_id", connectedAccountId)
         body.set("connection_owner", connectionOwner)
         body.set("client_id", clientId)
         body.set("client_secret", clientSecret)
         body.set("config", config)
+        body.set("connection_intent", connectionIntent)
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: ConnectedAccount.self
+        )
+    }
+
+    /// Upsert client credentials for a connected account
+    ///
+    /// Creates or updates a client-credentials-based installation for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. If an installation already exists, the stored client credentials are rotated to the new values. To create another connection, use POST.
+    ///
+    /// - Parameter slug: The identifier of the integration.
+    /// - Parameter body: The body value.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func updateDataIntegrationClientCredentials(
+        slug: String,
+        body: AnyCodable,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> ConnectedAccount {
+        let path = "data-integrations/\(PathEncoding.segment(slug))/client-credentials"
         return try await transport.request(
             method: "PUT",
             path: path,
@@ -329,7 +376,7 @@ public struct Pipes: Sendable {
 
     /// Vend credentials for a connected account
     ///
-    /// Returns credentials for a user's connected account. Branches on the installation's `auth_method`: OAuth installations return an access token (refreshed if needed); API-key installations return the stored secret.
+    /// Returns credentials for a user's connected account. Branches on the installation's `auth_method`: OAuth installations return an access token (refreshed if needed); API-key installations return the stored secret. Every active credential includes `config`: provider-declared, non-secret values from the installation snapshot, with current provider defaults for unset fields. Editing integration or organization configuration does not change the snapshot; reconnect or explicitly rebind the connection to adopt those edits. Defaults remain live, so a changed default can appear in `config` before a cached token is refreshed or re-minted. Credentials that never refresh require a reconnect or rebind when a default changes their routing.
     ///
     /// - Parameter slug: The identifier of the integration.
     /// - Parameter userId: A [User](https://workos.com/docs/reference/authkit/user) identifier. When `connection_owner` is `organization`, this is the user the credentials are vended on behalf of; they must be an active member of the organization.
@@ -521,7 +568,7 @@ public struct Pipes: Sendable {
 
     /// Import an organization connected account
     ///
-    /// Imports an organization-owned [connected account](https://workos.com/docs/reference/pipes/connected-account) by providing OAuth tokens directly. Use this to migrate existing connections or set up connections without going through the OAuth flow.
+    /// Imports an organization-owned [connected account](https://workos.com/docs/reference/pipes/connected-account) by providing OAuth tokens directly. Omit `connection_intent` to create only the compatibility connection, or set it to `add` to explicitly create another connection. This creation-only endpoint does not accept `connected_account_id` or reauthorization intent.
     ///
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier.
     /// - Parameter slug: The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
@@ -530,6 +577,8 @@ public struct Pipes: Sendable {
     /// - Parameter expiresAt: The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
     /// - Parameter scopes: The OAuth scopes granted for this connection.
     /// - Parameter state: Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+    /// - Parameter userId: The [User](https://workos.com/docs/reference/authkit/user) identifier of the organization member on whose behalf the connected account is being imported or updated. The user must be an active member of the organization.
+    /// - Parameter connectionIntent: Set to `add` to create another connected account. Omit this field for permanent compatibility behavior. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration, which creates the compatibility connection, and otherwise returns 404 `multiple_connections_unavailable`.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createOrganizationConnectedAccount(
         organizationId: String,
@@ -538,7 +587,9 @@ public struct Pipes: Sendable {
         refreshToken: String? = nil,
         expiresAt: Date? = nil,
         scopes: [String]? = nil,
-        state: ConnectedAccountInputState? = nil,
+        state: CreateOrganizationConnectedAccountState? = nil,
+        userId: String,
+        connectionIntent: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
         let path =
@@ -549,6 +600,8 @@ public struct Pipes: Sendable {
         body.set("expires_at", expiresAt)
         body.set("scopes", scopes)
         body.set("state", state)
+        body.set("user_id", userId)
+        body.set("connection_intent", connectionIntent)
         return try await transport.request(
             method: "POST",
             path: path,
@@ -570,8 +623,10 @@ public struct Pipes: Sendable {
     /// - Parameter expiresAt: The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
     /// - Parameter scopes: The OAuth scopes granted for this connection.
     /// - Parameter state: Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
-    /// - Parameter supportsMultipleConnections: Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
+    /// - Parameter userId: The [User](https://workos.com/docs/reference/authkit/user) identifier of the organization member on whose behalf the connected account is being imported or updated. The user must be an active member of the organization.
+    /// - Parameter supportsMultipleConnections: Accepted for compatibility; does not change update targeting. Omit intent and selector to update the compatibility connection, or supply `connected_account_id` to update an exact connection.
     /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to update.
+    /// - Parameter connectionIntent: Set to `reauthorize` with `connected_account_id` to update one exact connection. The intent may be omitted when supplying an ID. Omit both for permanent compatibility behavior.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateOrganizationConnectedAccount(
         organizationId: String,
@@ -580,9 +635,11 @@ public struct Pipes: Sendable {
         refreshToken: String? = nil,
         expiresAt: Date? = nil,
         scopes: [String]? = nil,
-        state: ConnectedAccountInputState? = nil,
+        state: OrganizationConnectedAccountState? = nil,
+        userId: String,
         supportsMultipleConnections: Bool? = nil,
         connectedAccountId: String? = nil,
+        connectionIntent: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
         let path =
@@ -596,12 +653,16 @@ public struct Pipes: Sendable {
         if let connectedAccountId {
             query.append(URLQueryItem(name: "connected_account_id", value: connectedAccountId))
         }
+        if let connectionIntent {
+            query.append(URLQueryItem(name: "connection_intent", value: connectionIntent))
+        }
         var body = EncodableBody()
         body.set("access_token", accessToken)
         body.set("refresh_token", refreshToken)
         body.set("expires_at", expiresAt)
         body.set("scopes", scopes)
         body.set("state", state)
+        body.set("user_id", userId)
         return try await transport.request(
             method: "PUT",
             path: path,
@@ -730,6 +791,7 @@ public struct Pipes: Sendable {
     /// - Parameter expiresAt: The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
     /// - Parameter scopes: The OAuth scopes granted for this connection.
     /// - Parameter state: Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+    /// - Parameter connectionIntent: Set to `add` to create another connected account. Omit this field for permanent compatibility behavior. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration, which creates the compatibility connection, and otherwise returns 404 `multiple_connections_unavailable`.
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createUserConnectedAccount(
@@ -739,7 +801,8 @@ public struct Pipes: Sendable {
         refreshToken: String? = nil,
         expiresAt: Date? = nil,
         scopes: [String]? = nil,
-        state: ConnectedAccountInputState? = nil,
+        state: CreateConnectedAccountState? = nil,
+        connectionIntent: String? = nil,
         organizationId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
@@ -755,6 +818,7 @@ public struct Pipes: Sendable {
         body.set("expires_at", expiresAt)
         body.set("scopes", scopes)
         body.set("state", state)
+        body.set("connection_intent", connectionIntent)
         return try await transport.request(
             method: "POST",
             path: path,
@@ -777,8 +841,9 @@ public struct Pipes: Sendable {
     /// - Parameter scopes: The OAuth scopes granted for this connection.
     /// - Parameter state: Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
-    /// - Parameter supportsMultipleConnections: Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
+    /// - Parameter supportsMultipleConnections: Accepted for compatibility; does not change update targeting. Omit intent and selector to update the compatibility connection, or supply `connected_account_id` to update an exact connection.
     /// - Parameter connectedAccountId: A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to update.
+    /// - Parameter connectionIntent: Set to `reauthorize` with `connected_account_id` to update one exact connection. The intent may be omitted when supplying an ID. Omit both for permanent compatibility behavior.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateUserConnectedAccount(
         userId: String,
@@ -791,6 +856,7 @@ public struct Pipes: Sendable {
         organizationId: String? = nil,
         supportsMultipleConnections: Bool? = nil,
         connectedAccountId: String? = nil,
+        connectionIntent: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectedAccount {
         let path =
@@ -806,6 +872,9 @@ public struct Pipes: Sendable {
         }
         if let connectedAccountId {
             query.append(URLQueryItem(name: "connected_account_id", value: connectedAccountId))
+        }
+        if let connectionIntent {
+            query.append(URLQueryItem(name: "connection_intent", value: connectionIntent))
         }
         var body = EncodableBody()
         body.set("access_token", accessToken)

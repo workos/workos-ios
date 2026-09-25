@@ -29,6 +29,31 @@ import Testing
         #expect(result.data.first?.id == "data_integration_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
+    @Test func listDataIntegrationsAutoPagingFetchesAllPages() async throws {
+        let (client, recorder) = makeTestClient(stubs: [
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","ownership":"user","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":"cursor_2"}}"#
+                        .utf8), headers: [:]),
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"data_integration","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","slug":"github","integration_type":"github","ownership":"user","description":"Production GitHub app","enabled":true,"state":"valid","scopes":["repo","read:org"],"redirect_uri":"https://api.workos.com/data-integrations/github/dik_01EHZNVPK3SFK441A1RGBFSHRT/callback","auth_methods":["oauth"],"credentials":{"type":"custom","client_id":"Iv1.abc123","redacted_client_secret":"6789"},"installation":null,"config":{"account":"myorg-myaccount"},"custom_provider":{"name":"My OAuth App","authorization_url":"https://provider.example.com/oauth/authorize","token_url":"https://provider.example.com/oauth/token","refresh_token_url":"https://provider.example.com/oauth/token","pkce_enabled":true,"request_scope_separator":" ","scopes_required":false,"client_secret_required":true,"additional_authorization_parameters":{"prompt":"consent"},"token_body_content_type":"application/x-www-form-urlencoded","authenticate_via":"request_body"},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                        .utf8), headers: [:]),
+        ])
+        var items: [DataIntegration] = []
+        for try await item in client.pipes.listDataIntegrationsAutoPaging() {
+            items.append(item)
+        }
+
+        #expect(items.count == 2)
+        #expect(recorder.allRequests.count == 2)
+        let second = try #require(recorder.allRequests.last?.url)
+        let query = URLComponents(url: second, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        #expect(query.contains(URLQueryItem(name: "after", value: "cursor_2")))
+    }
+
     @Test func createDataIntegrationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
@@ -97,16 +122,17 @@ import Testing
         #expect(request.url?.path == "/data-integrations/sample-slug")
     }
 
-    @Test func updateDataIntegrationApiKeySendsExpectedRequest() async throws {
+    @Test func createDataIntegrationApiKeySendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
-        let result = try await client.pipes.updateDataIntegrationApiKey(
-            slug: "sample-slug", userId: "test_user_id", secret: "test_secret")
+        let result = try await client.pipes.createDataIntegrationApiKey(
+            slug: "sample-slug", userId: "test_user_id", secret: "test_secret",
+            connectionIntent: "add")
 
         let request = try #require(recorder.lastRequest)
-        #expect(request.httpMethod == "PUT")
+        #expect(request.httpMethod == "POST")
         #expect(request.url?.path == "/data-integrations/sample-slug/api-key")
         let body = try #require(recorder.lastBody)
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
@@ -131,17 +157,17 @@ import Testing
         _ = result
     }
 
-    @Test func updateDataIntegrationClientCredentialsSendsExpectedRequest() async throws {
+    @Test func createDataIntegrationClientCredentialSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
                 #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
-        let result = try await client.pipes.updateDataIntegrationClientCredentials(
+        let result = try await client.pipes.createDataIntegrationClientCredential(
             slug: "sample-slug", userId: "test_user_id", clientId: "test_client_id",
-            clientSecret: "test_client_secret")
+            clientSecret: "test_client_secret", connectionIntent: "add")
 
         let request = try #require(recorder.lastRequest)
-        #expect(request.httpMethod == "PUT")
+        #expect(request.httpMethod == "POST")
         #expect(request.url?.path == "/data-integrations/sample-slug/client-credentials")
         let body = try #require(recorder.lastBody)
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
@@ -152,7 +178,7 @@ import Testing
     @Test func createDataIntegrationCredentialSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"active":true,"credential":{"object":"credential","auth_method":"oauth","value":"gho_16C7e42F292c6912E7710c838347Ae178B4a","expires_at":"2025-12-31T23:59:59.000Z","scopes":["repo","user:email"],"missing_scopes":[]},"error":"not_installed"}"#
+                #"{"active":true,"credential":{"object":"credential","auth_method":"oauth","value":"gho_16C7e42F292c6912E7710c838347Ae178B4a","expires_at":"2025-12-31T23:59:59.000Z","scopes":["repo","user:email"],"missing_scopes":[],"config":{"account":"myorg-myaccount"},"metadata":{"instance_url":"https://acme.my.salesforce.com"}},"error":"not_installed"}"#
         )
         let result = try await client.pipes.createDataIntegrationCredential(
             slug: "sample-slug", userId: "test_user_id")
@@ -223,13 +249,16 @@ import Testing
                 #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.createOrganizationConnectedAccount(
-            organizationId: "sample-organization-id", slug: "sample-slug")
+            organizationId: "sample-organization-id", slug: "sample-slug", userId: "test_user_id")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "POST")
         #expect(
             request.url?.path
                 == "/organizations/sample-organization-id/connected_accounts/sample-slug")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["user_id"] != nil)
         #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
@@ -239,13 +268,16 @@ import Testing
                 #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.updateOrganizationConnectedAccount(
-            organizationId: "sample-organization-id", slug: "sample-slug")
+            organizationId: "sample-organization-id", slug: "sample-slug", userId: "test_user_id")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "PUT")
         #expect(
             request.url?.path
                 == "/organizations/sample-organization-id/connected_accounts/sample-slug")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["user_id"] != nil)
         #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
