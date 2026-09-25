@@ -2,26 +2,36 @@
 
 import Foundation
 
-public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable, Equatable {
+public struct ReauthorizeDataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable,
+    Equatable
+{
     /// A [User](https://workos.com/docs/reference/authkit/user) identifier.
     public let userId: String
     /// An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
     public let organizationId: String?
     /// Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization.
-    public let connectionOwner: DataIntegrationsUpsertClientCredentialsRequestConnectionOwner?
+    public let connectionOwner:
+        ReauthorizeDataIntegrationsUpsertClientCredentialsRequestConnectionOwner?
     /// The OAuth client ID to store for this integration.
     public let clientId: String
     /// The OAuth client secret to store for this integration.
     public let clientSecret: String
     /// Provider-specific configuration values collected for this installation, keyed by the provider's config field descriptors.
     public let config: [String: String]?
+    /// Reauthorize exactly the connection named by `connected_account_id`.
+    public let connectionIntent: String
+    /// The exact connected account to reauthorize. Required with `connection_intent: reauthorize`.
+    public let connectedAccountId: String
 
     public init(
         userId: String,
         clientId: String,
         clientSecret: String,
+        connectionIntent: String,
+        connectedAccountId: String,
         organizationId: String? = nil,
-        connectionOwner: DataIntegrationsUpsertClientCredentialsRequestConnectionOwner? = nil,
+        connectionOwner: ReauthorizeDataIntegrationsUpsertClientCredentialsRequestConnectionOwner? =
+            nil,
         config: [String: String]? = nil
     ) {
         self.userId = userId
@@ -30,6 +40,8 @@ public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable,
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.config = config
+        self.connectionIntent = connectionIntent
+        self.connectedAccountId = connectedAccountId
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -39,5 +51,7 @@ public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable,
         case clientId = "client_id"
         case clientSecret = "client_secret"
         case config
+        case connectionIntent = "connection_intent"
+        case connectedAccountId = "connected_account_id"
     }
 }

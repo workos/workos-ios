@@ -6,7 +6,7 @@ public struct DataIntegrationCredentialsResponse: Codable, Sendable, Equatable {
     /// Indicates credentials are available.
     public let active: Bool?
     /// The credential object containing the vended secret.
-    public let credential: DataIntegrationCredentialsResponseCredential?
+    public let credential: DataIntegrationVendedCredential?
     /// The reason credentials are unavailable. Additional values may be added in the future; handle unknown values gracefully.
     /// - `"not_installed"`: The user does not have the integration installed.
     /// - `"needs_reauthorization"`: The user needs to reauthorize the integration.
@@ -14,7 +14,7 @@ public struct DataIntegrationCredentialsResponse: Codable, Sendable, Equatable {
 
     public init(
         active: Bool? = nil,
-        credential: DataIntegrationCredentialsResponseCredential? = nil,
+        credential: DataIntegrationVendedCredential? = nil,
         error: DataIntegrationCredentialsResponseError? = nil
     ) {
         self.active = active
