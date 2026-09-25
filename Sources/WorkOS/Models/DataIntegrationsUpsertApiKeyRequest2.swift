@@ -2,26 +2,30 @@
 
 import Foundation
 
-public struct DataIntegrationsUpsertApiKeyRequest: Codable, Sendable, Equatable {
+public struct DataIntegrationsUpsertApiKeyRequest2: Codable, Sendable, Equatable {
     /// A [User](https://workos.com/docs/reference/authkit/user) identifier.
     public let userId: String
     /// An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
     public let organizationId: String?
     /// Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization.
-    public let connectionOwner: DataIntegrationsUpsertApiKeyRequestConnectionOwner?
+    public let connectionOwner: DataIntegrationsUpsertApiKeyRequest2ConnectionOwner?
     /// The API key secret to store for this integration.
     public let secret: String
+    /// The exact connected account to reauthorize. The reauthorize intent may be omitted for compatibility.
+    public let connectedAccountId: String
 
     public init(
         userId: String,
         secret: String,
+        connectedAccountId: String,
         organizationId: String? = nil,
-        connectionOwner: DataIntegrationsUpsertApiKeyRequestConnectionOwner? = nil
+        connectionOwner: DataIntegrationsUpsertApiKeyRequest2ConnectionOwner? = nil
     ) {
         self.userId = userId
         self.organizationId = organizationId
         self.connectionOwner = connectionOwner
         self.secret = secret
+        self.connectedAccountId = connectedAccountId
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -29,5 +33,6 @@ public struct DataIntegrationsUpsertApiKeyRequest: Codable, Sendable, Equatable 
         case organizationId = "organization_id"
         case connectionOwner = "connection_owner"
         case secret
+        case connectedAccountId = "connected_account_id"
     }
 }
