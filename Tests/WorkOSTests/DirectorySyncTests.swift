@@ -29,6 +29,31 @@ import Testing
         #expect(result.data.first?.id == "directory_01ECAZ4NV9QMV47GW873HDCX74")
     }
 
+    @Test func listAutoPagingFetchesAllPages() async throws {
+        let (client, recorder) = makeTestClient(stubs: [
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"directory","id":"directory_01ECAZ4NV9QMV47GW873HDCX74","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","external_key":"sPa12dwRQ","type":"gsuite directory","state":"linked","name":"Foo Corp","domain":"foo-corp.com","metadata":{"users":{"active":42,"inactive":3},"groups":5},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":"cursor_2"}}"#
+                        .utf8), headers: [:]),
+            .init(
+                statusCode: 200,
+                data: Data(
+                    #"{"data":[{"object":"directory","id":"directory_01ECAZ4NV9QMV47GW873HDCX74","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT","external_key":"sPa12dwRQ","type":"gsuite directory","state":"linked","name":"Foo Corp","domain":"foo-corp.com","metadata":{"users":{"active":42,"inactive":3},"groups":5},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                        .utf8), headers: [:]),
+        ])
+        var items: [Directory] = []
+        for try await item in client.directorySync.listAutoPaging() {
+            items.append(item)
+        }
+
+        #expect(items.count == 2)
+        #expect(recorder.allRequests.count == 2)
+        let second = try #require(recorder.allRequests.last?.url)
+        let query = URLComponents(url: second, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        #expect(query.contains(URLQueryItem(name: "after", value: "cursor_2")))
+    }
+
     @Test func getSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
@@ -49,6 +74,16 @@ import Testing
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "DELETE")
         #expect(request.url?.path == "/directories/sample-id")
+    }
+
+    @Test func syncSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{"status":"queued"}"#)
+        let result = try await client.directorySync.sync(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/directories/sample-id/sync")
+        _ = result
     }
 
     @Test func listGroupsSendsExpectedRequest() async throws {

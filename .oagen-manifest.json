@@ -474,6 +474,8 @@
     "Sources/WorkOS/Models/DirectoryListListMetadata.swift",
     "Sources/WorkOS/Models/DirectoryMetadata.swift",
     "Sources/WorkOS/Models/DirectoryMetadataUser.swift",
+    "Sources/WorkOS/Models/DirectorySyncRateLimitError.swift",
+    "Sources/WorkOS/Models/DirectorySyncResponse.swift",
     "Sources/WorkOS/Models/DirectoryUser.swift",
     "Sources/WorkOS/Models/DirectoryUserEmail.swift",
     "Sources/WorkOS/Models/DirectoryUserList.swift",
@@ -1962,6 +1964,10 @@
     "POST /widgets/token": {
       "sdkMethod": "createToken",
       "service": "widgets"
+    },
+    "POST /directories/{id}/sync": {
+      "sdkMethod": "sync",
+      "service": "directorySync"
     }
   }
 }
