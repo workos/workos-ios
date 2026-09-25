@@ -135,6 +135,27 @@ public struct DirectorySync: Sendable {
         )
     }
 
+    /// Sync a Directory
+    ///
+    /// Request an asynchronous sync from the directory provider. Currently supports Google Workspace directories in linked or validating state. Manual requests share a five-minute per-directory cooldown across the API, Dashboard, Admin Portal, and MCP. Acceptance means the request was queued, not that the sync has started or completed. A running sync prevents another request from being queued.
+    ///
+    /// - Parameter id: Unique identifier for the Directory.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func sync(
+        id: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> DirectorySyncResponse {
+        let path = "directories/\(PathEncoding.segment(id))/sync"
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: DirectorySyncResponse.self
+        )
+    }
+
     /// List Directory Groups
     ///
     /// Get a list of all of existing directory groups matching the criteria specified.
