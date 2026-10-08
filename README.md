@@ -67,6 +67,16 @@ let authentication = try await workos.authenticateWithCode(
 
 Store `authorization.codeVerifier` securely until the callback completes, and verify that the returned state matches `authorization.state` before exchanging the code.
 
+Refresh the session with the same public client; no API key or client secret is sent:
+
+```swift
+let refreshed = try await workos.authenticateWithRefreshToken(
+    refreshToken: storedRefreshToken
+)
+```
+
+Store the returned access token and refresh token in the Keychain, replacing the previous tokens after each successful refresh. Retry transient network, rate-limit, and server failures without clearing the session; a terminal `invalid_grant` requires signing in again.
+
 > [!IMPORTANT]
 > Never include a WorkOS API key in an iOS, macOS, watchOS, tvOS, or visionOS app. API keys must only be used in trusted server environments.
 
