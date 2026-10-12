@@ -68,6 +68,50 @@ import Testing
         #expect(response.user.email == "marcelina.davis@example.com")
     }
 
+    @Test(arguments: [nil, "org_123"] as [String?])
+    func authenticateWithRefreshTokenOmitsClientSecret(organizationId: String?) async throws {
+        let (publicClient, recorder) = Self.makePublicClient(stubs: [
+            MockURLProtocol.Stub(
+                statusCode: 200, data: Data(authenticateResponseJSON.utf8), headers: [:])
+        ])
+        let response = try await publicClient.authenticateWithRefreshToken(
+            refreshToken: "rt_123", organizationId: organizationId)
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/user_management/authenticate")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["grant_type"] as? String == "refresh_token")
+        #expect(json?["client_id"] as? String == "client_public_123")
+        #expect(json?["refresh_token"] as? String == "rt_123")
+        #expect(json?["organization_id"] as? String == organizationId)
+        #expect(json?["client_secret"] == nil)
+        #expect(response.accessToken == "eyJhb.nNzb19vaWRjX2tleV9.lc5Uk4yWVk5In0")
+        #expect(response.refreshToken == "yAjhKk123NLIjdrBdGZPf8pLIDvK")
+    }
+
+    @Test func authenticateWithRefreshTokenThrowsWithoutClientID() async {
+        let (client, recorder) = makeHelperTestClient(clientID: nil, apiKey: "", stubs: [])
+        let publicClient = PublicClient(client: client)
+        await #expect(throws: HelperError.missingClientID) {
+            _ = try await publicClient.authenticateWithRefreshToken(refreshToken: "rt_123")
+        }
+        #expect(recorder.allRequests.isEmpty)
+    }
+
+    @Test func authenticateWithRefreshTokenPropagatesInvalidGrant() async {
+        let (client, _) = makeHelperTestClient(
+            apiKey: "", statusCode: 400,
+            responding: #"{"error":"invalid_grant","error_description":"Refresh token revoked"}"#)
+        let publicClient = PublicClient(client: client)
+        await #expect {
+            _ = try await publicClient.authenticateWithRefreshToken(refreshToken: "rt_revoked")
+        } throws: { error in
+            (error as? WorkOSError)?.helperErrorCode == "invalid_grant"
+        }
+    }
+
     @Test func ssoProfileAndTokenWithPKCEOmitsClientSecret() async throws {
         let (publicClient, recorder) = Self.makePublicClient(stubs: [
             MockURLProtocol.Stub(

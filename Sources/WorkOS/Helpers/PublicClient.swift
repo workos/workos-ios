@@ -2,7 +2,7 @@
 
 import Foundation
 
-/// A client preset for PKCE-only / public-client usage: no API key or client
+/// A client preset for public-client usage: no API key or client
 /// secret is required or ever sent. It exposes only the helper surface that
 /// is safe for public clients (native apps, CLIs, browsers).
 public struct PublicClient: Sendable {
@@ -75,6 +75,30 @@ public struct PublicClient: Sendable {
     ) async throws -> AuthenticateResponse {
         try await client.authKitPKCECodeExchange(
             code: code, codeVerifier: codeVerifier, requestOptions: requestOptions)
+    }
+
+    /// Exchange a refresh token for new session tokens. No client secret is sent.
+    /// Persist the returned refresh token in place of the one exchanged.
+    public func authenticateWithRefreshToken(
+        refreshToken: String, organizationId: String? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> AuthenticateResponse {
+        guard let clientID = client.configuration.clientID else {
+            throw HelperError.missingClientID
+        }
+        var body = EncodableBody()
+        body.set("grant_type", "refresh_token")
+        body.set("client_id", clientID)
+        body.set("refresh_token", refreshToken)
+        body.set("organization_id", organizationId)
+        return try await client.transport.request(
+            method: "POST",
+            path: "user_management/authenticate",
+            query: [],
+            body: body,
+            options: requestOptions,
+            as: AuthenticateResponse.self
+        )
     }
 
     /// Build an SSO authorization URL.
