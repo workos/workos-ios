@@ -3,7 +3,7 @@
 import Foundation
 
 public struct CreateUser: Codable, Sendable, Equatable {
-    /// The email address of the user.
+    /// The email address of the user. WorkOS trims whitespace and converts the address to lowercase before storing it.
     public let email: String
     /// The first name of the user.
     public let firstName: String?
