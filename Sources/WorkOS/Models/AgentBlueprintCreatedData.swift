@@ -16,6 +16,8 @@ public struct AgentBlueprintCreatedData: Codable, Sendable, Equatable {
     public let permissions: [String]
     /// Who may mint sessions from this blueprint.
     public let invocableBy: AgentBlueprintCreatedDataInvocableBy
+    /// How sessions may be minted from this blueprint.
+    public let invocableAs: AgentBlueprintCreatedDataInvocableAs
     /// Token and session lifetimes for sessions minted from this blueprint.
     public let sessionSettings: AgentBlueprintCreatedDataSessionSetting
     /// The timestamp when the agent blueprint was created.
@@ -29,6 +31,7 @@ public struct AgentBlueprintCreatedData: Codable, Sendable, Equatable {
         name: String,
         permissions: [String],
         invocableBy: AgentBlueprintCreatedDataInvocableBy,
+        invocableAs: AgentBlueprintCreatedDataInvocableAs,
         sessionSettings: AgentBlueprintCreatedDataSessionSetting,
         createdAt: String,
         updatedAt: String,
@@ -40,6 +43,7 @@ public struct AgentBlueprintCreatedData: Codable, Sendable, Equatable {
         self.description = description
         self.permissions = permissions
         self.invocableBy = invocableBy
+        self.invocableAs = invocableAs
         self.sessionSettings = sessionSettings
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -52,6 +56,7 @@ public struct AgentBlueprintCreatedData: Codable, Sendable, Equatable {
         case description
         case permissions
         case invocableBy = "invocable_by"
+        case invocableAs = "invocable_as"
         case sessionSettings = "session_settings"
         case createdAt = "created_at"
         case updatedAt = "updated_at"

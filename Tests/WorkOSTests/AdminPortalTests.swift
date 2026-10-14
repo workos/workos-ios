@@ -18,8 +18,7 @@ import Testing
     @Test func generateLinkSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"link":"https://setup.workos.com?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}"#
-        )
+                #"{"link":"https://setup.workos.com/init?apiToken=01EHZNVPK3SFK441A1RGBFSHRT"}"#)
         let result = try await client.adminPortal.generateLink(organization: "test_organization")
 
         let request = try #require(recorder.lastRequest)
@@ -29,5 +28,18 @@ import Testing
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
         #expect(json?["organization"] != nil)
         _ = result
+    }
+
+    @Test func createRevokeLinkSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.adminPortal.createRevokeLink(
+            organization: "test_organization", externalUserId: "test_external_user_id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/portal/revoke_link")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["organization"] != nil)
     }
 }
