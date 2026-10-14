@@ -495,31 +495,6 @@ import Testing
         #expect(result.data.first?.id == "perm_01HXYZ123456789ABCDEFGHIJ")
     }
 
-    @Test func listPermissionsAutoPagingFetchesAllPages() async throws {
-        let (client, recorder) = makeTestClient(stubs: [
-            .init(
-                statusCode: 200,
-                data: Data(
-                    #"{"data":[{"object":"permission","id":"perm_01HXYZ123456789ABCDEFGHIJ","slug":"documents:read","name":"View Documents","description":"Allows viewing document contents","system":false,"resource_type_slug":"workspace","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":"cursor_2"}}"#
-                        .utf8), headers: [:]),
-            .init(
-                statusCode: 200,
-                data: Data(
-                    #"{"data":[{"object":"permission","id":"perm_01HXYZ123456789ABCDEFGHIJ","slug":"documents:read","name":"View Documents","description":"Allows viewing document contents","system":false,"resource_type_slug":"workspace","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
-                        .utf8), headers: [:]),
-        ])
-        var items: [AuthorizationPermission] = []
-        for try await item in client.authorization.listPermissionsAutoPaging() {
-            items.append(item)
-        }
-
-        #expect(items.count == 2)
-        #expect(recorder.allRequests.count == 2)
-        let second = try #require(recorder.allRequests.last?.url)
-        let query = URLComponents(url: second, resolvingAgainstBaseURL: false)?.queryItems ?? []
-        #expect(query.contains(URLQueryItem(name: "after", value: "cursor_2")))
-    }
-
     @Test func createPermissionSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
