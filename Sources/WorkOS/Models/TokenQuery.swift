@@ -11,6 +11,8 @@ public struct TokenQuery: Codable, Sendable, Equatable {
     public let code: String?
     /// The grant type for the token request.
     public let grantType: TokenQueryGrantType
+    /// The PKCE code verifier matching the `code_challenge` sent with the authorization request. Required when the authorization request included a `code_challenge`. Must be sent in the request body.
+    public let codeVerifier: String?
     /// The OIDC ID token to exchange. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
     public let subjectToken: String?
     /// The type of the subject token. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
@@ -23,6 +25,7 @@ public struct TokenQuery: Codable, Sendable, Equatable {
         clientSecret: String,
         grantType: TokenQueryGrantType,
         code: String? = nil,
+        codeVerifier: String? = nil,
         subjectToken: String? = nil,
         subjectTokenType: String? = nil,
         organizationId: String? = nil
@@ -31,6 +34,7 @@ public struct TokenQuery: Codable, Sendable, Equatable {
         self.clientSecret = clientSecret
         self.code = code
         self.grantType = grantType
+        self.codeVerifier = codeVerifier
         self.subjectToken = subjectToken
         self.subjectTokenType = subjectTokenType
         self.organizationId = organizationId
@@ -41,6 +45,7 @@ public struct TokenQuery: Codable, Sendable, Equatable {
         case clientSecret = "client_secret"
         case code
         case grantType = "grant_type"
+        case codeVerifier = "code_verifier"
         case subjectToken = "subject_token"
         case subjectTokenType = "subject_token_type"
         case organizationId = "organization_id"

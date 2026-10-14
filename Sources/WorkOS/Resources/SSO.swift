@@ -562,12 +562,14 @@ public struct SSO: Sendable {
     /// Get an access token along with the user [Profile](https://workos.com/docs/reference/sso/profile) using the code passed to your [Redirect URI](https://workos.com/docs/reference/sso/get-authorization-url/redirect-uri).
     ///
     /// - Parameter code: The authorization code received from the authorization callback. Required when `grant_type` is `authorization_code`.
+    /// - Parameter codeVerifier: The PKCE code verifier matching the `code_challenge` sent with the authorization request. Required when the authorization request included a `code_challenge`. Must be sent in the request body.
     /// - Parameter subjectToken: The OIDC ID token to exchange. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
     /// - Parameter subjectTokenType: The type of the subject token. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
     /// - Parameter organizationId: The ID of the organization whose connection the subject token is validated against. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getProfileAndToken(
         code: String? = nil,
+        codeVerifier: String? = nil,
         subjectToken: String? = nil,
         subjectTokenType: String? = nil,
         organizationId: String? = nil,
@@ -576,6 +578,7 @@ public struct SSO: Sendable {
         let path = "sso/token"
         var body = EncodableBody()
         body.set("code", code)
+        body.set("code_verifier", codeVerifier)
         body.set("subject_token", subjectToken)
         body.set("subject_token_type", subjectTokenType)
         body.set("organization_id", organizationId)
