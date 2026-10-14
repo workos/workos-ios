@@ -3,12 +3,14 @@
 import Foundation
 
 public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable, Equatable {
+    /// A mutable, non-unique label. Omit to preserve an existing label; null clears it. Labels are never account identifiers.
+    public let accountDisplayName: String?
+    /// A developer-attested provider account identifier, never inferred from a label or credential. Omit to preserve an existing identifier; null clears it.
+    public let accountIdentifier: String?
     /// A [User](https://workos.com/docs/reference/authkit/user) identifier.
     public let userId: String
     /// An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
     public let organizationId: String?
-    /// A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to rotate a specific existing connection.
-    public let connectedAccountId: String?
     /// Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization.
     public let connectionOwner: DataIntegrationsUpsertClientCredentialsRequestConnectionOwner?
     /// The OAuth client ID to store for this integration.
@@ -22,14 +24,16 @@ public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable,
         userId: String,
         clientId: String,
         clientSecret: String,
+        accountDisplayName: String? = nil,
+        accountIdentifier: String? = nil,
         organizationId: String? = nil,
-        connectedAccountId: String? = nil,
         connectionOwner: DataIntegrationsUpsertClientCredentialsRequestConnectionOwner? = nil,
         config: [String: String]? = nil
     ) {
+        self.accountDisplayName = accountDisplayName
+        self.accountIdentifier = accountIdentifier
         self.userId = userId
         self.organizationId = organizationId
-        self.connectedAccountId = connectedAccountId
         self.connectionOwner = connectionOwner
         self.clientId = clientId
         self.clientSecret = clientSecret
@@ -37,9 +41,10 @@ public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable,
     }
 
     private enum CodingKeys: String, CodingKey {
+        case accountDisplayName = "account_display_name"
+        case accountIdentifier = "account_identifier"
         case userId = "user_id"
         case organizationId = "organization_id"
-        case connectedAccountId = "connected_account_id"
         case connectionOwner = "connection_owner"
         case clientId = "client_id"
         case clientSecret = "client_secret"
