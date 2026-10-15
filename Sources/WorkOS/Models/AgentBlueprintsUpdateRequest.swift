@@ -11,6 +11,8 @@ public struct AgentBlueprintsUpdateRequest: Codable, Sendable, Equatable {
     public let permissions: [String]?
     /// Who may mint sessions from this blueprint. Omitted lists are left unchanged.
     public let invocableBy: AgentBlueprintsUpdateRequestInvocableBy?
+    /// How sessions may be minted from this blueprint. Omitted lists are left unchanged.
+    public let invocableAs: AgentBlueprintsUpdateRequestInvocableAs?
     /// Token and session lifetimes for sessions minted from this blueprint. Omitted fields are left unchanged.
     public let sessionSettings: AgentBlueprintsUpdateRequestSessionSetting?
 
@@ -19,12 +21,14 @@ public struct AgentBlueprintsUpdateRequest: Codable, Sendable, Equatable {
         description: String? = nil,
         permissions: [String]? = nil,
         invocableBy: AgentBlueprintsUpdateRequestInvocableBy? = nil,
+        invocableAs: AgentBlueprintsUpdateRequestInvocableAs? = nil,
         sessionSettings: AgentBlueprintsUpdateRequestSessionSetting? = nil
     ) {
         self.name = name
         self.description = description
         self.permissions = permissions
         self.invocableBy = invocableBy
+        self.invocableAs = invocableAs
         self.sessionSettings = sessionSettings
     }
 
@@ -33,6 +37,7 @@ public struct AgentBlueprintsUpdateRequest: Codable, Sendable, Equatable {
         case description
         case permissions
         case invocableBy = "invocable_by"
+        case invocableAs = "invocable_as"
         case sessionSettings = "session_settings"
     }
 }

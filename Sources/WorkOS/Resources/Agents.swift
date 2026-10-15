@@ -78,6 +78,7 @@ public struct Agents: Sendable {
     /// - Parameter description: Human-readable description of the agent blueprint.
     /// - Parameter permissions: Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
     /// - Parameter invocableBy: Who may mint sessions from this blueprint.
+    /// - Parameter invocableAs: How sessions may be minted from this blueprint.
     /// - Parameter sessionSettings: Token and session lifetimes for sessions minted from this blueprint.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createBlueprint(
@@ -85,6 +86,7 @@ public struct Agents: Sendable {
         description: String? = nil,
         permissions: [String]? = nil,
         invocableBy: AgentBlueprintsCreateRequestInvocableBy? = nil,
+        invocableAs: AgentBlueprintsCreateRequestInvocableAs? = nil,
         sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> AgentBlueprint {
@@ -94,6 +96,7 @@ public struct Agents: Sendable {
         body.set("description", description)
         body.set("permissions", permissions)
         body.set("invocable_by", invocableBy)
+        body.set("invocable_as", invocableAs)
         body.set("session_settings", sessionSettings)
         return try await transport.request(
             method: "POST",
@@ -135,6 +138,7 @@ public struct Agents: Sendable {
     /// - Parameter description: Human-readable description of the agent blueprint. Pass `null` to clear it.
     /// - Parameter permissions: Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
     /// - Parameter invocableBy: Who may mint sessions from this blueprint. Omitted lists are left unchanged.
+    /// - Parameter invocableAs: How sessions may be minted from this blueprint. Omitted lists are left unchanged.
     /// - Parameter sessionSettings: Token and session lifetimes for sessions minted from this blueprint. Omitted fields are left unchanged.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateBlueprint(
@@ -143,6 +147,7 @@ public struct Agents: Sendable {
         description: String? = nil,
         permissions: [String]? = nil,
         invocableBy: AgentBlueprintsUpdateRequestInvocableBy? = nil,
+        invocableAs: AgentBlueprintsUpdateRequestInvocableAs? = nil,
         sessionSettings: AgentBlueprintsUpdateRequestSessionSetting? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> AgentBlueprint {
@@ -152,6 +157,7 @@ public struct Agents: Sendable {
         body.set("description", description)
         body.set("permissions", permissions)
         body.set("invocable_by", invocableBy)
+        body.set("invocable_as", invocableAs)
         body.set("session_settings", sessionSettings)
         return try await transport.request(
             method: "PATCH",

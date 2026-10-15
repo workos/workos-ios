@@ -29,6 +29,10 @@ public struct PipeConnectedAccount: Codable, Sendable, Equatable {
     public let apiKeyLast4: String?
     /// The state of the connected account.
     public let state: PipeConnectedAccountState
+    /// The ID of the User whose authorization established the connected account, or null when it is developer-managed, its establisher is unknown, or the establishing member left the organization. Historical events may omit this field.
+    public let establishedByUserId: String?
+    /// Why WorkOS put the connected account in its current state, or null when there is no WorkOS-recorded reason. `establishing_member_membership_ended` means the member who established an organization-owned connection is no longer an active member. Additional values may be added. Historical events may omit this field.
+    public let stateReason: String?
     /// An ISO 8601 timestamp.
     public let createdAt: Date
     /// An ISO 8601 timestamp.
@@ -49,7 +53,9 @@ public struct PipeConnectedAccount: Codable, Sendable, Equatable {
         userId: String? = nil,
         organizationId: String? = nil,
         authMethod: PipeConnectedAccountAuthMethod? = nil,
-        apiKeyLast4: String? = nil
+        apiKeyLast4: String? = nil,
+        establishedByUserId: String? = nil,
+        stateReason: String? = nil
     ) {
         self.object = object
         self.id = id
@@ -64,6 +70,8 @@ public struct PipeConnectedAccount: Codable, Sendable, Equatable {
         self.authMethod = authMethod
         self.apiKeyLast4 = apiKeyLast4
         self.state = state
+        self.establishedByUserId = establishedByUserId
+        self.stateReason = stateReason
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
@@ -82,6 +90,8 @@ public struct PipeConnectedAccount: Codable, Sendable, Equatable {
         case authMethod = "auth_method"
         case apiKeyLast4 = "api_key_last_4"
         case state
+        case establishedByUserId = "established_by_user_id"
+        case stateReason = "state_reason"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }

@@ -51,6 +51,16 @@ import Testing
         #expect(request.url?.path == "/directories/sample-id")
     }
 
+    @Test func createSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{"status":"queued"}"#)
+        let result = try await client.directorySync.create(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "POST")
+        #expect(request.url?.path == "/directories/sample-id/sync")
+        _ = result
+    }
+
     @Test func listGroupsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:

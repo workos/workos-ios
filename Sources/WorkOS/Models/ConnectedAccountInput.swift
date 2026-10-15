@@ -3,6 +3,10 @@
 import Foundation
 
 public struct ConnectedAccountInput: Codable, Sendable, Equatable {
+    /// A mutable, non-unique connection label; null clears it. Not an account identifier.
+    public let accountDisplayName: String?
+    /// A developer-attested account identifier; null clears it.
+    public let accountIdentifier: String?
     /// The OAuth access token for the connected account.
     public let accessToken: String?
     /// The OAuth refresh token for the connected account.
@@ -15,12 +19,16 @@ public struct ConnectedAccountInput: Codable, Sendable, Equatable {
     public let state: ConnectedAccountInputState?
 
     public init(
+        accountDisplayName: String? = nil,
+        accountIdentifier: String? = nil,
         accessToken: String? = nil,
         refreshToken: String? = nil,
         expiresAt: Date? = nil,
         scopes: [String]? = nil,
         state: ConnectedAccountInputState? = nil
     ) {
+        self.accountDisplayName = accountDisplayName
+        self.accountIdentifier = accountIdentifier
         self.accessToken = accessToken
         self.refreshToken = refreshToken
         self.expiresAt = expiresAt
@@ -29,6 +37,8 @@ public struct ConnectedAccountInput: Codable, Sendable, Equatable {
     }
 
     private enum CodingKeys: String, CodingKey {
+        case accountDisplayName = "account_display_name"
+        case accountIdentifier = "account_identifier"
         case accessToken = "access_token"
         case refreshToken = "refresh_token"
         case expiresAt = "expires_at"

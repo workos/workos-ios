@@ -3,6 +3,8 @@
 import Foundation
 
 public struct DataIntegrationsGetDataIntegrationAuthorizeUrlRequest: Codable, Sendable, Equatable {
+    /// A mutable, non-unique label. Omit to preserve an existing label; null clears it. Labels are never account identifiers.
+    public let accountDisplayName: String?
     /// The ID of the user to authorize. When `connection_owner` is `organization`, this is the user authorizing on behalf of the organization; they must be an active member of the organization and do not become the owner of the resulting connected account.
     public let userId: String
     /// An organization ID to scope the authorization to a specific organization. Required when `connection_owner` is `organization`.
@@ -17,12 +19,14 @@ public struct DataIntegrationsGetDataIntegrationAuthorizeUrlRequest: Codable, Se
 
     public init(
         userId: String,
+        accountDisplayName: String? = nil,
         organizationId: String? = nil,
         connectionOwner: DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionOwner? =
             nil,
         returnTo: String? = nil,
         config: [String: String]? = nil
     ) {
+        self.accountDisplayName = accountDisplayName
         self.userId = userId
         self.organizationId = organizationId
         self.connectionOwner = connectionOwner
@@ -31,6 +35,7 @@ public struct DataIntegrationsGetDataIntegrationAuthorizeUrlRequest: Codable, Se
     }
 
     private enum CodingKeys: String, CodingKey {
+        case accountDisplayName = "account_display_name"
         case userId = "user_id"
         case organizationId = "organization_id"
         case connectionOwner = "connection_owner"

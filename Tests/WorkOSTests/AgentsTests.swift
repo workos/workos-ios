@@ -18,7 +18,7 @@ import Testing
     @Test func listBlueprintsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"data":[{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                #"{"data":[{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"invocable_as":{"instance_types":["delegated","autonomous"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
         )
         let result = try await client.agents.listBlueprints()
 
@@ -34,12 +34,12 @@ import Testing
             .init(
                 statusCode: 200,
                 data: Data(
-                    #"{"data":[{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":"cursor_2"}}"#
+                    #"{"data":[{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"invocable_as":{"instance_types":["delegated","autonomous"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":"cursor_2"}}"#
                         .utf8), headers: [:]),
             .init(
                 statusCode: 200,
                 data: Data(
-                    #"{"data":[{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
+                    #"{"data":[{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"invocable_as":{"instance_types":["delegated","autonomous"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}],"list_metadata":{"before":null,"after":null}}"#
                         .utf8), headers: [:]),
         ])
         var items: [AgentBlueprint] = []
@@ -57,7 +57,7 @@ import Testing
     @Test func createBlueprintSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"invocable_as":{"instance_types":["delegated","autonomous"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.agents.createBlueprint(name: "test_name")
 
@@ -73,7 +73,7 @@ import Testing
     @Test func getBlueprintSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"invocable_as":{"instance_types":["delegated","autonomous"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.agents.getBlueprint(
             agentBlueprintId: "sample-agent-blueprint-id")
@@ -87,7 +87,7 @@ import Testing
     @Test func updateBlueprintSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"agent_blueprint","id":"agent_blueprint_01EHWNCE74X7JSDV0X3SZ3KJNY","name":"Prospecting Agent","description":"Finds and qualifies sales prospects.","permissions":["crm:read","email:send"],"invocable_by":{"role_slugs":["manager"],"organization_ids":["org_01EHWNCE74X7JSDV0X3SZ3KJNY"]},"invocable_as":{"instance_types":["delegated","autonomous"]},"session_settings":{"max_age_seconds":3600,"access_token_ttl_seconds":300,"refresh_token_ttl_seconds":3600},"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.agents.updateBlueprint(
             agentBlueprintId: "sample-agent-blueprint-id")

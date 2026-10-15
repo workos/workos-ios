@@ -97,16 +97,17 @@ import Testing
         #expect(request.url?.path == "/data-integrations/sample-slug")
     }
 
-    @Test func updateDataIntegrationApiKeySendsExpectedRequest() async throws {
+    @Test func createDataIntegrationApiKeySendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","established_by_user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","state_reason":null,"created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","warnings":[{"code":"duplicate_account_display_name","message":"Another connection for this provider and owner has the same label."}]}"#
         )
-        let result = try await client.pipes.updateDataIntegrationApiKey(
-            slug: "sample-slug", userId: "test_user_id", secret: "test_secret")
+        let result = try await client.pipes.createDataIntegrationApiKey(
+            slug: "sample-slug", userId: "test_user_id", secret: "test_secret",
+            connectionIntent: "add")
 
         let request = try #require(recorder.lastRequest)
-        #expect(request.httpMethod == "PUT")
+        #expect(request.httpMethod == "POST")
         #expect(request.url?.path == "/data-integrations/sample-slug/api-key")
         let body = try #require(recorder.lastBody)
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
@@ -114,34 +115,17 @@ import Testing
         #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
-    @Test func authorizeDataIntegrationSendsExpectedRequest() async throws {
+    @Test func createDataIntegrationClientCredentialSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"url":"https://api.workos.com/data-integrations/q2czJKmVAraSBg8xFpT7M9uR/authorize-redirect"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","established_by_user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","state_reason":null,"created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","warnings":[{"code":"duplicate_account_display_name","message":"Another connection for this provider and owner has the same label."}]}"#
         )
-        let result = try await client.pipes.authorizeDataIntegration(
-            slug: "sample-slug", userId: "test_user_id")
+        let result = try await client.pipes.createDataIntegrationClientCredential(
+            slug: "sample-slug", userId: "test_user_id", clientId: "test_client_id",
+            clientSecret: "test_client_secret", connectionIntent: "add")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "POST")
-        #expect(request.url?.path == "/data-integrations/sample-slug/authorize")
-        let body = try #require(recorder.lastBody)
-        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
-        #expect(json?["user_id"] != nil)
-        _ = result
-    }
-
-    @Test func updateDataIntegrationClientCredentialsSendsExpectedRequest() async throws {
-        let (client, recorder) = makeTestClient(
-            responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
-        )
-        let result = try await client.pipes.updateDataIntegrationClientCredentials(
-            slug: "sample-slug", userId: "test_user_id", clientId: "test_client_id",
-            clientSecret: "test_client_secret")
-
-        let request = try #require(recorder.lastRequest)
-        #expect(request.httpMethod == "PUT")
         #expect(request.url?.path == "/data-integrations/sample-slug/client-credentials")
         let body = try #require(recorder.lastBody)
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
@@ -152,7 +136,7 @@ import Testing
     @Test func createDataIntegrationCredentialSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"active":true,"credential":{"object":"credential","auth_method":"oauth","value":"gho_16C7e42F292c6912E7710c838347Ae178B4a","expires_at":"2025-12-31T23:59:59.000Z","scopes":["repo","user:email"],"missing_scopes":[]},"error":"not_installed"}"#
+                #"{"active":true,"credential":{"object":"credential","auth_method":"oauth","value":"gho_16C7e42F292c6912E7710c838347Ae178B4a","expires_at":"2025-12-31T23:59:59.000Z","scopes":["repo","user:email"],"missing_scopes":[],"config":{"account":"myorg-myaccount"},"metadata":{"instance_url":"https://acme.my.salesforce.com"}},"error":"not_installed"}"#
         )
         let result = try await client.pipes.createDataIntegrationCredential(
             slug: "sample-slug", userId: "test_user_id")
@@ -204,7 +188,7 @@ import Testing
     @Test func getOrganizationConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","established_by_user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","state_reason":null,"created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.getOrganizationConnectedAccount(
             organizationId: "sample-organization-id", slug: "sample-slug")
@@ -220,32 +204,38 @@ import Testing
     @Test func createOrganizationConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","established_by_user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","state_reason":null,"created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","warnings":[{"code":"duplicate_account_display_name","message":"Another connection for this provider and owner has the same label."}]}"#
         )
         let result = try await client.pipes.createOrganizationConnectedAccount(
-            organizationId: "sample-organization-id", slug: "sample-slug")
+            organizationId: "sample-organization-id", slug: "sample-slug", userId: "test_user_id")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "POST")
         #expect(
             request.url?.path
                 == "/organizations/sample-organization-id/connected_accounts/sample-slug")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["user_id"] != nil)
         #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
     @Test func updateOrganizationConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","established_by_user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","state_reason":null,"created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","warnings":[{"code":"duplicate_account_display_name","message":"Another connection for this provider and owner has the same label."}]}"#
         )
         let result = try await client.pipes.updateOrganizationConnectedAccount(
-            organizationId: "sample-organization-id", slug: "sample-slug")
+            organizationId: "sample-organization-id", slug: "sample-slug", userId: "test_user_id")
 
         let request = try #require(recorder.lastRequest)
         #expect(request.httpMethod == "PUT")
         #expect(
             request.url?.path
                 == "/organizations/sample-organization-id/connected_accounts/sample-slug")
+        let body = try #require(recorder.lastBody)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        #expect(json?["user_id"] != nil)
         #expect(result.id == "data_installation_01EHZNVPK3SFK441A1RGBFSHRT")
     }
 
@@ -264,7 +254,7 @@ import Testing
     @Test func listOrganizationDataProvidersSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"list","data":[{"object":"data_provider","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","name":"GitHub","description":"Connect your GitHub account to access repositories.","slug":"github","integration_type":"github","credentials_type":"oauth2","scopes":["repo","user:email"],"auth_methods":["oauth"],"connection_owner":"user","ownership":"userland_user","created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","connected_account":{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"},"connected_accounts":[{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"}]}]}"#
+                #"{"object":"list","data":[{"object":"data_provider","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","name":"GitHub","description":"Connect your GitHub account to access repositories.","slug":"github","integration_type":"github","credentials_type":"oauth2","scopes":["repo","user:email"],"auth_methods":["oauth"],"connection_owner":"user","ownership":"userland_user","created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","connected_account":{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","established_by_user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","state_reason":null,"created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"},"connected_accounts":[{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","established_by_user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","state_reason":null,"created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"}]}]}"#
         )
         let result = try await client.pipes.listOrganizationDataProviders(
             organizationId: "sample-organization-id")
@@ -278,7 +268,7 @@ import Testing
     @Test func getUserConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","established_by_user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","state_reason":null,"created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
         )
         let result = try await client.pipes.getUserConnectedAccount(
             userId: "sample-user-id", slug: "sample-slug")
@@ -294,7 +284,7 @@ import Testing
     @Test func createUserConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","established_by_user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","state_reason":null,"created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","warnings":[{"code":"duplicate_account_display_name","message":"Another connection for this provider and owner has the same label."}]}"#
         )
         let result = try await client.pipes.createUserConnectedAccount(
             userId: "sample-user-id", slug: "sample-slug")
@@ -310,7 +300,7 @@ import Testing
     @Test func updateUserConnectedAccountSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z"}"#
+                #"{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","established_by_user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","state_reason":null,"created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","warnings":[{"code":"duplicate_account_display_name","message":"Another connection for this provider and owner has the same label."}]}"#
         )
         let result = try await client.pipes.updateUserConnectedAccount(
             userId: "sample-user-id", slug: "sample-slug")
@@ -338,7 +328,7 @@ import Testing
     @Test func listUserDataProvidersSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"list","data":[{"object":"data_provider","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","name":"GitHub","description":"Connect your GitHub account to access repositories.","slug":"github","integration_type":"github","credentials_type":"oauth2","scopes":["repo","user:email"],"auth_methods":["oauth"],"connection_owner":"user","ownership":"userland_user","created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","connected_account":{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"},"connected_accounts":[{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"}]}]}"#
+                #"{"object":"list","data":[{"object":"data_provider","id":"data_integration_01EHZNVPK3SFK441A1RGBFSHRT","name":"GitHub","description":"Connect your GitHub account to access repositories.","slug":"github","integration_type":"github","credentials_type":"oauth2","scopes":["repo","user:email"],"auth_methods":["oauth"],"connection_owner":"user","ownership":"userland_user","created_at":"2024-01-15T10:30:00.000Z","updated_at":"2024-01-15T10:30:00.000Z","connected_account":{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","established_by_user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","state_reason":null,"created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"},"connected_accounts":[{"object":"connected_account","id":"data_installation_01EHZNVPK3SFK441A1RGBFSHRT","connection_role":"compatibility","account_identifier":"workspace_123","account_display_name":"Acme production","user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":null,"scopes":["repo","user:email"],"auth_method":"oauth","api_key_last_4":null,"client_id":"3MVG9dZJodJWxft2VoStSCVwPFsx0eDcpVc","client_secret_last_4":"cdef","config":{"instance_url":"https://example.my.salesforce.com"},"state":"connected","established_by_user_id":"user_01EHZNVPK3SFK441A1RGBFSHRT","state_reason":null,"created_at":"2024-01-16T14:20:00.000Z","updated_at":"2024-01-16T14:20:00.000Z","userlandUserId":"test_userlandUserId"}]}]}"#
         )
         let result = try await client.pipes.listUserDataProviders(userId: "sample-user-id")
 

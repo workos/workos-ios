@@ -1007,7 +1007,7 @@ public struct UserManagement: Sendable {
     ///
     /// Create a new user in the current environment.
     ///
-    /// - Parameter email: The email address of the user.
+    /// - Parameter email: The email address of the user. WorkOS trims whitespace and converts the address to lowercase before storing it.
     /// - Parameter firstName: The first name of the user.
     /// - Parameter lastName: The last name of the user.
     /// - Parameter name: The user's full name.

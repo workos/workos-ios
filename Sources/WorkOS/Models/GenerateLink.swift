@@ -9,6 +9,8 @@ public struct GenerateLink: Codable, Sendable, Equatable {
     public let successUrl: String?
     /// An [Organization](https://workos.com/docs/reference/organization) identifier.
     public let organization: String
+    /// The ID of the user in your application the link is generated for. The link and any Admin Portal sessions started from it can later be revoked by this ID, for example when that user is deprovisioned from your application.
+    public let externalUserId: String?
     /// The intent of the Admin Portal.
     /// - `sso` - Launch Admin Portal for creating SSO connections
     /// - `dsync` - Launch Admin Portal for creating Directory Sync connections
@@ -25,12 +27,14 @@ public struct GenerateLink: Codable, Sendable, Equatable {
         organization: String,
         returnUrl: String? = nil,
         successUrl: String? = nil,
+        externalUserId: String? = nil,
         intent: GenerateLinkIntent? = nil,
         itContactEmails: [String]? = nil
     ) {
         self.returnUrl = returnUrl
         self.successUrl = successUrl
         self.organization = organization
+        self.externalUserId = externalUserId
         self.intent = intent
         self.itContactEmails = itContactEmails
     }
@@ -39,6 +43,7 @@ public struct GenerateLink: Codable, Sendable, Equatable {
         case returnUrl = "return_url"
         case successUrl = "success_url"
         case organization
+        case externalUserId = "external_user_id"
         case intent
         case itContactEmails = "it_contact_emails"
     }

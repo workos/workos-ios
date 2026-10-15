@@ -13,6 +13,7 @@ public struct AdminPortal: Sendable {
     /// - Parameter returnUrl: The URL to go to when an admin clicks on your logo in the Admin Portal. If not specified, the return URL configured on the [Admin Portal](https://dashboard.workos.com/admin-portal) page will be used.
     /// - Parameter successUrl: The URL to redirect the admin to when they finish setup. If not specified, the success URL configured on the [Admin Portal](https://dashboard.workos.com/admin-portal) page will be used.
     /// - Parameter organization: An [Organization](https://workos.com/docs/reference/organization) identifier.
+    /// - Parameter externalUserId: The ID of the user in your application the link is generated for. The link and any Admin Portal sessions started from it can later be revoked by this ID, for example when that user is deprovisioned from your application.
     /// - Parameter intent: The intent of the Admin Portal.
     /// - Parameter itContactEmails: The email addresses of the IT contacts to grant access to the Admin Portal for the given organization. Accepts up to 20 emails.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
@@ -20,6 +21,7 @@ public struct AdminPortal: Sendable {
         returnUrl: String? = nil,
         successUrl: String? = nil,
         organization: String,
+        externalUserId: String? = nil,
         intent: GenerateLinkIntent? = nil,
         itContactEmails: [String]? = nil,
         requestOptions: RequestOptions? = nil
@@ -29,6 +31,7 @@ public struct AdminPortal: Sendable {
         body.set("return_url", returnUrl)
         body.set("success_url", successUrl)
         body.set("organization", organization)
+        body.set("external_user_id", externalUserId)
         body.set("intent", intent)
         body.set("it_contact_emails", itContactEmails)
         return try await transport.request(
@@ -38,6 +41,31 @@ public struct AdminPortal: Sendable {
             body: body,
             options: requestOptions,
             as: PortalLinkResponse.self
+        )
+    }
+
+    /// Revoke Portal Links
+    ///
+    /// Revokes every Portal Link generated for the given organization with the given `external_user_id`, and immediately ends any Admin Portal sessions that were started from those links. Use this when an admin is deprovisioned from your application: unopened links stop working, and their already-open portal sessions are ended. Only links that were generated with an `external_user_id` can be revoked, so pass one to `generate_link` for every admin you may later need to deprovision.
+    ///
+    /// - Parameter organization: An [Organization](https://workos.com/docs/reference/organization) identifier.
+    /// - Parameter externalUserId: The `external_user_id` the Portal Links were generated with for this organization. Every matching link is revoked, along with any Admin Portal sessions started from those links.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func createRevokeLink(
+        organization: String,
+        externalUserId: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path = "portal/revoke_link"
+        var body = EncodableBody()
+        body.set("organization", organization)
+        body.set("external_user_id", externalUserId)
+        try await transport.requestVoid(
+            method: "POST",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions
         )
     }
 }
