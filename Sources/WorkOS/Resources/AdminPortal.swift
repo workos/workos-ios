@@ -51,7 +51,7 @@ public struct AdminPortal: Sendable {
     /// - Parameter organization: An [Organization](https://workos.com/docs/reference/organization) identifier.
     /// - Parameter externalUserId: The `external_user_id` the Portal Links were generated with for this organization. Every matching link is revoked, along with any Admin Portal sessions started from those links.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
-    public func createRevokeLink(
+    public func revokeLink(
         organization: String,
         externalUserId: String,
         requestOptions: RequestOptions? = nil

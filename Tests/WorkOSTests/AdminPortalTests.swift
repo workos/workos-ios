@@ -30,9 +30,9 @@ import Testing
         _ = result
     }
 
-    @Test func createRevokeLinkSendsExpectedRequest() async throws {
+    @Test func revokeLinkSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(responding: #"{}"#)
-        try await client.adminPortal.createRevokeLink(
+        try await client.adminPortal.revokeLink(
             organization: "test_organization", externalUserId: "test_external_user_id")
 
         let request = try #require(recorder.lastRequest)
