@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.8.0](https://github.com/workos/workos-ios/compare/v0.7.0...v0.8.0) (2026-10-15)
+
+
+### Features
+
+* **admin_portal:** SDK surface change: `AdminPortal.createRevokeLink` was renamed to `AdminPortal.revokeLink` ([#44](https://github.com/workos/workos-ios/issues/44)) ([27b819a](https://github.com/workos/workos-ios/commit/27b819a3d0e45d185fa05d1ecf15a7756fbda3e1))
+* **admin_portal:** Update admin portal API surface ([#43](https://github.com/workos/workos-ios/issues/43)) ([59e0fee](https://github.com/workos/workos-ios/commit/59e0fee282fe5a8bb8588c2a657d13163f577a5f))
+* **audit_logs:** Update audit log API surface ([#43](https://github.com/workos/workos-ios/issues/43)) ([59e0fee](https://github.com/workos/workos-ios/commit/59e0fee282fe5a8bb8588c2a657d13163f577a5f))
+* **authorization:** Update authorization API surface ([#43](https://github.com/workos/workos-ios/issues/43)) ([59e0fee](https://github.com/workos/workos-ios/commit/59e0fee282fe5a8bb8588c2a657d13163f577a5f))
+* **feature_flags:** Update feature flag API surface ([#43](https://github.com/workos/workos-ios/issues/43)) ([59e0fee](https://github.com/workos/workos-ios/commit/59e0fee282fe5a8bb8588c2a657d13163f577a5f))
+* **generated:** Authorization (batch c64ce1e7) ([#38](https://github.com/workos/workos-ios/issues/38)) ([fd9162a](https://github.com/workos/workos-ios/commit/fd9162ae193c8a87bad495f1496535dcfb8f93e3))
+* **organizations:** Update organization API surface ([#43](https://github.com/workos/workos-ios/issues/43)) ([59e0fee](https://github.com/workos/workos-ios/commit/59e0fee282fe5a8bb8588c2a657d13163f577a5f))
+* **pipes:** Change Pipes API surface ([#43](https://github.com/workos/workos-ios/issues/43)) ([59e0fee](https://github.com/workos/workos-ios/commit/59e0fee282fe5a8bb8588c2a657d13163f577a5f))
+* **pipes:** Update Pipes API surface ([#43](https://github.com/workos/workos-ios/issues/43)) ([59e0fee](https://github.com/workos/workos-ios/commit/59e0fee282fe5a8bb8588c2a657d13163f577a5f))
+* **radar:** Update radar API surface ([#43](https://github.com/workos/workos-ios/issues/43)) ([59e0fee](https://github.com/workos/workos-ios/commit/59e0fee282fe5a8bb8588c2a657d13163f577a5f))
+* **user_management:** Update user management API surface ([#43](https://github.com/workos/workos-ios/issues/43)) ([59e0fee](https://github.com/workos/workos-ios/commit/59e0fee282fe5a8bb8588c2a657d13163f577a5f))
+* **user_management:** Update user management API surface ([#44](https://github.com/workos/workos-ios/issues/44)) ([27b819a](https://github.com/workos/workos-ios/commit/27b819a3d0e45d185fa05d1ecf15a7756fbda3e1))
+
+
+### Bug Fixes
+
+* **auth:** support public-client session refresh ([#42](https://github.com/workos/workos-ios/issues/42)) ([bbda327](https://github.com/workos/workos-ios/commit/bbda32754d12f9fe14548571704484a32b40fc55))
+* **user_management:** Change errors for endpoint `POST /user_management/authenticate` ([#44](https://github.com/workos/workos-ios/issues/44)) ([27b819a](https://github.com/workos/workos-ios/commit/27b819a3d0e45d185fa05d1ecf15a7756fbda3e1))
+
 ## [0.7.0](https://github.com/workos/workos-ios/compare/v0.6.0...v0.7.0) (2026-09-18)
 
 
