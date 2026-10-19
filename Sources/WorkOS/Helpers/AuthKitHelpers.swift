@@ -140,7 +140,7 @@ extension WorkOSClient {
 
     /// Poll for device-code completion (RFC 8628, part 2). Blocks until the
     /// user completes authorization, a non-pending error occurs, or the task
-    /// is cancelled.
+    /// is canceled.
     public func authKitPollDeviceCode(
         deviceCode: String, interval: Int = 5, requestOptions: RequestOptions? = nil
     ) async throws -> AuthenticateResponse {
