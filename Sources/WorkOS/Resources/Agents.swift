@@ -336,6 +336,27 @@ public struct Agents: Sendable {
         )
     }
 
+    /// Revoke an agent registration
+    ///
+    /// Revoke an agent registration by ID. Revocation is permanent: the registration, its identity assertions, and every access token or API key issued from it stop working, and the agent must register again. Revoking an already revoked registration succeeds and returns the original `revoked_at`. The registration is scoped to the environment of the API key used to authenticate the request.
+    ///
+    /// - Parameter id: The unique ID of the agent registration.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func revokeRegistration(
+        id: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> AgentRegistration {
+        let path = "agents/registrations/\(PathEncoding.segment(id))/revoke"
+        return try await transport.request(
+            method: "POST",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: AgentRegistration.self
+        )
+    }
+
     /// List agent instances
     ///
     /// Lists the agent instances in the current environment. Instances are created implicitly when tokens are minted.

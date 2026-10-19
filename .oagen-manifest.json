@@ -591,6 +591,7 @@
     "Sources/WorkOS/Models/FlagUpdatedContextActor.swift",
     "Sources/WorkOS/Models/FlagUpdatedContextPreviousAttribute.swift",
     "Sources/WorkOS/Models/FlagUpdatedContextPreviousAttributeData.swift",
+    "Sources/WorkOS/Models/FlagUpdatedContextPreviousAttributeDataOwner.swift",
     "Sources/WorkOS/Models/FlagUpdatedData.swift",
     "Sources/WorkOS/Models/FlagUpdatedDataOwner.swift",
     "Sources/WorkOS/Models/GenerateLink.swift",
@@ -972,6 +973,10 @@
     },
     "GET /agents/registrations/{id}": {
       "sdkMethod": "getRegistration",
+      "service": "agents"
+    },
+    "POST /agents/registrations/{id}/revoke": {
+      "sdkMethod": "revokeRegistration",
       "service": "agents"
     },
     "GET /agents/instances": {
