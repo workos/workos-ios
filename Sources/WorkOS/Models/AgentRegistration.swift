@@ -11,6 +11,8 @@ public struct AgentRegistration: Codable, Sendable, Equatable {
     public let organizationId: String
     /// The current verification status of the registration.
     public let status: AgentRegistrationStatus
+    /// The timestamp when the registration was revoked, or `null` if it has not been revoked.
+    public let revokedAt: Date?
     /// The kind of agent registration.
     public let kind: AgentRegistrationKind
     /// The claim associated with this registration, or `null` if the registration has no claim.
@@ -28,12 +30,14 @@ public struct AgentRegistration: Codable, Sendable, Equatable {
         kind: AgentRegistrationKind,
         createdAt: Date,
         updatedAt: Date,
+        revokedAt: Date? = nil,
         claim: AgentRegistrationClaim? = nil
     ) {
         self.id = id
         self.agentIdentity = agentIdentity
         self.organizationId = organizationId
         self.status = status
+        self.revokedAt = revokedAt
         self.kind = kind
         self.claim = claim
         self.createdAt = createdAt
@@ -45,6 +49,7 @@ public struct AgentRegistration: Codable, Sendable, Equatable {
         case agentIdentity = "agent_identity"
         case organizationId = "organization_id"
         case status
+        case revokedAt = "revoked_at"
         case kind
         case claim
         case createdAt = "created_at"

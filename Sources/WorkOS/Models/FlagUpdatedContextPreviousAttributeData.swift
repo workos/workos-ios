@@ -10,6 +10,8 @@ public struct FlagUpdatedContextPreviousAttributeData: Codable, Sendable, Equata
     public let description: String?
     /// The previous tags of the flag.
     public let tags: [String]?
+    /// The previous owner of the flag, or `null` if it had none.
+    public let owner: FlagUpdatedContextPreviousAttributeDataOwner?
     /// Whether the flag was previously enabled.
     public let enabled: Bool?
     /// The previous default value of the flag.
@@ -19,12 +21,14 @@ public struct FlagUpdatedContextPreviousAttributeData: Codable, Sendable, Equata
         name: String? = nil,
         description: String? = nil,
         tags: [String]? = nil,
+        owner: FlagUpdatedContextPreviousAttributeDataOwner? = nil,
         enabled: Bool? = nil,
         defaultValue: Bool? = nil
     ) {
         self.name = name
         self.description = description
         self.tags = tags
+        self.owner = owner
         self.enabled = enabled
         self.defaultValue = defaultValue
     }
@@ -33,6 +37,7 @@ public struct FlagUpdatedContextPreviousAttributeData: Codable, Sendable, Equata
         case name
         case description
         case tags
+        case owner
         case enabled
         case defaultValue = "default_value"
     }
