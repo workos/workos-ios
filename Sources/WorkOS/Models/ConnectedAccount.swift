@@ -45,6 +45,8 @@ public struct ConnectedAccount: Codable, Sendable, Equatable {
     public let createdAt: String
     /// The timestamp when the connection was last updated.
     public let updatedAt: String
+    /// Non-blocking warnings about an explicitly supplied label. Only writes return it, and only when another connection already uses the label; reads omit it.
+    public let warnings: [ConnectedAccountWarning]?
 
     public init(
         object: String,
@@ -64,7 +66,8 @@ public struct ConnectedAccount: Codable, Sendable, Equatable {
         clientSecretLast4: String? = nil,
         config: [String: String]? = nil,
         establishedByUserId: String? = nil,
-        stateReason: String? = nil
+        stateReason: String? = nil,
+        warnings: [ConnectedAccountWarning]? = nil
     ) {
         self.object = object
         self.id = id
@@ -84,6 +87,7 @@ public struct ConnectedAccount: Codable, Sendable, Equatable {
         self.stateReason = stateReason
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.warnings = warnings
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -105,5 +109,6 @@ public struct ConnectedAccount: Codable, Sendable, Equatable {
         case stateReason = "state_reason"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+        case warnings
     }
 }

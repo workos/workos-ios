@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// The user's compatibility [connected account](https://workos.com/docs/reference/pipes/connected-account) for this provider, or `null` when the compatibility slot is empty. This legacy field never selects a standard connection.
 public struct DataIntegrationsListResponseDataConnectedAccount: Codable, Sendable, Equatable {
     /// Distinguishes the connected account object.
     public let object: String
@@ -45,6 +46,8 @@ public struct DataIntegrationsListResponseDataConnectedAccount: Codable, Sendabl
     public let createdAt: String
     /// The timestamp when the connection was last updated.
     public let updatedAt: String
+    /// Non-blocking warnings about an explicitly supplied label. Only writes return it, and only when another connection already uses the label; reads omit it.
+    public let warnings: [DataIntegrationsListResponseDataConnectedAccountWarning]?
     /// Use `user_id` instead.
     @available(*, deprecated)
     public let userlandUserId: String?
@@ -68,6 +71,7 @@ public struct DataIntegrationsListResponseDataConnectedAccount: Codable, Sendabl
         config: [String: String]? = nil,
         establishedByUserId: String? = nil,
         stateReason: String? = nil,
+        warnings: [DataIntegrationsListResponseDataConnectedAccountWarning]? = nil,
         userlandUserId: String? = nil
     ) {
         self.object = object
@@ -88,6 +92,7 @@ public struct DataIntegrationsListResponseDataConnectedAccount: Codable, Sendabl
         self.stateReason = stateReason
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.warnings = warnings
         self.userlandUserId = userlandUserId
     }
 
@@ -110,6 +115,7 @@ public struct DataIntegrationsListResponseDataConnectedAccount: Codable, Sendabl
         case stateReason = "state_reason"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+        case warnings
         case userlandUserId
     }
 }

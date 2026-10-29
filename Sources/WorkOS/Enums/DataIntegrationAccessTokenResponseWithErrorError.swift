@@ -2,27 +2,27 @@
 
 import Foundation
 
-/// Enumeration of valid ReauthorizeDataIntegrationsUpsertClientCredentialsRequestConnectionOwner values.
-public enum ReauthorizeDataIntegrationsUpsertClientCredentialsRequestConnectionOwner:
-    RawRepresentable, Codable, Sendable, Hashable
+/// Enumeration of valid DataIntegrationAccessTokenResponseWithErrorError values.
+public enum DataIntegrationAccessTokenResponseWithErrorError: RawRepresentable, Codable, Sendable,
+    Hashable
 {
-    case user
-    case organization
+    case notInstalled
+    case needsReauthorization
     /// A value not known at SDK generation time.
     case unknown(String)
 
     public init(rawValue: String) {
         switch rawValue {
-        case "user": self = .user
-        case "organization": self = .organization
+        case "not_installed": self = .notInstalled
+        case "needs_reauthorization": self = .needsReauthorization
         default: self = .unknown(rawValue)
         }
     }
 
     public var rawValue: String {
         switch self {
-        case .user: return "user"
-        case .organization: return "organization"
+        case .notInstalled: return "not_installed"
+        case .needsReauthorization: return "needs_reauthorization"
         case .unknown(let value): return value
         }
     }
@@ -37,9 +37,8 @@ public enum ReauthorizeDataIntegrationsUpsertClientCredentialsRequestConnectionO
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases:
-        [ReauthorizeDataIntegrationsUpsertClientCredentialsRequestConnectionOwner] = [
-            .user,
-            .organization,
-        ]
+    public static let allKnownCases: [DataIntegrationAccessTokenResponseWithErrorError] = [
+        .notInstalled,
+        .needsReauthorization,
+    ]
 }

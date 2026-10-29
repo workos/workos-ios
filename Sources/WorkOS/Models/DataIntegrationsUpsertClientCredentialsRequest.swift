@@ -19,6 +19,10 @@ public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable,
     public let clientSecret: String
     /// Provider-specific configuration values collected for this installation, keyed by the provider's config field descriptors.
     public let config: [String: String]?
+    /// Send `reauthorize` with `connected_account_id` to reauthorize one exact connection. Omit it to use the compatibility connection; creating another connection lives on the POST route.
+    public let connectionIntent: String?
+    /// The exact connected account to reauthorize. Required with `connection_intent: reauthorize`; it may also be sent on its own to reauthorize that connection.
+    public let connectedAccountId: String?
 
     public init(
         userId: String,
@@ -28,7 +32,9 @@ public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable,
         accountIdentifier: String? = nil,
         organizationId: String? = nil,
         connectionOwner: DataIntegrationsUpsertClientCredentialsRequestConnectionOwner? = nil,
-        config: [String: String]? = nil
+        config: [String: String]? = nil,
+        connectionIntent: String? = nil,
+        connectedAccountId: String? = nil
     ) {
         self.accountDisplayName = accountDisplayName
         self.accountIdentifier = accountIdentifier
@@ -38,6 +44,8 @@ public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable,
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.config = config
+        self.connectionIntent = connectionIntent
+        self.connectedAccountId = connectedAccountId
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -49,5 +57,7 @@ public struct DataIntegrationsUpsertClientCredentialsRequest: Codable, Sendable,
         case clientId = "client_id"
         case clientSecret = "client_secret"
         case config
+        case connectionIntent = "connection_intent"
+        case connectedAccountId = "connected_account_id"
     }
 }

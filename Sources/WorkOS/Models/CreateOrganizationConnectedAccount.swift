@@ -19,7 +19,7 @@ public struct CreateOrganizationConnectedAccount: Codable, Sendable, Equatable {
     public let state: CreateOrganizationConnectedAccountState?
     /// The [User](https://workos.com/docs/reference/authkit/user) identifier of the organization member on whose behalf the connected account is being imported or updated. The user must be an active member of the organization.
     public let userId: String
-    /// Set to `add` to create another connected account. Omit this field for permanent compatibility behavior. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration, which creates the compatibility connection, and otherwise returns 404 `multiple_connections_unavailable`.
+    /// Set to `add` to create another connected account. Omit this field for permanent compatibility behavior.
     public let connectionIntent: String?
 
     public init(
