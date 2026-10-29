@@ -15,6 +15,8 @@ public struct CreateMagicCodeAndReturn: Codable, Sendable, Equatable {
     public let radarAuthAttemptId: String?
     /// An optional Radar signals ID to correlate client-side signals with this request.
     public let signalsId: String?
+    /// The locale to use when rendering the Magic Auth email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
+    public let locale: CreateMagicCodeAndReturnLocale?
 
     public init(
         email: String,
@@ -22,7 +24,8 @@ public struct CreateMagicCodeAndReturn: Codable, Sendable, Equatable {
         ipAddress: String? = nil,
         userAgent: String? = nil,
         radarAuthAttemptId: String? = nil,
-        signalsId: String? = nil
+        signalsId: String? = nil,
+        locale: CreateMagicCodeAndReturnLocale? = nil
     ) {
         self.email = email
         self.invitationToken = invitationToken
@@ -30,6 +33,7 @@ public struct CreateMagicCodeAndReturn: Codable, Sendable, Equatable {
         self.userAgent = userAgent
         self.radarAuthAttemptId = radarAuthAttemptId
         self.signalsId = signalsId
+        self.locale = locale
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -39,5 +43,6 @@ public struct CreateMagicCodeAndReturn: Codable, Sendable, Equatable {
         case userAgent = "user_agent"
         case radarAuthAttemptId = "radar_auth_attempt_id"
         case signalsId = "signals_id"
+        case locale
     }
 }

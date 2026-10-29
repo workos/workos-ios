@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// The completion record for the claim, or `null` if the claim has not been completed.
 public struct AgentRegistrationClaimClaimCompletion: Codable, Sendable, Equatable {
     /// Unique identifier of the claim completion.
     public let id: String

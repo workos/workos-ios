@@ -5,14 +5,19 @@ import Foundation
 public struct DataIntegrationAuthorizeUrlResponse: Codable, Sendable, Equatable {
     /// The OAuth authorization URL to redirect the user to.
     public let url: String
+    /// `finish_required` when the request included `code_challenge`: the connection will be held until your app finishes it. Omitted otherwise. If you sent `code_challenge` and this is missing, don't redirect the user.
+    public let completion: String?
 
     public init(
-        url: String
+        url: String,
+        completion: String? = nil
     ) {
         self.url = url
+        self.completion = completion
     }
 
     private enum CodingKeys: String, CodingKey {
         case url
+        case completion
     }
 }
