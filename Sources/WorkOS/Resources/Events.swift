@@ -15,8 +15,8 @@ public struct Events: Sendable {
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
     /// - Parameter events: Filter events by one or more event types (e.g. `dsync.user.created`).
-    /// - Parameter rangeStart: ISO-8601 date string to filter events created after this date.
-    /// - Parameter rangeEnd: ISO-8601 date string to filter events created before this date.
+    /// - Parameter rangeStart: ISO 8601 UTC timestamp with a `Z` suffix to filter events created after this date. Timezone offsets such as `+00:00` are not accepted.
+    /// - Parameter rangeEnd: ISO 8601 UTC timestamp with a `Z` suffix to filter events created before this date. Timezone offsets such as `+00:00` are not accepted.
     /// - Parameter organizationId: Filter events by the [Organization](https://workos.com/docs/reference/organization) that the event is associated with.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func list(
@@ -25,8 +25,8 @@ public struct Events: Sendable {
         limit: Int? = nil,
         order: PaginationOrder? = nil,
         events: [String],
-        rangeStart: String? = nil,
-        rangeEnd: String? = nil,
+        rangeStart: Date? = nil,
+        rangeEnd: Date? = nil,
         organizationId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<EventSchema> {
@@ -48,10 +48,10 @@ public struct Events: Sendable {
             query.append(URLQueryItem(name: "events", value: value))
         }
         if let rangeStart {
-            query.append(URLQueryItem(name: "range_start", value: rangeStart))
+            query.append(URLQueryItem(name: "range_start", value: "\(rangeStart)"))
         }
         if let rangeEnd {
-            query.append(URLQueryItem(name: "range_end", value: rangeEnd))
+            query.append(URLQueryItem(name: "range_end", value: "\(rangeEnd)"))
         }
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
@@ -73,8 +73,8 @@ public struct Events: Sendable {
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
     /// - Parameter events: Filter events by one or more event types (e.g. `dsync.user.created`).
-    /// - Parameter rangeStart: ISO-8601 date string to filter events created after this date.
-    /// - Parameter rangeEnd: ISO-8601 date string to filter events created before this date.
+    /// - Parameter rangeStart: ISO 8601 UTC timestamp with a `Z` suffix to filter events created after this date. Timezone offsets such as `+00:00` are not accepted.
+    /// - Parameter rangeEnd: ISO 8601 UTC timestamp with a `Z` suffix to filter events created before this date. Timezone offsets such as `+00:00` are not accepted.
     /// - Parameter organizationId: Filter events by the [Organization](https://workos.com/docs/reference/organization) that the event is associated with.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listAutoPaging(
@@ -82,8 +82,8 @@ public struct Events: Sendable {
         limit: Int? = nil,
         order: PaginationOrder? = nil,
         events: [String],
-        rangeStart: String? = nil,
-        rangeEnd: String? = nil,
+        rangeStart: Date? = nil,
+        rangeEnd: Date? = nil,
         organizationId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<EventSchema> {

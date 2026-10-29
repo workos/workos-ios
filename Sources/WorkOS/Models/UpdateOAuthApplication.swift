@@ -11,17 +11,21 @@ public struct UpdateOAuthApplication: Codable, Sendable, Equatable {
     public let scopes: [String]?
     /// Updated redirect URIs for the application. OAuth applications only.
     public let redirectUris: [RedirectUriInput]?
+    /// Updated origins allowed to call the OAuth token endpoint for this application from a browser. Replaces the existing list. OAuth applications only.
+    public let corsOrigins: [String]?
 
     public init(
         name: String? = nil,
         description: String? = nil,
         scopes: [String]? = nil,
-        redirectUris: [RedirectUriInput]? = nil
+        redirectUris: [RedirectUriInput]? = nil,
+        corsOrigins: [String]? = nil
     ) {
         self.name = name
         self.description = description
         self.scopes = scopes
         self.redirectUris = redirectUris
+        self.corsOrigins = corsOrigins
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -29,5 +33,6 @@ public struct UpdateOAuthApplication: Codable, Sendable, Equatable {
         case description
         case scopes
         case redirectUris = "redirect_uris"
+        case corsOrigins = "cors_origins"
     }
 }

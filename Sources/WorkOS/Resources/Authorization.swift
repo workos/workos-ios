@@ -134,6 +134,33 @@ public struct Authorization: Sendable {
         )
     }
 
+    /// Update role assignments for a group
+    ///
+    /// Add and remove role assignments for a group in a single atomic operation. Additions that already exist and removals that match no assignment are skipped. An assignment in both lists is rejected. `add` and `remove` must contain between 1 and 100 entries combined.
+    ///
+    /// - Parameter groupId: The ID of the group.
+    /// - Parameter add: Role assignments to add to the group. Assignments that already exist are skipped.
+    /// - Parameter remove: Role assignments to remove from the group. Entries that match no assignment are skipped.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func patchGroupRoleAssignments(
+        groupId: String,
+        add: [ReplaceGroupRoleAssignmentEntry]? = nil,
+        remove: [ReplaceGroupRoleAssignmentEntry]? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path = "authorization/groups/\(PathEncoding.segment(groupId))/role_assignments"
+        var body = EncodableBody()
+        body.set("add", add)
+        body.set("remove", remove)
+        try await transport.requestVoid(
+            method: "PATCH",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions
+        )
+    }
+
     /// Remove group role assignments by criteria
     ///
     /// Remove role assignments from a group that match the provided criteria. Returns 404 when no matching active assignment is found.

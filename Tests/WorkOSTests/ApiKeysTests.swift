@@ -27,7 +27,7 @@ import Testing
     @Test func createExpireSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"organization","id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":null,"permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+                #"{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"organization","id":"org_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":null,"permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
         )
         let result = try await client.apiKeys.createExpire(id: "sample-id")
 
@@ -40,7 +40,7 @@ import Testing
     @Test func createValidationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"api_key":{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"organization","id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":null,"permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"agent_registration_id":"agent_reg_01EHZNVPK3SFK441A1RGBFSHRT"}"#
+                #"{"api_key":{"object":"api_key","id":"api_key_01EHZNVPK3SFK441A1RGBFSHRT","owner":{"type":"organization","id":"org_01EHZNVPK3SFK441A1RGBFSHRT","organization_id":"org_01EHZNVPK3SFK441A1RGBFSHRT"},"name":"Production API Key","obfuscated_value":"sk_...3456","last_used_at":null,"expires_at":null,"permissions":["posts:read","posts:write"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"},"agent_registration_id":"agent_reg_01EHZNVPK3SFK441A1RGBFSHRT"}"#
         )
         let result = try await client.apiKeys.createValidation(value: "test_value")
 

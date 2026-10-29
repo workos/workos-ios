@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// The group the role was derived from, or null if direct.
 public struct UserRoleAssignmentSourceGroup: Codable, Sendable, Equatable {
     /// The unique ID of the Group the role was derived from.
     public let id: String

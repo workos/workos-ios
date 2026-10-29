@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// The claim associated with this registration, or `null` if the registration has no claim.
 public struct AgentRegistrationClaim: Codable, Sendable, Equatable {
     /// Unique identifier of the claim.
     public let id: String

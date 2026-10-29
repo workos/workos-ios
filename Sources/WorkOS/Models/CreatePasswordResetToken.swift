@@ -5,14 +5,19 @@ import Foundation
 public struct CreatePasswordResetToken: Codable, Sendable, Equatable {
     /// The email address of the user requesting a password reset.
     public let email: String
+    /// The locale to use when rendering the password reset email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
+    public let locale: CreatePasswordResetTokenLocale?
 
     public init(
-        email: String
+        email: String,
+        locale: CreatePasswordResetTokenLocale? = nil
     ) {
         self.email = email
+        self.locale = locale
     }
 
     private enum CodingKeys: String, CodingKey {
         case email
+        case locale
     }
 }

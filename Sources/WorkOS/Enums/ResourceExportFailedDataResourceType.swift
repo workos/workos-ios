@@ -12,6 +12,7 @@ public enum ResourceExportFailedDataResourceType: RawRepresentable, Codable, Sen
     case connections
     case directoryUsers
     case scimLogs
+    case radarDetections
     /// A value not known at SDK generation time.
     case unknown(String)
 
@@ -25,6 +26,7 @@ public enum ResourceExportFailedDataResourceType: RawRepresentable, Codable, Sen
         case "connections": self = .connections
         case "directoryUsers": self = .directoryUsers
         case "scimLogs": self = .scimLogs
+        case "radarDetections": self = .radarDetections
         default: self = .unknown(rawValue)
         }
     }
@@ -39,6 +41,7 @@ public enum ResourceExportFailedDataResourceType: RawRepresentable, Codable, Sen
         case .connections: return "connections"
         case .directoryUsers: return "directoryUsers"
         case .scimLogs: return "scimLogs"
+        case .radarDetections: return "radarDetections"
         case .unknown(let value): return value
         }
     }
@@ -62,5 +65,6 @@ public enum ResourceExportFailedDataResourceType: RawRepresentable, Codable, Sen
         .connections,
         .directoryUsers,
         .scimLogs,
+        .radarDetections,
     ]
 }

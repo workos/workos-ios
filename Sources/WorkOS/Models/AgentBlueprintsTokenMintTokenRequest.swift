@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// How to mint the agent session, discriminated by `type`. `intent` is optional on every variant.
 public struct AgentBlueprintsTokenMintTokenRequest: Codable, Sendable, Equatable {
     /// How the session is minted: `user_delegated`, `autonomous`, `agent_delegated`, or `refresh`.
     public let type: AgentBlueprintsTokenMintTokenRequestType

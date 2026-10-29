@@ -15,6 +15,10 @@ public struct DataIntegrationsUpsertApiKeyRequest: Codable, Sendable, Equatable 
     public let connectionOwner: DataIntegrationsUpsertApiKeyRequestConnectionOwner?
     /// The API key secret to store for this integration.
     public let secret: String
+    /// Send `reauthorize` with `connected_account_id` to reauthorize one exact connection. Omit it to use the compatibility connection; creating another connection lives on the POST route.
+    public let connectionIntent: String?
+    /// The exact connected account to reauthorize. Required with `connection_intent: reauthorize`; it may also be sent on its own to reauthorize that connection.
+    public let connectedAccountId: String?
 
     public init(
         userId: String,
@@ -22,7 +26,9 @@ public struct DataIntegrationsUpsertApiKeyRequest: Codable, Sendable, Equatable 
         accountDisplayName: String? = nil,
         accountIdentifier: String? = nil,
         organizationId: String? = nil,
-        connectionOwner: DataIntegrationsUpsertApiKeyRequestConnectionOwner? = nil
+        connectionOwner: DataIntegrationsUpsertApiKeyRequestConnectionOwner? = nil,
+        connectionIntent: String? = nil,
+        connectedAccountId: String? = nil
     ) {
         self.accountDisplayName = accountDisplayName
         self.accountIdentifier = accountIdentifier
@@ -30,6 +36,8 @@ public struct DataIntegrationsUpsertApiKeyRequest: Codable, Sendable, Equatable 
         self.organizationId = organizationId
         self.connectionOwner = connectionOwner
         self.secret = secret
+        self.connectionIntent = connectionIntent
+        self.connectedAccountId = connectedAccountId
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -39,5 +47,7 @@ public struct DataIntegrationsUpsertApiKeyRequest: Codable, Sendable, Equatable 
         case organizationId = "organization_id"
         case connectionOwner = "connection_owner"
         case secret
+        case connectionIntent = "connection_intent"
+        case connectedAccountId = "connected_account_id"
     }
 }

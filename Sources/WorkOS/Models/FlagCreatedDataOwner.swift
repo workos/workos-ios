@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// The owner of the Feature Flag.
 public struct FlagCreatedDataOwner: Codable, Sendable, Equatable {
     /// The email address of the flag owner.
     public let email: String

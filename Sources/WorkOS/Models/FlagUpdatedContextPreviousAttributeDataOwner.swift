@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// The previous owner of the flag, or `null` if it had none.
 public struct FlagUpdatedContextPreviousAttributeDataOwner: Codable, Sendable, Equatable {
     /// The email address of the flag owner.
     public let email: String

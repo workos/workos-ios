@@ -13,6 +13,8 @@ public struct CreateOAuthApplication: Codable, Sendable, Equatable {
     public let scopes: [String]?
     /// Redirect URIs for the application.
     public let redirectUris: [RedirectUriInput]?
+    /// Origins allowed to call the OAuth token endpoint for this application from a browser.
+    public let corsOrigins: [String]?
     /// Whether the application uses PKCE (Proof Key for Code Exchange).
     public let usesPkce: Bool?
     /// Whether this is a first-party application. Third-party applications require an organization_id.
@@ -27,6 +29,7 @@ public struct CreateOAuthApplication: Codable, Sendable, Equatable {
         description: String? = nil,
         scopes: [String]? = nil,
         redirectUris: [RedirectUriInput]? = nil,
+        corsOrigins: [String]? = nil,
         usesPkce: Bool? = nil,
         organizationId: String? = nil
     ) {
@@ -35,6 +38,7 @@ public struct CreateOAuthApplication: Codable, Sendable, Equatable {
         self.description = description
         self.scopes = scopes
         self.redirectUris = redirectUris
+        self.corsOrigins = corsOrigins
         self.usesPkce = usesPkce
         self.isFirstParty = isFirstParty
         self.organizationId = organizationId
@@ -46,6 +50,7 @@ public struct CreateOAuthApplication: Codable, Sendable, Equatable {
         case description
         case scopes
         case redirectUris = "redirect_uris"
+        case corsOrigins = "cors_origins"
         case usesPkce = "uses_pkce"
         case isFirstParty = "is_first_party"
         case organizationId = "organization_id"

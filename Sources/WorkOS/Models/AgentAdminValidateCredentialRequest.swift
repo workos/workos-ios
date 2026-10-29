@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// The agent credential to validate. Either an `api_key` or an `access_token`, discriminated by `type`.
 public struct AgentAdminValidateCredentialRequest: Codable, Sendable, Equatable {
     /// The kind of credential being validated — an agent API key or an agent access token.
     public let type: AgentAdminValidateCredentialRequestType

@@ -5,6 +5,8 @@ import Foundation
 /// Enumeration of valid WidgetSessionTokenScopes values.
 public enum WidgetSessionTokenScopes: RawRepresentable, Codable, Sendable, Hashable {
     case widgetsUsersTableManage
+    case widgetsUserApiKeysManageSelf
+    case widgetsUserApiKeysManageAll
     case widgetsDomainVerificationManage
     case widgetsSSOManage
     case widgetsApiKeysManage
@@ -17,6 +19,8 @@ public enum WidgetSessionTokenScopes: RawRepresentable, Codable, Sendable, Hasha
     public init(rawValue: String) {
         switch rawValue {
         case "widgets:users-table:manage": self = .widgetsUsersTableManage
+        case "widgets:user-api-keys:manage-self": self = .widgetsUserApiKeysManageSelf
+        case "widgets:user-api-keys:manage-all": self = .widgetsUserApiKeysManageAll
         case "widgets:domain-verification:manage": self = .widgetsDomainVerificationManage
         case "widgets:sso:manage": self = .widgetsSSOManage
         case "widgets:api-keys:manage": self = .widgetsApiKeysManage
@@ -30,6 +34,8 @@ public enum WidgetSessionTokenScopes: RawRepresentable, Codable, Sendable, Hasha
     public var rawValue: String {
         switch self {
         case .widgetsUsersTableManage: return "widgets:users-table:manage"
+        case .widgetsUserApiKeysManageSelf: return "widgets:user-api-keys:manage-self"
+        case .widgetsUserApiKeysManageAll: return "widgets:user-api-keys:manage-all"
         case .widgetsDomainVerificationManage: return "widgets:domain-verification:manage"
         case .widgetsSSOManage: return "widgets:sso:manage"
         case .widgetsApiKeysManage: return "widgets:api-keys:manage"
@@ -52,6 +58,8 @@ public enum WidgetSessionTokenScopes: RawRepresentable, Codable, Sendable, Hasha
 
     public static let allKnownCases: [WidgetSessionTokenScopes] = [
         .widgetsUsersTableManage,
+        .widgetsUserApiKeysManageSelf,
+        .widgetsUserApiKeysManageAll,
         .widgetsDomainVerificationManage,
         .widgetsSSOManage,
         .widgetsApiKeysManage,
