@@ -10,6 +10,29 @@ enum SessionTokenVerification {
         let sub: String
         let exp: Int
         let nbf: Int?
+        /// True only for the user access token family. Other token types signed
+        /// by the same environment key (agent and widget tokens) are rejected.
+        let isUserAccessToken: Bool
+
+        private enum CodingKeys: String, CodingKey {
+            case sub, exp, nbf, sid
+            case authTime = "auth_time"
+            case subProfile = "sub_profile"
+            case subType = "sub_type"
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            sub = try container.decode(String.self, forKey: .sub)
+            exp = try container.decode(Int.self, forKey: .exp)
+            nbf = try container.decodeIfPresent(Int.self, forKey: .nbf)
+            let sid = try? container.decode(String.self, forKey: .sid)
+            let authTime = try? container.decode(Double.self, forKey: .authTime)
+            let subProfile = try? container.decodeIfPresent(String.self, forKey: .subProfile)
+            let profileIsUser = !container.contains(.subProfile) || subProfile == "user"
+            isUserAccessToken =
+                sid != nil && authTime != nil && profileIsUser && !container.contains(.subType)
+        }
     }
 
     private struct Header: Decodable {
@@ -66,7 +89,7 @@ enum SessionTokenVerification {
         // Parse claims only after the signature has been checked. Expiration is
         // mandatory; expired signed tokens are handled by the session caller.
         let verified = try JSONDecoder().decode(VerifiedClaims.self, from: payload)
-        guard !verified.sub.isEmpty,
+        guard !verified.sub.isEmpty, verified.isUserAccessToken,
             verified.nbf.map({ Double($0) <= Date().timeIntervalSince1970 }) ?? true
         else { throw SessionError.invalidJWT }
         return (try JSONDecoder().decode(JWTClaims.self, from: payload), verified)

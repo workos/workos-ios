@@ -29,6 +29,7 @@ import Testing
             claims ?? [
                 "sub": "user_123", "sid": "session_123", "role": "admin",
                 "org_id": "org_456", "permissions": ["posts:read"],
+                "auth_time": Int(Date().timeIntervalSince1970),
                 "exp": Int(Date().timeIntervalSince1970) + 3600,
             ]
         let input =
@@ -143,6 +144,55 @@ import Testing
         #expect(result.impersonator == nil)
     }
 
+    private static func userClaims(_ overrides: [String: Any?]) -> [String: Any] {
+        var claims: [String: Any] = [
+            "sub": "user_123", "sid": "session_123",
+            "auth_time": Int(Date().timeIntervalSince1970),
+            "exp": Int(Date().timeIntervalSince1970) + 3600,
+        ]
+        for (key, value) in overrides {
+            claims[key] = value
+        }
+        return claims
+    }
+
+    @Test(arguments: [
+        "agent-sub-profile", "authkit-widget", "standalone-widget", "missing-sid",
+        "missing-auth-time", "string-auth-time", "numeric-sid", "null-sub-type",
+    ])
+    func rejectsNonUserAccessTokens(kind: String) async throws {
+        var overrides: [String: Any?] = [:]
+        switch kind {
+        case "agent-sub-profile": overrides = ["sub": "agent_123", "sub_profile": "ai_agent"]
+        case "authkit-widget": overrides = ["sub_type": "authkit"]
+        case "standalone-widget": overrides = ["sub_type": "standalone"]
+        case "missing-sid": overrides = ["sid": nil]
+        case "missing-auth-time": overrides = ["auth_time": nil]
+        case "string-auth-time": overrides = ["auth_time": "1700000000"]
+        case "numeric-sid": overrides = ["sid": 123]
+        case "null-sub-type": overrides = ["sub_type": NSNull()]
+        default: Issue.record("Unhandled kind")
+        }
+        let token = try Self.token(claims: Self.userClaims(overrides))
+        let (client, _) = makeHelperTestClient(responding: try Self.jwks())
+        let result = await Session.authenticateVerified(
+            client: client, sealedSession: try Self.sealed(token), cookiePassword: Self.password)
+        #expect(!result.authenticated)
+        #expect(!result.needsRefresh)
+        #expect(result.reason == "invalid_jwt")
+        #expect(result.sessionId == nil)
+    }
+
+    @Test(arguments: [nil, "user"])
+    func acceptsUserAccessTokens(subProfile: String?) async throws {
+        let token = try Self.token(claims: Self.userClaims(["sub_profile": subProfile]))
+        let (client, _) = makeHelperTestClient(responding: try Self.jwks())
+        let result = await Session.authenticateVerified(
+            client: client, sealedSession: try Self.sealed(token), cookiePassword: Self.password)
+        #expect(result.authenticated)
+        #expect(result.sessionId == "session_123")
+    }
+
     @Test(arguments: [
         "wrong-key", "wrong-alg", "wrong-type", "wrong-use", "duplicate", "malformed",
         "unavailable", "missing-client-id",
@@ -182,6 +232,7 @@ import Testing
     @Test func signedExpiredTokenCanRefreshAndLogOut() async throws {
         let token = try Self.token(claims: [
             "sub": "user_123", "sid": "session_expired",
+            "auth_time": Int(Date().timeIntervalSince1970) - 3600,
             "exp": Int(Date().timeIntervalSince1970) - 1,
         ])
         let (client, _) = makeHelperTestClient(responding: try Self.jwks())

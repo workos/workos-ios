@@ -171,6 +171,8 @@ public struct Session: Sendable {
     /// Authenticate against the configured client's JWKS. Requires a signed
     /// RS256 token with `sub` and `exp`. A cookie user must match the signed sub;
     /// its other profile fields remain cookie data, not verified JWT claims.
+    /// Tokens that are not user access tokens (agent and widget tokens) fail
+    /// with `invalid_jwt`.
     /// Cookie impersonator data is not returned because it is not signed.
     /// Fetches JWKS on every call (no cache). Fetch/verification failures fail
     /// closed with `invalid_jwt`.
