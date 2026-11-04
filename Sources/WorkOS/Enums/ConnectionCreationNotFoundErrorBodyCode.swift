@@ -2,27 +2,25 @@
 
 import Foundation
 
-/// Enumeration of valid DataIntegrationsUpsertClientCredentialsRequest2ConnectionOwner values.
-public enum DataIntegrationsUpsertClientCredentialsRequest2ConnectionOwner: RawRepresentable,
-    Codable, Sendable, Hashable
-{
-    case user
-    case organization
+/// Enumeration of valid ConnectionCreationNotFoundErrorBodyCode values.
+public enum ConnectionCreationNotFoundErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
+    case multipleConnectionsUnavailable
+    case entityNotFound
     /// A value not known at SDK generation time.
     case unknown(String)
 
     public init(rawValue: String) {
         switch rawValue {
-        case "user": self = .user
-        case "organization": self = .organization
+        case "multiple_connections_unavailable": self = .multipleConnectionsUnavailable
+        case "entity_not_found": self = .entityNotFound
         default: self = .unknown(rawValue)
         }
     }
 
     public var rawValue: String {
         switch self {
-        case .user: return "user"
-        case .organization: return "organization"
+        case .multipleConnectionsUnavailable: return "multiple_connections_unavailable"
+        case .entityNotFound: return "entity_not_found"
         case .unknown(let value): return value
         }
     }
@@ -37,9 +35,8 @@ public enum DataIntegrationsUpsertClientCredentialsRequest2ConnectionOwner: RawR
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases:
-        [DataIntegrationsUpsertClientCredentialsRequest2ConnectionOwner] = [
-            .user,
-            .organization,
-        ]
+    public static let allKnownCases: [ConnectionCreationNotFoundErrorBodyCode] = [
+        .multipleConnectionsUnavailable,
+        .entityNotFound,
+    ]
 }

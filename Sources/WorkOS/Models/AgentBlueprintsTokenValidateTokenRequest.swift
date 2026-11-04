@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// The agent access token to validate.
 public struct AgentBlueprintsTokenValidateTokenRequest: Codable, Sendable, Equatable {
     /// The agent access token (a JWT) to validate.
     public let agentAccessToken: String

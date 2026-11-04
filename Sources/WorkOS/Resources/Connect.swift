@@ -227,6 +227,7 @@ public struct Connect: Sendable {
     /// - Parameter description: A description for the application.
     /// - Parameter scopes: The OAuth scopes granted to the application.
     /// - Parameter redirectUris: Updated redirect URIs for the application. OAuth applications only.
+    /// - Parameter corsOrigins: Updated origins allowed to call the OAuth token endpoint for this application from a browser. Replaces the existing list. OAuth applications only.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateApplication(
         id: String,
@@ -234,6 +235,7 @@ public struct Connect: Sendable {
         description: String? = nil,
         scopes: [String]? = nil,
         redirectUris: [RedirectUriInput]? = nil,
+        corsOrigins: [String]? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ConnectApplication {
         let path = "connect/applications/\(PathEncoding.segment(id))"
@@ -242,6 +244,7 @@ public struct Connect: Sendable {
         body.set("description", description)
         body.set("scopes", scopes)
         body.set("redirect_uris", redirectUris)
+        body.set("cors_origins", corsOrigins)
         return try await transport.request(
             method: "PUT",
             path: path,

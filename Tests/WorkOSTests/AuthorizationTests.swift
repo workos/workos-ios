@@ -65,6 +65,15 @@ import Testing
         _ = result
     }
 
+    @Test func patchGroupRoleAssignmentsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.authorization.patchGroupRoleAssignments(groupId: "sample-group-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PATCH")
+        #expect(request.url?.path == "/authorization/groups/sample-group-id/role_assignments")
+    }
+
     @Test func deleteGroupRoleAssignmentsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(responding: #"{}"#)
         try await client.authorization.deleteGroupRoleAssignments(

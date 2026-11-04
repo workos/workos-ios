@@ -13,6 +13,8 @@ public enum ResourceExportDownloadedDataResourceType: RawRepresentable, Codable,
     case connections
     case directoryUsers
     case scimLogs
+    case radarDetections
+    case teamActivityLogEvents
     /// A value not known at SDK generation time.
     case unknown(String)
 
@@ -26,6 +28,8 @@ public enum ResourceExportDownloadedDataResourceType: RawRepresentable, Codable,
         case "connections": self = .connections
         case "directoryUsers": self = .directoryUsers
         case "scimLogs": self = .scimLogs
+        case "radarDetections": self = .radarDetections
+        case "teamActivityLogEvents": self = .teamActivityLogEvents
         default: self = .unknown(rawValue)
         }
     }
@@ -40,6 +44,8 @@ public enum ResourceExportDownloadedDataResourceType: RawRepresentable, Codable,
         case .connections: return "connections"
         case .directoryUsers: return "directoryUsers"
         case .scimLogs: return "scimLogs"
+        case .radarDetections: return "radarDetections"
+        case .teamActivityLogEvents: return "teamActivityLogEvents"
         case .unknown(let value): return value
         }
     }
@@ -63,5 +69,7 @@ public enum ResourceExportDownloadedDataResourceType: RawRepresentable, Codable,
         .connections,
         .directoryUsers,
         .scimLogs,
+        .radarDetections,
+        .teamActivityLogEvents,
     ]
 }

@@ -2,28 +2,25 @@
 
 import Foundation
 
-/// Enumeration of valid ConnectedAccountWriteResponseState values.
-public enum ConnectedAccountWriteResponseState: RawRepresentable, Codable, Sendable, Hashable {
-    case connected
-    case needsReauthorization
-    case disconnected
+/// Enumeration of valid ConnectionCreationConflictErrorBodyCode values.
+public enum ConnectionCreationConflictErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
+    case connectedAccountLimitReached
+    case idempotencyKeyConflict
     /// A value not known at SDK generation time.
     case unknown(String)
 
     public init(rawValue: String) {
         switch rawValue {
-        case "connected": self = .connected
-        case "needs_reauthorization": self = .needsReauthorization
-        case "disconnected": self = .disconnected
+        case "connected_account_limit_reached": self = .connectedAccountLimitReached
+        case "idempotency_key_conflict": self = .idempotencyKeyConflict
         default: self = .unknown(rawValue)
         }
     }
 
     public var rawValue: String {
         switch self {
-        case .connected: return "connected"
-        case .needsReauthorization: return "needs_reauthorization"
-        case .disconnected: return "disconnected"
+        case .connectedAccountLimitReached: return "connected_account_limit_reached"
+        case .idempotencyKeyConflict: return "idempotency_key_conflict"
         case .unknown(let value): return value
         }
     }
@@ -38,9 +35,8 @@ public enum ConnectedAccountWriteResponseState: RawRepresentable, Codable, Senda
         try container.encode(rawValue)
     }
 
-    public static let allKnownCases: [ConnectedAccountWriteResponseState] = [
-        .connected,
-        .needsReauthorization,
-        .disconnected,
+    public static let allKnownCases: [ConnectionCreationConflictErrorBodyCode] = [
+        .connectedAccountLimitReached,
+        .idempotencyKeyConflict,
     ]
 }

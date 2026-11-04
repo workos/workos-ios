@@ -124,6 +124,19 @@ import Testing
         #expect(result.id == "group_01HXYZ123456789ABCDEFGHIJ")
     }
 
+    @Test func updateOrganizationMembershipsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.groups.updateOrganizationMemberships(
+            organizationId: "sample-organizationId", groupId: "sample-groupId")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PATCH")
+        #expect(
+            request.url?.path
+                == "/organizations/sample-organizationId/groups/sample-groupId/organization-memberships"
+        )
+    }
+
     @Test func deleteOrganizationMembershipSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(responding: #"{}"#)
         try await client.groups.deleteOrganizationMembership(

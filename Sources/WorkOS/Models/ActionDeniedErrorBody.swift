@@ -2,9 +2,10 @@
 
 import Foundation
 
-public struct ConnectedAccountWriteResponseWarning: Codable, Sendable, Equatable {
+public struct ActionDeniedErrorBody: Codable, Sendable, Equatable {
+    /// The error code identifying the type of error.
     public let code: String
-    /// A human-readable explanation of the non-blocking warning.
+    /// A human-readable description of the error.
     public let message: String
 
     public init(

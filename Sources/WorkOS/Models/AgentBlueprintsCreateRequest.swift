@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// Configuration for the new agent blueprint.
 public struct AgentBlueprintsCreateRequest: Codable, Sendable, Equatable {
     /// Human-readable name of the agent blueprint.
     public let name: String

@@ -14,7 +14,7 @@ public struct AuthorizationCodeSessionAuthenticateRequest: Codable, Sendable, Eq
     public let codeVerifier: String?
     /// An invitation token to accept during authentication.
     public let invitationToken: String?
-    /// The IP address of the user's request.
+    /// The IP address of the user's request. Required when Radar is in Decision mode.
     public let ipAddress: String?
     /// A unique identifier for the device.
     public let deviceId: String?
