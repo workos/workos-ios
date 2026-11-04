@@ -122,9 +122,7 @@ import Testing
         case "null-b64":
             token = try Self.token(header: ["alg": "RS256", "kid": "test-key", "b64": NSNull()])
         case "future-nbf":
-            token = try Self.token(claims: [
-                "sub": "user_123", "exp": 4_102_444_800, "nbf": 4_102_444_800,
-            ])
+            token = try Self.token(claims: Self.userClaims(["nbf": 4_102_444_800]))
         case "malformed": token = "a.b.c.d"
         case "empty": token = ""
         default: Issue.record("Unhandled attack")
