@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// The tenant installation created when an API key was supplied at creation time; `null` otherwise. Not populated on list/get responses.
 public struct DataIntegrationInstallation: Codable, Sendable, Equatable {
     /// Unique identifier of the installation.
     public let id: String

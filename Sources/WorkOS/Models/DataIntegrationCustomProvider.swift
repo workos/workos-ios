@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// The OAuth definition when this is a custom provider; `null` for built-in providers.
 public struct DataIntegrationCustomProvider: Codable, Sendable, Equatable {
     /// A descriptive name for the custom provider.
     public let name: String

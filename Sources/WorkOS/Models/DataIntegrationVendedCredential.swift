@@ -15,10 +15,10 @@ public struct DataIntegrationVendedCredential: Codable, Sendable, Equatable {
     public let scopes: [String]?
     /// If the integration has requested scopes that aren't present on the access token, they're listed here. Present for `oauth` and `client_credentials` credentials; absent for `api_key`.
     public let missingScopes: [String]?
+    /// Non-sensitive fields captured from the provider token response (e.g. Salesforce `instance_url`), as configured for the provider. Captured on OAuth code exchange and refresh, and on each `client_credentials` mint. A field a later OAuth refresh omits keeps its stored value. Present for `oauth` and `client_credentials` credentials; absent for `api_key`.
+    public let metadata: [String: AnyCodable]?
     /// Provider-declared, non-secret config from the installation snapshot, with current defaults for unset fields. Includes both integration- and installation-scope fields; omits undeclared fields and fields marked secret. Use these values to address a per-tenant host, such as Snowflake's `account` or Zendesk's `subdomain`. Empty when no values are disclosable. Changes to integration or organization pins require reconnecting or explicitly rebinding the connection. Defaults are live and can differ from a cached token's audience until refresh or re-mint.
     public let config: [String: String]?
-    /// Non-sensitive fields captured from the provider token response (e.g. Salesforce `instance_url`), as configured for the provider. Only present for `client_credentials` credentials.
-    public let metadata: [String: AnyCodable]?
 
     public init(
         object: String? = nil,
@@ -27,8 +27,8 @@ public struct DataIntegrationVendedCredential: Codable, Sendable, Equatable {
         expiresAt: String? = nil,
         scopes: [String]? = nil,
         missingScopes: [String]? = nil,
-        config: [String: String]? = nil,
-        metadata: [String: AnyCodable]? = nil
+        metadata: [String: AnyCodable]? = nil,
+        config: [String: String]? = nil
     ) {
         self.object = object
         self.authMethod = authMethod
@@ -36,8 +36,8 @@ public struct DataIntegrationVendedCredential: Codable, Sendable, Equatable {
         self.expiresAt = expiresAt
         self.scopes = scopes
         self.missingScopes = missingScopes
-        self.config = config
         self.metadata = metadata
+        self.config = config
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -47,7 +47,7 @@ public struct DataIntegrationVendedCredential: Codable, Sendable, Equatable {
         case expiresAt = "expires_at"
         case scopes
         case missingScopes = "missing_scopes"
-        case config
         case metadata
+        case config
     }
 }

@@ -8,50 +8,44 @@ public struct Events: Sendable {
 
     /// List events
     ///
-    /// List events for the current environment.
+    /// List events for the current environment. Events are returned oldest first; use `after` to page forward.
     ///
-    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
-    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
     /// - Parameter events: Filter events by one or more event types (e.g. `dsync.user.created`).
-    /// - Parameter rangeStart: ISO-8601 date string to filter events created after this date.
-    /// - Parameter rangeEnd: ISO-8601 date string to filter events created before this date.
+    /// - Parameter rangeStart: ISO 8601 UTC timestamp with a `Z` suffix to filter events created after this date. Timezone offsets such as `+00:00` are not accepted.
+    /// - Parameter rangeEnd: ISO 8601 UTC timestamp with a `Z` suffix to filter events created before this date. Timezone offsets such as `+00:00` are not accepted.
     /// - Parameter organizationId: Filter events by the [Organization](https://workos.com/docs/reference/organization) that the event is associated with.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func list(
-        before: String? = nil,
         after: String? = nil,
         limit: Int? = nil,
-        order: PaginationOrder? = nil,
         events: [String],
-        rangeStart: String? = nil,
-        rangeEnd: String? = nil,
+        rangeStart: Date? = nil,
+        rangeEnd: Date? = nil,
         organizationId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<EventSchema> {
         let path = "events"
         var query: [URLQueryItem] = []
-        if let before {
-            query.append(URLQueryItem(name: "before", value: before))
-        }
         if let after {
             query.append(URLQueryItem(name: "after", value: after))
         }
         if let limit {
             query.append(URLQueryItem(name: "limit", value: "\(limit)"))
         }
-        if let order {
-            query.append(URLQueryItem(name: "order", value: order.rawValue))
-        }
         for value in events {
             query.append(URLQueryItem(name: "events", value: value))
         }
         if let rangeStart {
-            query.append(URLQueryItem(name: "range_start", value: rangeStart))
+            query.append(
+                URLQueryItem(
+                    name: "range_start", value: Coding.iso8601Fractional.string(from: rangeStart)))
         }
         if let rangeEnd {
-            query.append(URLQueryItem(name: "range_end", value: rangeEnd))
+            query.append(
+                URLQueryItem(
+                    name: "range_end", value: Coding.iso8601Fractional.string(from: rangeEnd)))
         }
         if let organizationId {
             query.append(URLQueryItem(name: "organization_id", value: organizationId))
@@ -69,30 +63,24 @@ public struct Events: Sendable {
     /// Auto-paginating variant of `list`: fetches successive
     /// pages as the sequence is iterated.
     ///
-    /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
-    /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
     /// - Parameter events: Filter events by one or more event types (e.g. `dsync.user.created`).
-    /// - Parameter rangeStart: ISO-8601 date string to filter events created after this date.
-    /// - Parameter rangeEnd: ISO-8601 date string to filter events created before this date.
+    /// - Parameter rangeStart: ISO 8601 UTC timestamp with a `Z` suffix to filter events created after this date. Timezone offsets such as `+00:00` are not accepted.
+    /// - Parameter rangeEnd: ISO 8601 UTC timestamp with a `Z` suffix to filter events created before this date. Timezone offsets such as `+00:00` are not accepted.
     /// - Parameter organizationId: Filter events by the [Organization](https://workos.com/docs/reference/organization) that the event is associated with.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listAutoPaging(
-        before: String? = nil,
         limit: Int? = nil,
-        order: PaginationOrder? = nil,
         events: [String],
-        rangeStart: String? = nil,
-        rangeEnd: String? = nil,
+        rangeStart: Date? = nil,
+        rangeEnd: Date? = nil,
         organizationId: String? = nil,
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<EventSchema> {
         AutoPagingSequence { cursor in
             try await self.list(
-                before: before,
                 after: cursor,
                 limit: limit,
-                order: order,
                 events: events,
                 rangeStart: rangeStart,
                 rangeEnd: rangeEnd,

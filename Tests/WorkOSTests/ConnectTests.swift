@@ -36,7 +36,7 @@ import Testing
     @Test func listApplicationsSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"data":[{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}],"list_metadata":{"before":null,"after":null}}"#
+                #"{"data":[{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"cors_origins":["test_cors_origins"],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}],"list_metadata":{"before":null,"after":null}}"#
         )
         let result = try await client.connect.listApplications()
 
@@ -50,7 +50,7 @@ import Testing
     @Test func createOAuthApplicationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}"#
+                #"{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"cors_origins":["test_cors_origins"],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}"#
         )
         let result = try await client.connect.createOAuthApplication(
             name: "test_name", isFirstParty: true)
@@ -68,7 +68,7 @@ import Testing
     @Test func createM2MApplicationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}"#
+                #"{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"cors_origins":["test_cors_origins"],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}"#
         )
         let result = try await client.connect.createM2MApplication(
             name: "test_name", organizationId: "test_organization_id")
@@ -86,7 +86,7 @@ import Testing
     @Test func getApplicationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}"#
+                #"{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"cors_origins":["test_cors_origins"],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}"#
         )
         let result = try await client.connect.getApplication(id: "sample-id")
 
@@ -99,7 +99,7 @@ import Testing
     @Test func updateApplicationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}"#
+                #"{"object":"connect_application","id":"conn_app_01HXYZ123456789ABCDEFGHIJ","client_id":"client_01HXYZ123456789ABCDEFGHIJ","description":"An application for managing user access","name":"My Application","scopes":["openid","profile","email"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z","application_type":"oauth","redirect_uris":[{"uri":"https://example.com","default":true}],"cors_origins":["test_cors_origins"],"uses_pkce":true,"is_first_party":true,"was_dynamically_registered":false,"organization_id":"organization_id_01234"}"#
         )
         let result = try await client.connect.updateApplication(id: "sample-id")
 

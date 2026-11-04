@@ -116,7 +116,10 @@ public struct Vault: Sendable {
             query.append(URLQueryItem(name: "search", value: search))
         }
         if let updatedAfter {
-            query.append(URLQueryItem(name: "updatedAfter", value: "\(updatedAfter)"))
+            query.append(
+                URLQueryItem(
+                    name: "updatedAfter", value: Coding.iso8601Fractional.string(from: updatedAfter)
+                ))
         }
         return try await transport.request(
             method: "GET",

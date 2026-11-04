@@ -12,7 +12,7 @@ public struct EmailCompletionSessionAuthenticateRequest: Codable, Sendable, Equa
     public let emailCompletionToken: String
     /// The email address the user supplied for a profile the identity provider left without one.
     public let email: String
-    /// The IP address of the user's request.
+    /// The IP address of the user's request. Required when Radar is in Decision mode.
     public let ipAddress: String?
     /// A unique identifier for the device.
     public let deviceId: String?

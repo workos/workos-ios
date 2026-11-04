@@ -23,6 +23,8 @@ public struct ConnectApplicationOAuth: Codable, Sendable, Equatable {
     public let applicationType: String
     /// The redirect URIs configured for this application.
     public let redirectUris: [ConnectApplicationOAuthRedirectUris]
+    /// The CORS origins allowed to call the OAuth token endpoint for this application from a browser.
+    public let corsOrigins: [String]
     /// Whether the application uses PKCE for authorization.
     public let usesPkce: Bool
     /// Whether the application is a first-party application.
@@ -42,6 +44,7 @@ public struct ConnectApplicationOAuth: Codable, Sendable, Equatable {
         updatedAt: Date,
         applicationType: String,
         redirectUris: [ConnectApplicationOAuthRedirectUris],
+        corsOrigins: [String],
         usesPkce: Bool,
         isFirstParty: Bool,
         description: String? = nil,
@@ -58,6 +61,7 @@ public struct ConnectApplicationOAuth: Codable, Sendable, Equatable {
         self.updatedAt = updatedAt
         self.applicationType = applicationType
         self.redirectUris = redirectUris
+        self.corsOrigins = corsOrigins
         self.usesPkce = usesPkce
         self.isFirstParty = isFirstParty
         self.wasDynamicallyRegistered = wasDynamicallyRegistered
@@ -75,6 +79,7 @@ public struct ConnectApplicationOAuth: Codable, Sendable, Equatable {
         case updatedAt = "updated_at"
         case applicationType = "application_type"
         case redirectUris = "redirect_uris"
+        case corsOrigins = "cors_origins"
         case usesPkce = "uses_pkce"
         case isFirstParty = "is_first_party"
         case wasDynamicallyRegistered = "was_dynamically_registered"

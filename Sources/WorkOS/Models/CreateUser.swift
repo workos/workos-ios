@@ -17,7 +17,7 @@ public struct CreateUser: Codable, Sendable, Equatable {
     public let metadata: [String: String]?
     /// The external ID of the user.
     public let externalId: String?
-    /// The IP address of the user's request.
+    /// The IP address of the user's request. Required when Radar is in Decision mode.
     public let ipAddress: String?
     /// The user agent string from the user's request.
     public let userAgent: String?

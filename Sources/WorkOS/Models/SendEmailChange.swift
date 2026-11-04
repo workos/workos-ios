@@ -5,14 +5,19 @@ import Foundation
 public struct SendEmailChange: Codable, Sendable, Equatable {
     /// The new email address to change to.
     public let newEmail: String
+    /// The locale to use when rendering the email change email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
+    public let locale: SendEmailChangeLocale?
 
     public init(
-        newEmail: String
+        newEmail: String,
+        locale: SendEmailChangeLocale? = nil
     ) {
         self.newEmail = newEmail
+        self.locale = locale
     }
 
     private enum CodingKeys: String, CodingKey {
         case newEmail = "new_email"
+        case locale
     }
 }

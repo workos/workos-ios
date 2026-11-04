@@ -65,6 +65,14 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
     case flagDeleted
     case flagUpdated
     case flagRuleUpdated
+    case featureFlagsFlagCreated
+    case featureFlagsFlagUpdated
+    case featureFlagsFlagDeleted
+    case featureFlagsFlagRuleCreated
+    case featureFlagsFlagRuleUpdated
+    case featureFlagsFlagTargetCreated
+    case featureFlagsFlagRuleDeleted
+    case featureFlagsFlagTargetDeleted
     case invitationAccepted
     case invitationCreated
     case invitationResent
@@ -180,6 +188,14 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case "flag.deleted": self = .flagDeleted
         case "flag.updated": self = .flagUpdated
         case "flag.rule_updated": self = .flagRuleUpdated
+        case "feature_flags.flag.created": self = .featureFlagsFlagCreated
+        case "feature_flags.flag.updated": self = .featureFlagsFlagUpdated
+        case "feature_flags.flag.deleted": self = .featureFlagsFlagDeleted
+        case "feature_flags.flag_rule.created": self = .featureFlagsFlagRuleCreated
+        case "feature_flags.flag_rule.updated": self = .featureFlagsFlagRuleUpdated
+        case "feature_flags.flag_target.created": self = .featureFlagsFlagTargetCreated
+        case "feature_flags.flag_rule.deleted": self = .featureFlagsFlagRuleDeleted
+        case "feature_flags.flag_target.deleted": self = .featureFlagsFlagTargetDeleted
         case "invitation.accepted": self = .invitationAccepted
         case "invitation.created": self = .invitationCreated
         case "invitation.resent": self = .invitationResent
@@ -300,6 +316,14 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case .flagDeleted: return "flag.deleted"
         case .flagUpdated: return "flag.updated"
         case .flagRuleUpdated: return "flag.rule_updated"
+        case .featureFlagsFlagCreated: return "feature_flags.flag.created"
+        case .featureFlagsFlagUpdated: return "feature_flags.flag.updated"
+        case .featureFlagsFlagDeleted: return "feature_flags.flag.deleted"
+        case .featureFlagsFlagRuleCreated: return "feature_flags.flag_rule.created"
+        case .featureFlagsFlagRuleUpdated: return "feature_flags.flag_rule.updated"
+        case .featureFlagsFlagTargetCreated: return "feature_flags.flag_target.created"
+        case .featureFlagsFlagRuleDeleted: return "feature_flags.flag_rule.deleted"
+        case .featureFlagsFlagTargetDeleted: return "feature_flags.flag_target.deleted"
         case .invitationAccepted: return "invitation.accepted"
         case .invitationCreated: return "invitation.created"
         case .invitationResent: return "invitation.resent"
@@ -424,6 +448,14 @@ public enum CreateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         .flagDeleted,
         .flagUpdated,
         .flagRuleUpdated,
+        .featureFlagsFlagCreated,
+        .featureFlagsFlagUpdated,
+        .featureFlagsFlagDeleted,
+        .featureFlagsFlagRuleCreated,
+        .featureFlagsFlagRuleUpdated,
+        .featureFlagsFlagTargetCreated,
+        .featureFlagsFlagRuleDeleted,
+        .featureFlagsFlagTargetDeleted,
         .invitationAccepted,
         .invitationCreated,
         .invitationResent,

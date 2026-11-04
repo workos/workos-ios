@@ -292,6 +292,36 @@ public struct Groups: Sendable {
         )
     }
 
+    /// Update Group members
+    ///
+    /// Adds and removes organization memberships for a group in a single atomic operation. Organization memberships not listed in `add` or `remove` are left unchanged. Adding a member that is already in the group or removing a member that isn't in the group has no effect. A membership listed in both `add` and `remove` is rejected. `add` and `remove` must contain between 1 and 100 entries combined.
+    ///
+    /// - Parameter organizationId: Unique identifier of the Organization.
+    /// - Parameter groupId: Unique identifier of the Group.
+    /// - Parameter add: The IDs of the organization memberships to add to the group. Adding a membership that's already in the group has no effect.
+    /// - Parameter remove: The IDs of the organization memberships to remove from the group. Removing a membership that isn't in the group has no effect.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func updateOrganizationMemberships(
+        organizationId: String,
+        groupId: String,
+        add: [String]? = nil,
+        remove: [String]? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path =
+            "organizations/\(PathEncoding.segment(organizationId))/groups/\(PathEncoding.segment(groupId))/organization-memberships"
+        var body = EncodableBody()
+        body.set("add", add)
+        body.set("remove", remove)
+        try await transport.requestVoid(
+            method: "PATCH",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions
+        )
+    }
+
     /// Remove a member from a Group
     ///
     /// Remove an organization membership from a group.

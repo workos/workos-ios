@@ -32,7 +32,7 @@ public struct UserManagement: Sendable {
     /// - Parameter email: The user's email address.
     /// - Parameter password: The user's password.
     /// - Parameter invitationToken: An invitation token to accept during authentication.
-    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter ipAddress: The IP address of the user's request. Required when Radar is in Decision mode.
     /// - Parameter deviceId: A unique identifier for the device.
     /// - Parameter userAgent: The user agent string from the user's browser.
     /// - Parameter signalsId: An optional Radar signals ID to correlate client-side signals with this authentication attempt.
@@ -77,7 +77,7 @@ public struct UserManagement: Sendable {
     /// - Parameter code: The authorization code received from the redirect.
     /// - Parameter codeVerifier: The PKCE code verifier used to derive the code challenge passed to the authorization URL.
     /// - Parameter invitationToken: An invitation token to accept during authentication.
-    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter ipAddress: The IP address of the user's request. Required when Radar is in Decision mode.
     /// - Parameter deviceId: A unique identifier for the device.
     /// - Parameter userAgent: The user agent string from the user's browser.
     /// - Parameter signalsId: An optional Radar signals ID to correlate client-side signals with this authentication attempt.
@@ -850,14 +850,17 @@ public struct UserManagement: Sendable {
     /// Creates a one-time token that can be used to reset a user's password.
     ///
     /// - Parameter email: The email address of the user requesting a password reset.
+    /// - Parameter locale: The locale to use when rendering the password reset email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func resetPassword(
         email: String,
+        locale: CreatePasswordResetTokenLocale? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> PasswordReset {
         let path = "user_management/password_reset"
         var body = EncodableBody()
         body.set("email", email)
+        body.set("locale", locale)
         return try await transport.request(
             method: "POST",
             path: path,
@@ -1014,7 +1017,7 @@ public struct UserManagement: Sendable {
     /// - Parameter emailVerified: Whether the user's email has been verified.
     /// - Parameter metadata: Object containing metadata key/value pairs associated with the user.
     /// - Parameter externalId: The external ID of the user.
-    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter ipAddress: The IP address of the user's request. Required when Radar is in Decision mode.
     /// - Parameter userAgent: The user agent string from the user's request.
     /// - Parameter signalsId: An optional Radar signals ID to correlate client-side signals with this request.
     /// - Parameter password: The password to set for the user. Mutually exclusive with `password_hash`, `password_hash_type`, and `password_salt_position`.
@@ -1216,15 +1219,18 @@ public struct UserManagement: Sendable {
     ///
     /// - Parameter id: The unique ID of the user.
     /// - Parameter newEmail: The new email address to change to.
+    /// - Parameter locale: The locale to use when rendering the email change email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func sendEmailChange(
         id: String,
         newEmail: String,
+        locale: SendEmailChangeLocale? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> EmailChange {
         let path = "user_management/users/\(PathEncoding.segment(id))/email_change/send"
         var body = EncodableBody()
         body.set("new_email", newEmail)
+        body.set("locale", locale)
         return try await transport.request(
             method: "POST",
             path: path,
@@ -1265,17 +1271,21 @@ public struct UserManagement: Sendable {
     /// Sends an email that contains a one-time code used to verify a user's email address.
     ///
     /// - Parameter id: The ID of the user.
+    /// - Parameter locale: The locale to use when rendering the verification email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func sendVerificationEmail(
         id: String,
+        locale: SendVerificationEmailLocale? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> SendVerificationEmailResponse {
         let path = "user_management/users/\(PathEncoding.segment(id))/email_verification/send"
+        var body = EncodableBody()
+        body.set("locale", locale)
         return try await transport.request(
             method: "POST",
             path: path,
             query: [],
-            body: nil,
+            body: body,
             options: requestOptions,
             as: SendVerificationEmailResponse.self
         )
@@ -1460,7 +1470,7 @@ public struct UserManagement: Sendable {
     /// - Parameter roleSlug: The [role](https://workos.com/docs/authkit/roles) that the recipient will receive when they join the organization in the invitation.
     /// - Parameter expiresInDays: How many days the invitations will be valid for. Must be between 1 and 30 days. Defaults to 7 days if not specified.
     /// - Parameter inviterUserId: The ID of the [user](https://workos.com/docs/reference/authkit/user) who invites the recipient. The invitation email will mention the name of this user.
-    /// - Parameter locale: The locale to use when rendering the invitation email. See [supported locales](https://workos.com/docs/authkit/hosted-ui/localization).
+    /// - Parameter locale: The locale to use when rendering the invitation email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func sendInvitation(
         email: String,
@@ -1557,7 +1567,7 @@ public struct UserManagement: Sendable {
     /// Resends an invitation email to the recipient. The invitation must be in a pending state.
     ///
     /// - Parameter id: The unique ID of the invitation.
-    /// - Parameter locale: The locale to use when rendering the invitation email. See [supported locales](https://workos.com/docs/authkit/hosted-ui/localization).
+    /// - Parameter locale: The locale to use when rendering the invitation email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func resendInvitation(
         id: String,
@@ -1646,10 +1656,11 @@ public struct UserManagement: Sendable {
     ///
     /// - Parameter email: The email address to send the magic code to.
     /// - Parameter invitationToken: The invitation token to associate with this magic code.
-    /// - Parameter ipAddress: The IP address of the user's request.
+    /// - Parameter ipAddress: The IP address of the user's request. Required when Radar is in Decision mode.
     /// - Parameter userAgent: The user agent string from the user's request.
     /// - Parameter radarAuthAttemptId: The ID of an existing Radar authentication attempt to associate with this request.
     /// - Parameter signalsId: An optional Radar signals ID to correlate client-side signals with this request.
+    /// - Parameter locale: The locale to use when rendering the Magic Auth email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func createMagicAuth(
         email: String,
@@ -1658,6 +1669,7 @@ public struct UserManagement: Sendable {
         userAgent: String? = nil,
         radarAuthAttemptId: String? = nil,
         signalsId: String? = nil,
+        locale: CreateMagicCodeAndReturnLocale? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> MagicAuthSendMagicAuthCodeAndReturnResponse {
         let path = "user_management/magic_auth"
@@ -1668,6 +1680,7 @@ public struct UserManagement: Sendable {
         body.set("user_agent", userAgent)
         body.set("radar_auth_attempt_id", radarAuthAttemptId)
         body.set("signals_id", signalsId)
+        body.set("locale", locale)
         return try await transport.request(
             method: "POST",
             path: path,
@@ -1971,7 +1984,7 @@ public struct UserManagement: Sendable {
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listWaitlists(
         requestOptions: RequestOptions? = nil
-    ) async throws -> Page<Waitlist> {
+    ) async throws -> WaitlistListResponse {
         let path = "user_management/waitlists"
         return try await transport.request(
             method: "GET",
@@ -1979,7 +1992,7 @@ public struct UserManagement: Sendable {
             query: [],
             body: nil,
             options: requestOptions,
-            as: Page<Waitlist>.self
+            as: WaitlistListResponse.self
         )
     }
 
