@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.9.0](https://github.com/workos/workos-ios/compare/v0.8.0...v0.9.0) (2026-11-04)
+
+
+### Features
+
+* **events:** Change events API surface ([#49](https://github.com/workos/workos-ios/issues/49)) ([d616b1f](https://github.com/workos/workos-ios/commit/d616b1fa8ef4fc3e38ce26574c0d8c0dc0047ffb))
+* **feature_flags:** Add feature flag API surface ([#49](https://github.com/workos/workos-ios/issues/49)) ([d616b1f](https://github.com/workos/workos-ios/commit/d616b1fa8ef4fc3e38ce26574c0d8c0dc0047ffb))
+* **pipes:** Change Pipes API surface ([#49](https://github.com/workos/workos-ios/issues/49)) ([d616b1f](https://github.com/workos/workos-ios/commit/d616b1fa8ef4fc3e38ce26574c0d8c0dc0047ffb))
+* **webhooks:** Add webhook API surface ([#49](https://github.com/workos/workos-ios/issues/49)) ([d616b1f](https://github.com/workos/workos-ios/commit/d616b1fa8ef4fc3e38ce26574c0d8c0dc0047ffb))
+
+
+### Bug Fixes
+
+* **events:** Updated model `EventSchema` ([#49](https://github.com/workos/workos-ios/issues/49)) ([d616b1f](https://github.com/workos/workos-ios/commit/d616b1fa8ef4fc3e38ce26574c0d8c0dc0047ffb))
+
 ## [0.8.0](https://github.com/workos/workos-ios/compare/v0.7.0...v0.8.0) (2026-10-19)
 
 
