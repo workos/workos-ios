@@ -5,8 +5,8 @@ import Foundation
 public struct AuditLogEvent: Codable, Sendable, Equatable {
     /// Identifier of what happened.
     public let action: String
-    /// ISO-8601 value of when the action occurred.
-    public let occurredAt: Date
+    /// ISO-8601 value of when the action occurred. When omitted, defaults to the time WorkOS accepts the event.
+    public let occurredAt: Date?
     /// The entity that performed the action.
     public let actor: AuditLogEventActor
     /// The resources affected by the action.
@@ -20,7 +20,7 @@ public struct AuditLogEvent: Codable, Sendable, Equatable {
 
     public init(
         action: String,
-        occurredAt: Date,
+        occurredAt: Date? = nil,
         actor: AuditLogEventActor,
         targets: [AuditLogEventTarget],
         context: AuditLogEventContext,
