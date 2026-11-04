@@ -12,10 +12,19 @@ public struct DataIntegrationsGetDataIntegrationAuthorizeUrlRequest: Codable, Se
     /// Who will own the connected account. `user` (the default) connects the user's own account. `organization` connects the organization's shared account and requires `organization_id`.
     public let connectionOwner:
         DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionOwner?
-    /// The URL to redirect the user to after authorization.
+    /// The URL to redirect the user to after authorization. Required with `code_challenge`, and must then exactly match a redirect URI registered on one of the environment's applications. Loopback URLs match on any port; wildcard redirect URIs are not honored, and a `return_to` with a query string or fragment never matches.
     public let returnTo: String?
+    /// A PKCE-style code challenge: the base64url-encoded SHA-256 of a `code_verifier` your app keeps. When set, the connection isn't saved when the user finishes authorizing. Instead, the user is redirected to `return_to` with a `connect_code` and `state`, and your app must call [Finish connection](https://workos.com/docs/reference/pipes/connected-account/finish-connection) with the `connect_code` and `code_verifier` within 90 seconds to save it.
+    public let codeChallenge: String?
+    /// The method used to derive `code_challenge`. Only `S256` is supported, and it is the default. Requires `code_challenge`.
+    public let codeChallengeMethod: String?
     /// Connect-time config values for the provider-declared `installation`-scope fields (e.g. a Zendesk `subdomain`), keyed by the config field. Only fields the provider declares may be supplied, and required fields must be provided unless already pinned on the integration.
     public let config: [String: String]?
+    /// Which connection the request targets. Omit it to use the compatibility connection. Send `add` to create another connection: the first connection for an owner shape fills the compatibility slot, and later connections are standard. Send `reauthorize` with `connected_account_id` to reauthorize one exact connection.
+    public let connectionIntent:
+        DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionIntent?
+    /// The exact connected account to reauthorize. Required with `connection_intent: reauthorize` and not accepted otherwise.
+    public let connectedAccountId: String?
 
     public init(
         userId: String,
@@ -24,14 +33,23 @@ public struct DataIntegrationsGetDataIntegrationAuthorizeUrlRequest: Codable, Se
         connectionOwner: DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionOwner? =
             nil,
         returnTo: String? = nil,
-        config: [String: String]? = nil
+        codeChallenge: String? = nil,
+        codeChallengeMethod: String? = nil,
+        config: [String: String]? = nil,
+        connectionIntent: DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionIntent? =
+            nil,
+        connectedAccountId: String? = nil
     ) {
         self.accountDisplayName = accountDisplayName
         self.userId = userId
         self.organizationId = organizationId
         self.connectionOwner = connectionOwner
         self.returnTo = returnTo
+        self.codeChallenge = codeChallenge
+        self.codeChallengeMethod = codeChallengeMethod
         self.config = config
+        self.connectionIntent = connectionIntent
+        self.connectedAccountId = connectedAccountId
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -40,6 +58,10 @@ public struct DataIntegrationsGetDataIntegrationAuthorizeUrlRequest: Codable, Se
         case organizationId = "organization_id"
         case connectionOwner = "connection_owner"
         case returnTo = "return_to"
+        case codeChallenge = "code_challenge"
+        case codeChallengeMethod = "code_challenge_method"
         case config
+        case connectionIntent = "connection_intent"
+        case connectedAccountId = "connected_account_id"
     }
 }

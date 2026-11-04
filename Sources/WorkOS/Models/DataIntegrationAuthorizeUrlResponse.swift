@@ -5,14 +5,24 @@ import Foundation
 public struct DataIntegrationAuthorizeUrlResponse: Codable, Sendable, Equatable {
     /// The OAuth authorization URL to redirect the user to.
     public let url: String
+    /// Identifies this authorization. WorkOS adds it to `return_to` alongside `connect_code` or `error`. Store it in the user's session with the `code_verifier` and compare it when the user returns.
+    public let state: String
+    /// `finish_required` when the request included `code_challenge`: the connection will be held until your app finishes it. Omitted otherwise. If you sent `code_challenge` and this is missing, don't redirect the user.
+    public let completion: String?
 
     public init(
-        url: String
+        url: String,
+        state: String,
+        completion: String? = nil
     ) {
         self.url = url
+        self.state = state
+        self.completion = completion
     }
 
     private enum CodingKeys: String, CodingKey {
         case url
+        case state
+        case completion
     }
 }

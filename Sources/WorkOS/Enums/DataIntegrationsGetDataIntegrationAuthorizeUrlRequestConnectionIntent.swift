@@ -2,27 +2,27 @@
 
 import Foundation
 
-/// Enumeration of valid ReauthorizeDataIntegrationsUpsertApiKeyRequestConnectionOwner values.
-public enum ReauthorizeDataIntegrationsUpsertApiKeyRequestConnectionOwner: RawRepresentable,
+/// Enumeration of valid DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionIntent values.
+public enum DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionIntent: RawRepresentable,
     Codable, Sendable, Hashable
 {
-    case user
-    case organization
+    case add
+    case reauthorize
     /// A value not known at SDK generation time.
     case unknown(String)
 
     public init(rawValue: String) {
         switch rawValue {
-        case "user": self = .user
-        case "organization": self = .organization
+        case "add": self = .add
+        case "reauthorize": self = .reauthorize
         default: self = .unknown(rawValue)
         }
     }
 
     public var rawValue: String {
         switch self {
-        case .user: return "user"
-        case .organization: return "organization"
+        case .add: return "add"
+        case .reauthorize: return "reauthorize"
         case .unknown(let value): return value
         }
     }
@@ -38,8 +38,8 @@ public enum ReauthorizeDataIntegrationsUpsertApiKeyRequestConnectionOwner: RawRe
     }
 
     public static let allKnownCases:
-        [ReauthorizeDataIntegrationsUpsertApiKeyRequestConnectionOwner] = [
-            .user,
-            .organization,
+        [DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionIntent] = [
+            .add,
+            .reauthorize,
         ]
 }
