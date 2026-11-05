@@ -231,7 +231,8 @@ public struct Session: Sendable {
     }
 
     /// Validate the sealed session: unseal it, check the access token, and
-    /// extract the JWT claims. Never throws — failures are reported through
+    /// extract the JWT claims. Agent and widget tokens are rejected with
+    /// `invalid_jwt`, but the signature is not verified. Never throws — failures are reported through
     /// `authenticated == false` plus `reason`.
     @available(
         *, deprecated, message: "Does not verify JWT signatures. Use await authenticateVerified()."
@@ -251,7 +252,8 @@ public struct Session: Sendable {
         }
 
         guard !session.accessToken.isEmpty,
-            let claims = try? Session.parseJWTPayload(session.accessToken)
+            let claims = try? Session.parseJWTPayload(session.accessToken),
+            SessionTokenVerification.TokenFamily.isUserAccessToken(session.accessToken)
         else {
             return AuthenticateSessionResult(authenticated: false, reason: "invalid_jwt")
         }

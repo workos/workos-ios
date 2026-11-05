@@ -16,6 +16,7 @@ import Testing
             "role": "admin",
             "permissions": ["posts:read"],
             "entitlements": ["audit-logs"],
+            "auth_time": Int(Date().timeIntervalSince1970),
             "exp": Int(Date().addingTimeInterval(expiresIn).timeIntervalSince1970),
         ])
     }
@@ -72,7 +73,7 @@ import Testing
     func authenticateRejectsInvalidExpiration(expiration: String) throws {
         var claims: [String: Any] = [
             "sid": "session_forged", "org_id": "org_VICTIM", "role": "admin",
-            "permissions": ["billing:write"],
+            "permissions": ["billing:write"], "auth_time": Int(Date().timeIntervalSince1970),
         ]
         if expiration == "null" { claims["exp"] = NSNull() }
         if expiration == "string" { claims["exp"] = "4102444800" }
@@ -96,6 +97,62 @@ import Testing
             #expect(result.user == nil)
             #expect(result.impersonator == nil)
         }
+    }
+
+    @Test(arguments: [
+        "agent-sub-profile", "authkit-widget", "standalone-widget", "missing-sid",
+        "missing-auth-time", "string-auth-time", "numeric-sid", "null-sub-type", "expired-agent",
+    ])
+    func authenticateRejectsNonUserAccessTokens(kind: String) throws {
+        var claims: [String: Any] = [
+            "sid": "session_123", "org_id": "org_456", "role": "admin",
+            "auth_time": Int(Date().timeIntervalSince1970),
+            "exp": Int(Date().addingTimeInterval(3600).timeIntervalSince1970),
+        ]
+        switch kind {
+        case "agent-sub-profile": claims["sub_profile"] = "ai_agent"
+        case "authkit-widget": claims["sub_type"] = "authkit"
+        case "standalone-widget": claims["sub_type"] = "standalone"
+        case "missing-sid": claims["sid"] = nil
+        case "missing-auth-time": claims["auth_time"] = nil
+        case "string-auth-time": claims["auth_time"] = "1700000000"
+        case "numeric-sid": claims["sid"] = 123
+        case "null-sub-type": claims["sub_type"] = NSNull()
+        case "expired-agent":
+            claims["sub_profile"] = "ai_agent"
+            claims["exp"] = Int(Date().addingTimeInterval(-3600).timeIntervalSince1970)
+        default: Issue.record("Unhandled kind")
+        }
+        let sealed = try Session.sealSession(
+            accessToken: makeTestJWT(claims: claims), refreshToken: "rt_123",
+            cookiePassword: Self.cookiePassword)
+        let session = Session(sessionData: sealed, cookiePassword: Self.cookiePassword)
+        let results = [
+            session.authenticate(),
+            Session.authenticate(sealedSession: sealed, cookiePassword: Self.cookiePassword),
+        ]
+        for result in results {
+            #expect(!result.authenticated)
+            #expect(result.reason == "invalid_jwt")
+            #expect(!result.needsRefresh)
+            #expect(result.sessionId == nil)
+        }
+    }
+
+    @Test(arguments: [nil, "user"])
+    func authenticateAcceptsUserAccessTokens(subProfile: String?) throws {
+        var claims: [String: Any] = [
+            "sid": "session_123", "auth_time": Int(Date().timeIntervalSince1970),
+            "exp": Int(Date().addingTimeInterval(3600).timeIntervalSince1970),
+        ]
+        if let subProfile { claims["sub_profile"] = subProfile }
+        let sealed = try Session.sealSession(
+            accessToken: makeTestJWT(claims: claims), refreshToken: "rt_123",
+            cookiePassword: Self.cookiePassword)
+        let result = Session.authenticate(
+            sealedSession: sealed, cookiePassword: Self.cookiePassword)
+        #expect(result.authenticated)
+        #expect(result.sessionId == "session_123")
     }
 
     @Test func authenticateFlagsExpiredTokenForRefresh() throws {
