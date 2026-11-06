@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1](https://github.com/workos/workos-ios/compare/v0.9.0...v0.9.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* **session:** Reject non-user access tokens in session authentication ([#51](https://github.com/workos/workos-ios/issues/51)) ([4eb6a8d](https://github.com/workos/workos-ios/commit/4eb6a8decd76c056f167b9d92dfd9df0aff96a2e))
+
 ## [0.9.0](https://github.com/workos/workos-ios/compare/v0.8.0...v0.9.0) (2026-11-04)
 
 
