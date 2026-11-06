@@ -6,10 +6,57 @@ import Security
 /// Internal RS256 verification. Only keys from the configured WorkOS client's
 /// JWKS are trusted; token-provided key URLs and certificates are never used.
 enum SessionTokenVerification {
+    /// True only for the user access token family. Other token types signed
+    /// by the same environment key (agent and widget tokens) are rejected.
+    struct TokenFamily: Decodable {
+        let isUserAccessToken: Bool
+
+        private enum CodingKeys: String, CodingKey {
+            case sid
+            case authTime = "auth_time"
+            case subProfile = "sub_profile"
+            case subType = "sub_type"
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let sid = try? container.decode(String.self, forKey: .sid)
+            let authTime = try? container.decode(Double.self, forKey: .authTime)
+            let subProfile = try? container.decodeIfPresent(String.self, forKey: .subProfile)
+            let profileIsUser = !container.contains(.subProfile) || subProfile == "user"
+            isUserAccessToken =
+                sid != nil && authTime != nil && profileIsUser && !container.contains(.subType)
+        }
+
+        /// Reads the token family from an unverified JWT payload. Returns false
+        /// for malformed tokens.
+        static func isUserAccessToken(_ token: String) -> Bool {
+            let parts = token.split(separator: ".", omittingEmptySubsequences: false)
+            guard parts.count == 3,
+                let payload = HelperSupport.base64URLDecode(String(parts[1])),
+                let family = try? JSONDecoder().decode(TokenFamily.self, from: payload)
+            else { return false }
+            return family.isUserAccessToken
+        }
+    }
+
     struct VerifiedClaims: Decodable {
         let sub: String
         let exp: Int
         let nbf: Int?
+        let isUserAccessToken: Bool
+
+        private enum CodingKeys: String, CodingKey {
+            case sub, exp, nbf
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            sub = try container.decode(String.self, forKey: .sub)
+            exp = try container.decode(Int.self, forKey: .exp)
+            nbf = try container.decodeIfPresent(Int.self, forKey: .nbf)
+            isUserAccessToken = try TokenFamily(from: decoder).isUserAccessToken
+        }
     }
 
     private struct Header: Decodable {
@@ -66,7 +113,7 @@ enum SessionTokenVerification {
         // Parse claims only after the signature has been checked. Expiration is
         // mandatory; expired signed tokens are handled by the session caller.
         let verified = try JSONDecoder().decode(VerifiedClaims.self, from: payload)
-        guard !verified.sub.isEmpty,
+        guard !verified.sub.isEmpty, verified.isUserAccessToken,
             verified.nbf.map({ Double($0) <= Date().timeIntervalSince1970 }) ?? true
         else { throw SessionError.invalidJWT }
         return (try JSONDecoder().decode(JWTClaims.self, from: payload), verified)

@@ -171,6 +171,8 @@ public struct Session: Sendable {
     /// Authenticate against the configured client's JWKS. Requires a signed
     /// RS256 token with `sub` and `exp`. A cookie user must match the signed sub;
     /// its other profile fields remain cookie data, not verified JWT claims.
+    /// Tokens that are not user access tokens (agent and widget tokens) fail
+    /// with `invalid_jwt`.
     /// Cookie impersonator data is not returned because it is not signed.
     /// Fetches JWKS on every call (no cache). Fetch/verification failures fail
     /// closed with `invalid_jwt`.
@@ -229,7 +231,8 @@ public struct Session: Sendable {
     }
 
     /// Validate the sealed session: unseal it, check the access token, and
-    /// extract the JWT claims. Never throws — failures are reported through
+    /// extract the JWT claims. Agent and widget tokens are rejected with
+    /// `invalid_jwt`, but the signature is not verified. Never throws — failures are reported through
     /// `authenticated == false` plus `reason`.
     @available(
         *, deprecated, message: "Does not verify JWT signatures. Use await authenticateVerified()."
@@ -249,7 +252,8 @@ public struct Session: Sendable {
         }
 
         guard !session.accessToken.isEmpty,
-            let claims = try? Session.parseJWTPayload(session.accessToken)
+            let claims = try? Session.parseJWTPayload(session.accessToken),
+            SessionTokenVerification.TokenFamily.isUserAccessToken(session.accessToken)
         else {
             return AuthenticateSessionResult(authenticated: false, reason: "invalid_jwt")
         }
