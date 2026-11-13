@@ -54,6 +54,7 @@
     "Sources/WorkOS/Enums/ConnectionStatus.swift",
     "Sources/WorkOS/Enums/ConnectionType.swift",
     "Sources/WorkOS/Enums/ConnectionsConnectionType.swift",
+    "Sources/WorkOS/Enums/ConnectionsState.swift",
     "Sources/WorkOS/Enums/CreateConnectedAccountState.swift",
     "Sources/WorkOS/Enums/CreateConnectionOidcOptionsIdTokenSignatureAlgorithm.swift",
     "Sources/WorkOS/Enums/CreateConnectionOidcOptionsTokenAuthenticationMethod.swift",
