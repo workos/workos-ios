@@ -11,17 +11,23 @@ public struct PipesProvider: Sendable {
     /// Returns a list of all providers available to the specified organization, along with any configured custom OAuth scopes, enabled state, and organization-managed credentials where applicable.
     ///
     /// - Parameter organizationId: An [Organization](https://workos.com/docs/reference/organization) identifier to list provider configurations for.
+    /// - Parameter ownership: Select the provider configuration for `user` connections or `organization` shared connections. Defaults to `user`; never falls back to the other ownership.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listOrganizationDataIntegrationConfigurations(
         organizationId: String,
+        ownership: PipesProviderOwnership? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegrationConfigurationListResponse {
         let path =
             "organizations/\(PathEncoding.segment(organizationId))/data_integration_configurations"
+        var query: [URLQueryItem] = []
+        if let ownership {
+            query.append(URLQueryItem(name: "ownership", value: ownership.rawValue))
+        }
         return try await transport.request(
             method: "GET",
             path: path,
-            query: [],
+            query: query,
             body: nil,
             options: requestOptions,
             as: DataIntegrationConfigurationListResponse.self
@@ -39,6 +45,7 @@ public struct PipesProvider: Sendable {
     /// - Parameter clientId: The OAuth client ID of the organization's own application. Must be provided together with `client_secret`, and only for providers whose credentials are supplied by the organization.
     /// - Parameter clientSecret: The OAuth client secret of the organization's own application. Must be provided together with `client_id`.
     /// - Parameter config: Provider-specific config values to set for the organization, keyed by config field. Only fields the provider declares are accepted, and each value must match that field's pattern. Accepted only for providers whose credentials are organization-managed; for shared or custom credential providers, config belongs on the integration itself (via the data-integrations API) and supplying it here is rejected.
+    /// - Parameter ownership: Select the provider configuration for `user` connections or `organization` shared connections. Defaults to `user`; never falls back to the other ownership.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func updateOrganizationDataIntegrationConfiguration(
         organizationId: String,
@@ -48,10 +55,15 @@ public struct PipesProvider: Sendable {
         clientId: String? = nil,
         clientSecret: String? = nil,
         config: [String: String]? = nil,
+        ownership: PipesProviderOwnership? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> DataIntegrationConfigurationResponse {
         let path =
             "organizations/\(PathEncoding.segment(organizationId))/data_integration_configurations/\(PathEncoding.segment(slug))"
+        var query: [URLQueryItem] = []
+        if let ownership {
+            query.append(URLQueryItem(name: "ownership", value: ownership.rawValue))
+        }
         var body = EncodableBody()
         body.set("enabled", enabled)
         body.set("scopes", scopes)
@@ -61,7 +73,7 @@ public struct PipesProvider: Sendable {
         return try await transport.request(
             method: "PUT",
             path: path,
-            query: [],
+            query: query,
             body: body,
             options: requestOptions,
             as: DataIntegrationConfigurationResponse.self
