@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.10.0](https://github.com/workos/workos-ios/compare/v0.9.0...v0.10.0) (2026-11-13)
+
+
+### Features
+
+* **directory_sync:** Change directory sync API surface ([#53](https://github.com/workos/workos-ios/issues/53)) ([ad8e222](https://github.com/workos/workos-ios/commit/ad8e22274bb4a93cbb908dc12cb796a186875f56))
+* **pipes:** Update Pipes API surface ([#53](https://github.com/workos/workos-ios/issues/53)) ([ad8e222](https://github.com/workos/workos-ios/commit/ad8e22274bb4a93cbb908dc12cb796a186875f56))
+* **sso:** Update SSO API surface ([#54](https://github.com/workos/workos-ios/issues/54)) ([886e152](https://github.com/workos/workos-ios/commit/886e152542327facd3a06f37bd7b61981550ea36))
+
+
+### Bug Fixes
+
+* **session:** Reject non-user access tokens in session authentication ([#51](https://github.com/workos/workos-ios/issues/51)) ([4eb6a8d](https://github.com/workos/workos-ios/commit/4eb6a8decd76c056f167b9d92dfd9df0aff96a2e))
+
 ## [0.9.0](https://github.com/workos/workos-ios/compare/v0.8.0...v0.9.0) (2026-11-04)
 
 
