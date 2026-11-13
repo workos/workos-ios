@@ -19,6 +19,8 @@ public struct AuthenticationRadarRiskDetectedData: Codable, Sendable, Equatable 
     public let userId: String
     /// The email address of the user.
     public let email: String
+    /// The ID of the Radar detection that challenged the authentication.
+    public let radarDetectionId: String?
 
     public init(
         authMethod: String,
@@ -28,7 +30,8 @@ public struct AuthenticationRadarRiskDetectedData: Codable, Sendable, Equatable 
         control: String? = nil,
         blocklistType: String? = nil,
         ipAddress: String? = nil,
-        userAgent: String? = nil
+        userAgent: String? = nil,
+        radarDetectionId: String? = nil
     ) {
         self.authMethod = authMethod
         self.action = action
@@ -38,6 +41,7 @@ public struct AuthenticationRadarRiskDetectedData: Codable, Sendable, Equatable 
         self.userAgent = userAgent
         self.userId = userId
         self.email = email
+        self.radarDetectionId = radarDetectionId
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -49,5 +53,6 @@ public struct AuthenticationRadarRiskDetectedData: Codable, Sendable, Equatable 
         case userAgent = "user_agent"
         case userId = "user_id"
         case email
+        case radarDetectionId = "radar_detection_id"
     }
 }

@@ -8,17 +8,22 @@ public struct AuthenticationEmailVerificationFailedDataError: Codable, Sendable,
     public let code: String
     /// A human-readable error message.
     public let message: String
+    /// The ID of the Radar detection that blocked the authentication. Only set on `policy_denied` errors.
+    public let radarDetectionId: String?
 
     public init(
         code: String,
-        message: String
+        message: String,
+        radarDetectionId: String? = nil
     ) {
         self.code = code
         self.message = message
+        self.radarDetectionId = radarDetectionId
     }
 
     private enum CodingKeys: String, CodingKey {
         case code
         case message
+        case radarDetectionId = "radar_detection_id"
     }
 }

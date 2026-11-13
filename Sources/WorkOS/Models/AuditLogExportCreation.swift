@@ -5,9 +5,9 @@ import Foundation
 public struct AuditLogExportCreation: Codable, Sendable, Equatable {
     /// The unique ID of the Organization.
     public let organizationId: String
-    /// ISO-8601 value for start of the export range.
+    /// ISO-8601 value for start of the export range. The range must span no more than 31 days.
     public let rangeStart: Date
-    /// ISO-8601 value for end of the export range.
+    /// ISO-8601 value for end of the export range. Must be no more than 31 days after the start.
     public let rangeEnd: Date
     /// List of actions to filter against.
     public let actions: [String]?

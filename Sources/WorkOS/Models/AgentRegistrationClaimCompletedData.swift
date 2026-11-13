@@ -10,6 +10,8 @@ public struct AgentRegistrationClaimCompletedData: Codable, Sendable, Equatable 
     public let id: String
     /// The ID of the agent registration.
     public let agentRegistrationId: String
+    /// The ID of the organization the registration belongs to.
+    public let organizationId: String?
     /// The ID of the claim attempt that completed the claim.
     public let completedByAttemptId: String
     /// The user who completed the claim.
@@ -29,11 +31,13 @@ public struct AgentRegistrationClaimCompletedData: Codable, Sendable, Equatable 
         claimedBy: AgentRegistrationClaimCompletedDataClaimedBy,
         completedAt: String,
         createdAt: String,
-        updatedAt: String
+        updatedAt: String,
+        organizationId: String? = nil
     ) {
         self.object = object
         self.id = id
         self.agentRegistrationId = agentRegistrationId
+        self.organizationId = organizationId
         self.completedByAttemptId = completedByAttemptId
         self.claimedBy = claimedBy
         self.completedAt = completedAt
@@ -45,6 +49,7 @@ public struct AgentRegistrationClaimCompletedData: Codable, Sendable, Equatable 
         case object
         case id
         case agentRegistrationId = "agent_registration_id"
+        case organizationId = "organization_id"
         case completedByAttemptId = "completed_by_attempt_id"
         case claimedBy = "claimed_by"
         case completedAt = "completed_at"

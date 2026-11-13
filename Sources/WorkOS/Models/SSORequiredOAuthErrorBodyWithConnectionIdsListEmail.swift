@@ -2,9 +2,7 @@
 
 import Foundation
 
-public struct SSORequiredOAuthErrorBodyWithConnectionIdsListEmailPendingAuthenticationToken:
-    Codable, Sendable, Equatable
-{
+public struct SSORequiredOAuthErrorBodyWithConnectionIdsListEmail: Codable, Sendable, Equatable {
     /// The OAuth error code.
     public let error: String
     /// A human-readable description of the error.

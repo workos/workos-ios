@@ -138,7 +138,6 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
     case permissionNotFound
     case permissionSlugConflict
     case phoneNumberRequired
-    case policyDenied
     case productionFeatureRequiresBilling
     case radarChallenge
     case radarSignUpChallenge
@@ -323,7 +322,6 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case "permission_not_found": self = .permissionNotFound
         case "permission_slug_conflict": self = .permissionSlugConflict
         case "phone_number_required": self = .phoneNumberRequired
-        case "policy_denied": self = .policyDenied
         case "production_feature_requires_billing": self = .productionFeatureRequiresBilling
         case "radar_challenge": self = .radarChallenge
         case "radar_sign_up_challenge": self = .radarSignUpChallenge
@@ -510,7 +508,6 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case .permissionNotFound: return "permission_not_found"
         case .permissionSlugConflict: return "permission_slug_conflict"
         case .phoneNumberRequired: return "phone_number_required"
-        case .policyDenied: return "policy_denied"
         case .productionFeatureRequiresBilling: return "production_feature_requires_billing"
         case .radarChallenge: return "radar_challenge"
         case .radarSignUpChallenge: return "radar_sign_up_challenge"
@@ -698,7 +695,6 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         .permissionNotFound,
         .permissionSlugConflict,
         .phoneNumberRequired,
-        .policyDenied,
         .productionFeatureRequiresBilling,
         .radarChallenge,
         .radarSignUpChallenge,

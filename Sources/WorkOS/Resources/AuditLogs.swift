@@ -254,8 +254,8 @@ public struct AuditLogs: Sendable {
     /// Create an Audit Log Export. Exports are scoped to a single organization within a specified date range.
     ///
     /// - Parameter organizationId: The unique ID of the Organization.
-    /// - Parameter rangeStart: ISO-8601 value for start of the export range.
-    /// - Parameter rangeEnd: ISO-8601 value for end of the export range.
+    /// - Parameter rangeStart: ISO-8601 value for start of the export range. The range must span no more than 31 days.
+    /// - Parameter rangeEnd: ISO-8601 value for end of the export range. Must be no more than 31 days after the start.
     /// - Parameter actions: List of actions to filter against.
     /// - Parameter actors: Deprecated. Use `actor_names` instead.
     /// - Parameter actorNames: List of actor names to filter against.

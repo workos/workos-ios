@@ -79,6 +79,7 @@
     "Sources/WorkOS/Enums/DataIntegrationInstallationConnectionRole.swift",
     "Sources/WorkOS/Enums/DataIntegrationOwnership.swift",
     "Sources/WorkOS/Enums/DataIntegrationState.swift",
+    "Sources/WorkOS/Enums/DataIntegrationVendedCredentialAuthMethod.swift",
     "Sources/WorkOS/Enums/DataIntegrationsCreateApiKeyConnectionRequestConnectionOwner.swift",
     "Sources/WorkOS/Enums/DataIntegrationsCreateClientCredentialsConnectionRequestConnectionOwner.swift",
     "Sources/WorkOS/Enums/DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionIntent.swift",
@@ -158,6 +159,7 @@
     "Sources/WorkOS/Enums/PipeConnectedAccountConnectionRole.swift",
     "Sources/WorkOS/Enums/PipeConnectedAccountState.swift",
     "Sources/WorkOS/Enums/PipesOwnership.swift",
+    "Sources/WorkOS/Enums/PipesProviderOwnership.swift",
     "Sources/WorkOS/Enums/ProfileConnectionType.swift",
     "Sources/WorkOS/Enums/RadarListAction.swift",
     "Sources/WorkOS/Enums/RadarListType.swift",
@@ -926,7 +928,7 @@
     "Sources/WorkOS/Models/SSODeviceAuthorizationRequest.swift",
     "Sources/WorkOS/Models/SSOLogoutAuthorizeRequest.swift",
     "Sources/WorkOS/Models/SSOLogoutAuthorizeResponse.swift",
-    "Sources/WorkOS/Models/SSORequiredOAuthErrorBodyWithConnectionIdsListEmailPendingAuthenticationToken.swift",
+    "Sources/WorkOS/Models/SSORequiredOAuthErrorBodyWithConnectionIdsListEmail.swift",
     "Sources/WorkOS/Models/SSOTokenResponse.swift",
     "Sources/WorkOS/Models/SSOTokenResponseOAuthToken.swift",
     "Sources/WorkOS/Models/SendEmailChange.swift",
@@ -1626,6 +1628,22 @@
     },
     "POST /directories/{id}/sync": {
       "sdkMethod": "create",
+      "service": "directorySync"
+    },
+    "GET /directories/{directoryId}/groups": {
+      "sdkMethod": "listGroups",
+      "service": "directorySync"
+    },
+    "GET /directories/{directoryId}/groups/{groupId}": {
+      "sdkMethod": "getGroup",
+      "service": "directorySync"
+    },
+    "GET /directories/{directoryId}/users": {
+      "sdkMethod": "listUsers",
+      "service": "directorySync"
+    },
+    "GET /directories/{directoryId}/users/{userId}": {
+      "sdkMethod": "getUser",
       "service": "directorySync"
     },
     "GET /directory_groups": {
