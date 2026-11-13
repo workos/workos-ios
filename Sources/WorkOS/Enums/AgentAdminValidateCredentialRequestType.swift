@@ -4,7 +4,9 @@ import Foundation
 
 /// Enumeration of valid AgentAdminValidateCredentialRequestType values.
 public enum AgentAdminValidateCredentialRequestType: RawRepresentable, Codable, Sendable, Hashable {
+    /// The kind of credential being validated — an agent API key or an agent access token.
     case apiKey
+    /// The kind of credential being validated — an agent API key or an agent access token.
     case accessToken
     /// A value not known at SDK generation time.
     case unknown(String)

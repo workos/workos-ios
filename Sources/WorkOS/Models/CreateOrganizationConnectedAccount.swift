@@ -7,6 +7,8 @@ public struct CreateOrganizationConnectedAccount: Codable, Sendable, Equatable {
     public let accountDisplayName: String?
     /// A developer-attested account identifier; null clears it.
     public let accountIdentifier: String?
+    /// Installation-scoped provider configuration for this connection, such as Salesforce salesforce_host. Imports apply supplied values over installation-scoped integration pins and inherit other config from the credential source. Credential-bearing imports must satisfy required configuration even when config is omitted or {}. On update, a supplied object replaces installation-scoped values; omitted config preserves the stored snapshot. Stored integration-scoped values remain bound to the OAuth client and cannot be overridden or replaced with current integration pins. Replacements must satisfy required configuration; {} and empty-string values clear installation-scoped values only when the result is valid. Provider defaults count toward completeness but are resolved at read time, not stored. Only tokenless needs_reauthorization placeholders may remain incomplete; attaching their first tokens validates configuration even when config is omitted. Unrelated updates do not revalidate unchanged configuration. Clearing salesforce_host falls back to login.salesforce.com, which may not work for sandbox or My Domain-only connections.
+    public let config: [String: String]?
     /// The OAuth access token for the connected account.
     public let accessToken: String?
     /// The OAuth refresh token for the connected account.
@@ -19,6 +21,8 @@ public struct CreateOrganizationConnectedAccount: Codable, Sendable, Equatable {
     public let state: CreateOrganizationConnectedAccountState?
     /// The [User](https://workos.com/docs/reference/authkit/user) identifier of the organization member on whose behalf the connected account is being imported or updated. The user must be an active member of the organization.
     public let userId: String
+    /// Provider token-response metadata to preserve during import, such as Salesforce instance_url. Only allowlisted, non-sensitive scalar fields from this provider are accepted, including nested fields. Provider refresh responses can update these values. Not accepted on update.
+    public let metadata: [String: AnyCodable]?
     /// Set to `add` to create another connected account. Omit this field for permanent compatibility behavior.
     public let connectionIntent: String?
 
@@ -26,33 +30,39 @@ public struct CreateOrganizationConnectedAccount: Codable, Sendable, Equatable {
         userId: String,
         accountDisplayName: String? = nil,
         accountIdentifier: String? = nil,
+        config: [String: String]? = nil,
         accessToken: String? = nil,
         refreshToken: String? = nil,
         expiresAt: Date? = nil,
         scopes: [String]? = nil,
         state: CreateOrganizationConnectedAccountState? = nil,
+        metadata: [String: AnyCodable]? = nil,
         connectionIntent: String? = nil
     ) {
         self.accountDisplayName = accountDisplayName
         self.accountIdentifier = accountIdentifier
+        self.config = config
         self.accessToken = accessToken
         self.refreshToken = refreshToken
         self.expiresAt = expiresAt
         self.scopes = scopes
         self.state = state
         self.userId = userId
+        self.metadata = metadata
         self.connectionIntent = connectionIntent
     }
 
     private enum CodingKeys: String, CodingKey {
         case accountDisplayName = "account_display_name"
         case accountIdentifier = "account_identifier"
+        case config
         case accessToken = "access_token"
         case refreshToken = "refresh_token"
         case expiresAt = "expires_at"
         case scopes
         case state
         case userId = "user_id"
+        case metadata
         case connectionIntent = "connection_intent"
     }
 }

@@ -188,7 +188,7 @@ import Testing
     @Test func createDataIntegrationCredentialSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
-                #"{"active":true,"credential":{"object":"credential","auth_method":"oauth","value":"gho_16C7e42F292c6912E7710c838347Ae178B4a","expires_at":"2025-12-31T23:59:59.000Z","scopes":["repo","user:email"],"missing_scopes":[],"metadata":{"instance_url":"https://acme.my.salesforce.com"},"config":{"account":"myorg-myaccount"}},"error":"not_installed"}"#
+                #"{"active":true,"credential":{"object":"credential","auth_method":"oauth","value":"test_value","expires_at":"2025-12-31T23:59:59.000Z","scopes":["test_scopes"],"missing_scopes":[],"metadata":{"instance_url":"https://acme.my.salesforce.com"},"config":{"account":"myorg-myaccount"}},"error":"not_installed"}"#
         )
         let result = try await client.pipes.createDataIntegrationCredential(
             slug: "sample-slug", userId: "test_user_id")

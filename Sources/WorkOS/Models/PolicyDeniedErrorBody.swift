@@ -7,17 +7,22 @@ public struct PolicyDeniedErrorBody: Codable, Sendable, Equatable {
     public let code: String
     /// A human-readable description of the error.
     public let message: String
+    /// The ID of the Radar detection that blocked the request. Only set when Radar blocked it.
+    public let radarDetectionId: String?
 
     public init(
         code: String,
-        message: String
+        message: String,
+        radarDetectionId: String? = nil
     ) {
         self.code = code
         self.message = message
+        self.radarDetectionId = radarDetectionId
     }
 
     private enum CodingKeys: String, CodingKey {
         case code
         case message
+        case radarDetectionId = "radar_detection_id"
     }
 }

@@ -3,7 +3,6 @@
 import Foundation
 
 public struct DataIntegrationCredentialsResponse: Codable, Sendable, Equatable {
-    /// Indicates credentials are available.
     public let active: Bool?
     /// The credential object containing the vended secret.
     public let credential: DataIntegrationVendedCredential?

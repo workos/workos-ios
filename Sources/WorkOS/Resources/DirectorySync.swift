@@ -156,27 +156,27 @@ public struct DirectorySync: Sendable {
         )
     }
 
-    /// List Directory Groups
+    /// List Groups for a Directory
     ///
-    /// Get a list of all of existing directory groups matching the criteria specified.
+    /// Get a list of the Directory Groups in a Directory, optionally filtered to the groups a Directory User belongs to.
     ///
+    /// - Parameter directoryId: Unique identifier of the Directory.
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
-    /// - Parameter directory: Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
-    /// - Parameter user: Unique identifier of the WorkOS Directory User. This value can be obtained from the WorkOS API.
+    /// - Parameter user: Filter Directory Groups to those this Directory User belongs to.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listGroups(
+        directoryId: String,
         before: String? = nil,
         after: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
-        directory: String? = nil,
         user: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<DirectoryGroup> {
-        let path = "directory_groups"
+        let path = "directories/\(PathEncoding.segment(directoryId))/groups"
         var query: [URLQueryItem] = []
         if let before {
             query.append(URLQueryItem(name: "before", value: before))
@@ -189,9 +189,6 @@ public struct DirectorySync: Sendable {
         }
         if let order {
             query.append(URLQueryItem(name: "order", value: order.rawValue))
-        }
-        if let directory {
-            query.append(URLQueryItem(name: "directory", value: directory))
         }
         if let user {
             query.append(URLQueryItem(name: "user", value: user))
@@ -209,44 +206,47 @@ public struct DirectorySync: Sendable {
     /// Auto-paginating variant of `listGroups`: fetches successive
     /// pages as the sequence is iterated.
     ///
+    /// - Parameter directoryId: Unique identifier of the Directory.
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
-    /// - Parameter directory: Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
-    /// - Parameter user: Unique identifier of the WorkOS Directory User. This value can be obtained from the WorkOS API.
+    /// - Parameter user: Filter Directory Groups to those this Directory User belongs to.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listGroupsAutoPaging(
+        directoryId: String,
         before: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
-        directory: String? = nil,
         user: String? = nil,
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<DirectoryGroup> {
         AutoPagingSequence { cursor in
             try await self.listGroups(
+                directoryId: directoryId,
                 before: before,
                 after: cursor,
                 limit: limit,
                 order: order,
-                directory: directory,
                 user: user,
                 requestOptions: requestOptions
             )
         }
     }
 
-    /// Get a Directory Group
+    /// Get a Group for a Directory
     ///
-    /// Get the details of an existing Directory Group.
+    /// Get the details of a Directory Group in a Directory.
     ///
-    /// - Parameter id: Unique identifier for the Directory Group.
+    /// - Parameter directoryId: Unique identifier of the Directory.
+    /// - Parameter groupId: Unique identifier for the Directory Group.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getGroup(
-        id: String,
+        directoryId: String,
+        groupId: String,
         requestOptions: RequestOptions? = nil
     ) async throws -> DirectoryGroup {
-        let path = "directory_groups/\(PathEncoding.segment(id))"
+        let path =
+            "directories/\(PathEncoding.segment(directoryId))/groups/\(PathEncoding.segment(groupId))"
         return try await transport.request(
             method: "GET",
             path: path,
@@ -257,31 +257,31 @@ public struct DirectorySync: Sendable {
         )
     }
 
-    /// List Directory Users
+    /// List Users for a Directory
     ///
-    /// Get a list of all of existing Directory Users matching the criteria specified.
+    /// Get a list of the Directory Users in a Directory, optionally filtered to the members of a Directory Group.
     ///
+    /// - Parameter directoryId: Unique identifier of the Directory.
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter after: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
-    /// - Parameter directory: Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
-    /// - Parameter group: Unique identifier of the WorkOS Directory Group. This value can be obtained from the WorkOS API.
-    /// - Parameter idpId: Filter Directory Users by the identity provider's unique identifier (`idp_id`). Requires the `directory` parameter to also be provided.
-    /// - Parameter email: Filter Directory Users by their primary email address. Requires the `directory` parameter to also be provided.
+    /// - Parameter group: Filter Directory Users to the members of this Directory Group.
+    /// - Parameter idpId: Filter Directory Users by the identity provider's unique identifier (`idp_id`).
+    /// - Parameter email: Filter Directory Users by their primary email address.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listUsers(
+        directoryId: String,
         before: String? = nil,
         after: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
-        directory: String? = nil,
         group: String? = nil,
         idpId: String? = nil,
         email: String? = nil,
         requestOptions: RequestOptions? = nil
-    ) async throws -> Page<DirectoryUserWithGroups> {
-        let path = "directory_users"
+    ) async throws -> Page<DirectoryUser> {
+        let path = "directories/\(PathEncoding.segment(directoryId))/users"
         var query: [URLQueryItem] = []
         if let before {
             query.append(URLQueryItem(name: "before", value: before))
@@ -294,9 +294,6 @@ public struct DirectorySync: Sendable {
         }
         if let order {
             query.append(URLQueryItem(name: "order", value: order.rawValue))
-        }
-        if let directory {
-            query.append(URLQueryItem(name: "directory", value: directory))
         }
         if let group {
             query.append(URLQueryItem(name: "group", value: group))
@@ -313,38 +310,38 @@ public struct DirectorySync: Sendable {
             query: query,
             body: nil,
             options: requestOptions,
-            as: Page<DirectoryUserWithGroups>.self
+            as: Page<DirectoryUser>.self
         )
     }
 
     /// Auto-paginating variant of `listUsers`: fetches successive
     /// pages as the sequence is iterated.
     ///
+    /// - Parameter directoryId: Unique identifier of the Directory.
     /// - Parameter before: An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
     /// - Parameter limit: Upper limit on the number of objects to return, between `1` and `100`.
     /// - Parameter order: Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records).
-    /// - Parameter directory: Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
-    /// - Parameter group: Unique identifier of the WorkOS Directory Group. This value can be obtained from the WorkOS API.
-    /// - Parameter idpId: Filter Directory Users by the identity provider's unique identifier (`idp_id`). Requires the `directory` parameter to also be provided.
-    /// - Parameter email: Filter Directory Users by their primary email address. Requires the `directory` parameter to also be provided.
+    /// - Parameter group: Filter Directory Users to the members of this Directory Group.
+    /// - Parameter idpId: Filter Directory Users by the identity provider's unique identifier (`idp_id`).
+    /// - Parameter email: Filter Directory Users by their primary email address.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listUsersAutoPaging(
+        directoryId: String,
         before: String? = nil,
         limit: Int? = nil,
         order: PaginationOrder? = nil,
-        directory: String? = nil,
         group: String? = nil,
         idpId: String? = nil,
         email: String? = nil,
         requestOptions: RequestOptions? = nil
-    ) -> AutoPagingSequence<DirectoryUserWithGroups> {
+    ) -> AutoPagingSequence<DirectoryUser> {
         AutoPagingSequence { cursor in
             try await self.listUsers(
+                directoryId: directoryId,
                 before: before,
                 after: cursor,
                 limit: limit,
                 order: order,
-                directory: directory,
                 group: group,
                 idpId: idpId,
                 email: email,
@@ -353,24 +350,27 @@ public struct DirectorySync: Sendable {
         }
     }
 
-    /// Get a Directory User
+    /// Get a User for a Directory
     ///
-    /// Get the details of an existing Directory User.
+    /// Get the details of a Directory User in a Directory.
     ///
-    /// - Parameter id: Unique identifier for the Directory User.
+    /// - Parameter directoryId: Unique identifier of the Directory.
+    /// - Parameter userId: Unique identifier for the Directory User.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func getUser(
-        id: String,
+        directoryId: String,
+        userId: String,
         requestOptions: RequestOptions? = nil
-    ) async throws -> DirectoryUserWithGroups {
-        let path = "directory_users/\(PathEncoding.segment(id))"
+    ) async throws -> DirectoryUser {
+        let path =
+            "directories/\(PathEncoding.segment(directoryId))/users/\(PathEncoding.segment(userId))"
         return try await transport.request(
             method: "GET",
             path: path,
             query: [],
             body: nil,
             options: requestOptions,
-            as: DirectoryUserWithGroups.self
+            as: DirectoryUser.self
         )
     }
 }

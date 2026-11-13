@@ -3,7 +3,7 @@
 import Foundation
 
 public struct ClientApiTokenResponse: Codable, Sendable, Equatable {
-    /// The Client API token.
+    /// The Widgets API token.
     public let token: String
 
     public init(

@@ -5,9 +5,13 @@ import Foundation
 /// Enumeration of valid AgentBlueprintsTokenMintTokenRequestType values.
 public enum AgentBlueprintsTokenMintTokenRequestType: RawRepresentable, Codable, Sendable, Hashable
 {
+    /// How the session is minted: `user_delegated`, `autonomous`, `agent_delegated`, or `refresh`.
     case userDelegated
+    /// How the session is minted: `user_delegated`, `autonomous`, `agent_delegated`, or `refresh`.
     case autonomous
+    /// How the session is minted: `user_delegated`, `autonomous`, `agent_delegated`, or `refresh`.
     case agentDelegated
+    /// How the session is minted: `user_delegated`, `autonomous`, `agent_delegated`, or `refresh`.
     case refresh
     /// A value not known at SDK generation time.
     case unknown(String)

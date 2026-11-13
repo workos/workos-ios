@@ -6,14 +6,10 @@ public struct DataIntegrationVendedCredential: Codable, Sendable, Equatable {
     /// Distinguishes the credential object.
     public let object: String?
     /// The authentication method for this credential. Additional values may be added in the future; handle unknown values gracefully.
-    public let authMethod: String?
-    /// The vended secret. An OAuth access token when `auth_method` is `oauth`, the API key when `api_key`, or the client-credentials access token when `client_credentials`.
+    public let authMethod: DataIntegrationVendedCredentialAuthMethod?
     public let value: String?
-    /// The ISO-8601 formatted timestamp indicating when the credential expires, or `null` if it does not expire. Present for `oauth` and `client_credentials` credentials; absent for `api_key`.
     public let expiresAt: String?
-    /// The scopes granted to the access token. Present for `oauth` and `client_credentials` credentials; absent for `api_key`.
     public let scopes: [String]?
-    /// If the integration has requested scopes that aren't present on the access token, they're listed here. Present for `oauth` and `client_credentials` credentials; absent for `api_key`.
     public let missingScopes: [String]?
     /// Non-sensitive fields captured from the provider token response (e.g. Salesforce `instance_url`), as configured for the provider. Captured on OAuth code exchange and refresh, and on each `client_credentials` mint. A field a later OAuth refresh omits keeps its stored value. Present for `oauth` and `client_credentials` credentials; absent for `api_key`.
     public let metadata: [String: AnyCodable]?
@@ -22,7 +18,7 @@ public struct DataIntegrationVendedCredential: Codable, Sendable, Equatable {
 
     public init(
         object: String? = nil,
-        authMethod: String? = nil,
+        authMethod: DataIntegrationVendedCredentialAuthMethod? = nil,
         value: String? = nil,
         expiresAt: String? = nil,
         scopes: [String]? = nil,
