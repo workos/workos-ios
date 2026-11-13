@@ -18,6 +18,7 @@ public struct SSO: Sendable {
     /// - Parameter domain: Filter Connections by their associated domain.
     /// - Parameter organizationId: Filter Connections by their associated organization.
     /// - Parameter search: Searchable text to match against Connection names.
+    /// - Parameter state: Filter Connections by their state.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listConnections(
         before: String? = nil,
@@ -28,6 +29,7 @@ public struct SSO: Sendable {
         domain: String? = nil,
         organizationId: String? = nil,
         search: String? = nil,
+        state: ConnectionsState? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Page<Connection> {
         let path = "connections"
@@ -56,6 +58,9 @@ public struct SSO: Sendable {
         if let search {
             query.append(URLQueryItem(name: "search", value: search))
         }
+        if let state {
+            query.append(URLQueryItem(name: "state", value: state.rawValue))
+        }
         return try await transport.request(
             method: "GET",
             path: path,
@@ -76,6 +81,7 @@ public struct SSO: Sendable {
     /// - Parameter domain: Filter Connections by their associated domain.
     /// - Parameter organizationId: Filter Connections by their associated organization.
     /// - Parameter search: Searchable text to match against Connection names.
+    /// - Parameter state: Filter Connections by their state.
     /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
     public func listConnectionsAutoPaging(
         before: String? = nil,
@@ -85,6 +91,7 @@ public struct SSO: Sendable {
         domain: String? = nil,
         organizationId: String? = nil,
         search: String? = nil,
+        state: ConnectionsState? = nil,
         requestOptions: RequestOptions? = nil
     ) -> AutoPagingSequence<Connection> {
         AutoPagingSequence { cursor in
@@ -97,6 +104,7 @@ public struct SSO: Sendable {
                 domain: domain,
                 organizationId: organizationId,
                 search: search,
+                state: state,
                 requestOptions: requestOptions
             )
         }
