@@ -236,6 +236,19 @@ import Testing
         #expect(result.id == "role_assignment_01HXYZ123456789ABCDEFGH")
     }
 
+    @Test func updateRoleAssignmentsSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.authorization.updateRoleAssignments(
+            organizationMembershipId: "sample-organization-membership-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "PATCH")
+        #expect(
+            request.url?.path
+                == "/authorization/organization_memberships/sample-organization-membership-id/role_assignments"
+        )
+    }
+
     @Test func removeRoleSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(responding: #"{}"#)
         try await client.authorization.removeRole(

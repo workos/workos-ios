@@ -76,7 +76,7 @@ public struct Agents: Sendable {
     ///
     /// - Parameter name: Human-readable name of the agent blueprint.
     /// - Parameter description: Human-readable description of the agent blueprint.
-    /// - Parameter permissions: Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
+    /// - Parameter permissions: Permissions forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment and may appear once.
     /// - Parameter invocableBy: Who may mint sessions from this blueprint.
     /// - Parameter invocableAs: How sessions may be minted from this blueprint.
     /// - Parameter sessionSettings: Token and session lifetimes for sessions minted from this blueprint.
@@ -84,7 +84,7 @@ public struct Agents: Sendable {
     public func createBlueprint(
         name: String,
         description: String? = nil,
-        permissions: [String]? = nil,
+        permissions: [AnyCodable]? = nil,
         invocableBy: AgentBlueprintsCreateRequestInvocableBy? = nil,
         invocableAs: AgentBlueprintsCreateRequestInvocableAs? = nil,
         sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = nil,
@@ -136,7 +136,7 @@ public struct Agents: Sendable {
     /// - Parameter agentBlueprintId: The unique ID of the agent blueprint.
     /// - Parameter name: Human-readable name of the agent blueprint.
     /// - Parameter description: Human-readable description of the agent blueprint. Pass `null` to clear it.
-    /// - Parameter permissions: Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
+    /// - Parameter permissions: Permissions forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment and may appear once.
     /// - Parameter invocableBy: Who may mint sessions from this blueprint. Omitted lists are left unchanged.
     /// - Parameter invocableAs: How sessions may be minted from this blueprint. Omitted lists are left unchanged.
     /// - Parameter sessionSettings: Token and session lifetimes for sessions minted from this blueprint. Omitted fields are left unchanged.
@@ -145,7 +145,7 @@ public struct Agents: Sendable {
         agentBlueprintId: String,
         name: String? = nil,
         description: String? = nil,
-        permissions: [String]? = nil,
+        permissions: [AnyCodable]? = nil,
         invocableBy: AgentBlueprintsUpdateRequestInvocableBy? = nil,
         invocableAs: AgentBlueprintsUpdateRequestInvocableAs? = nil,
         sessionSettings: AgentBlueprintsUpdateRequestSessionSetting? = nil,

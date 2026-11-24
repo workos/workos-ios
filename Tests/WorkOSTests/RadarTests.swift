@@ -43,6 +43,19 @@ import Testing
         #expect(request.url?.path == "/radar/attempts/sample-id")
     }
 
+    @Test func getDetectionSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"radar_detection","id":"detection_01HZBC6N1EB1ZY7KG32X","attempt_id":"radar_att_01HZBC6N1EB1ZY7KG32X","control":"bot_detection","verdict":"challenge","challenge_type":"email","evidence":{"summary":"Sign-up from a Tor exit node with an email format shared by many recent sign-ups. The action was decided by the risky IP. The email pattern would also have challenged.","allowed_by":{"list_id":"radar_list_01HZBC6N1EB1ZY7KG32X","list":{"type":"domain","action":"block","name":"Disposable email domains","workos_managed":true},"entry":"example.com"},"control":"bot_detection","details":{"signals":[{"signal":"risky_ip","action":"block"}],"decided_by":"risky_ip","ip_risk":["abuser","anonymous","vpn","tor","proxy"],"email_pattern":["generated_looking","repeated_format","suspicious_domain"],"browser_signals":["automation_framework","headless_browser","tampered_signals","inconsistent_hardware","missing_signals","missing_expected_signals"],"ip_sign_ups":{"count":6,"window_minutes":5},"domain_sign_ups":{"root_domain":"example.com","count":44}}},"ip_address":"203.0.113.42","location":{"city":"San Francisco","country":"US"},"user_agent":"Mozilla/5.0","email":"user@example.com","user_id":"user_01E4ZCR3C56J083X43JQXF3JK5","action":"signup","auth_method":"password","created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.radar.getDetection(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/radar/detections/sample-id")
+        #expect(result.id == "detection_01HZBC6N1EB1ZY7KG32X")
+    }
+
     @Test func addListEntrySendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding: #"{"message":"Entry already present in list"}"#)

@@ -312,6 +312,15 @@ import Testing
         #expect(result.id == "cors_origin_01HXYZ123456789ABCDEFGHIJ")
     }
 
+    @Test func deleteCorsOriginSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(responding: #"{}"#)
+        try await client.userManagement.deleteCorsOrigin(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "DELETE")
+        #expect(request.url?.path == "/user_management/cors_origins/sample-id")
+    }
+
     @Test func getEmailVerificationSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:

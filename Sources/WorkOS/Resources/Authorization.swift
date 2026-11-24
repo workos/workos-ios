@@ -631,7 +631,7 @@ public struct Authorization: Sendable {
 
     /// Assign a role
     ///
-    /// Assign a role to an organization membership on a specific resource.
+    /// Assign a role to an organization membership on a specific resource. If the role is already assigned to the membership on that resource, the existing role assignment is returned and no changes are made.
     ///
     /// - Parameter organizationMembershipId: The ID of the organization membership.
     /// - Parameter roleSlug: The slug of the role to assign.
@@ -661,6 +661,34 @@ public struct Authorization: Sendable {
             body: body,
             options: requestOptions,
             as: UserRoleAssignment.self
+        )
+    }
+
+    /// Update role assignments for an organization membership
+    ///
+    /// Add and remove role assignments for an organization membership in a single atomic operation. Each entry identifies a role and a resource, either by `resource_id` or by `resource_type_slug` and `resource_external_id`; to change an organization-level role, target the organization resource. Additions that already exist and removals that match no assignment are skipped. An assignment in both lists is rejected, as is a removal of a role granted only through a group. `add` and `remove` must contain between 1 and 100 entries combined.
+    ///
+    /// - Parameter organizationMembershipId: The ID of the organization membership.
+    /// - Parameter add: Role assignments to add to the organization membership. Assignments that already exist are skipped.
+    /// - Parameter remove: Role assignments to remove from the organization membership. Entries that match no assignment are skipped. Roles granted through a group cannot be removed.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func updateRoleAssignments(
+        organizationMembershipId: String,
+        add: [PatchRoleAssignmentEntry]? = nil,
+        remove: [PatchRoleAssignmentEntry]? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path =
+            "authorization/organization_memberships/\(PathEncoding.segment(organizationMembershipId))/role_assignments"
+        var body = EncodableBody()
+        body.set("add", add)
+        body.set("remove", remove)
+        try await transport.requestVoid(
+            method: "PATCH",
+            path: path,
+            query: [],
+            body: body,
+            options: requestOptions
         )
     }
 
