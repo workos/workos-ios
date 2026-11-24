@@ -40,10 +40,13 @@ public enum UpdateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
     case apiKeyCreated
     case apiKeyRevoked
     case apiKeyUpdated
+    case applicationTokenExchangeFailed
+    case applicationTokenExchangeSucceeded
     case connectionActivated
     case connectionDeactivated
     case connectionSAMLCertificateRenewalRequired
     case connectionSAMLCertificateRenewed
+    case connectionSAMLCertificateReplaced
     case connectionDeleted
     case dsyncActivated
     case dsyncDeleted
@@ -77,6 +80,9 @@ public enum UpdateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
     case invitationCreated
     case invitationResent
     case invitationRevoked
+    case issuerTrustCreated
+    case issuerTrustDeleted
+    case issuerTrustUpdated
     case magicAuthCreated
     case organizationCreated
     case organizationDeleted
@@ -162,11 +168,14 @@ public enum UpdateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case "api_key.created": self = .apiKeyCreated
         case "api_key.revoked": self = .apiKeyRevoked
         case "api_key.updated": self = .apiKeyUpdated
+        case "application.token_exchange_failed": self = .applicationTokenExchangeFailed
+        case "application.token_exchange_succeeded": self = .applicationTokenExchangeSucceeded
         case "connection.activated": self = .connectionActivated
         case "connection.deactivated": self = .connectionDeactivated
         case "connection.saml_certificate_renewal_required":
             self = .connectionSAMLCertificateRenewalRequired
         case "connection.saml_certificate_renewed": self = .connectionSAMLCertificateRenewed
+        case "connection.saml_certificate_replaced": self = .connectionSAMLCertificateReplaced
         case "connection.deleted": self = .connectionDeleted
         case "dsync.activated": self = .dsyncActivated
         case "dsync.deleted": self = .dsyncDeleted
@@ -200,6 +209,9 @@ public enum UpdateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case "invitation.created": self = .invitationCreated
         case "invitation.resent": self = .invitationResent
         case "invitation.revoked": self = .invitationRevoked
+        case "issuer_trust.created": self = .issuerTrustCreated
+        case "issuer_trust.deleted": self = .issuerTrustDeleted
+        case "issuer_trust.updated": self = .issuerTrustUpdated
         case "magic_auth.created": self = .magicAuthCreated
         case "organization.created": self = .organizationCreated
         case "organization.deleted": self = .organizationDeleted
@@ -290,11 +302,14 @@ public enum UpdateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case .apiKeyCreated: return "api_key.created"
         case .apiKeyRevoked: return "api_key.revoked"
         case .apiKeyUpdated: return "api_key.updated"
+        case .applicationTokenExchangeFailed: return "application.token_exchange_failed"
+        case .applicationTokenExchangeSucceeded: return "application.token_exchange_succeeded"
         case .connectionActivated: return "connection.activated"
         case .connectionDeactivated: return "connection.deactivated"
         case .connectionSAMLCertificateRenewalRequired:
             return "connection.saml_certificate_renewal_required"
         case .connectionSAMLCertificateRenewed: return "connection.saml_certificate_renewed"
+        case .connectionSAMLCertificateReplaced: return "connection.saml_certificate_replaced"
         case .connectionDeleted: return "connection.deleted"
         case .dsyncActivated: return "dsync.activated"
         case .dsyncDeleted: return "dsync.deleted"
@@ -328,6 +343,9 @@ public enum UpdateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         case .invitationCreated: return "invitation.created"
         case .invitationResent: return "invitation.resent"
         case .invitationRevoked: return "invitation.revoked"
+        case .issuerTrustCreated: return "issuer_trust.created"
+        case .issuerTrustDeleted: return "issuer_trust.deleted"
+        case .issuerTrustUpdated: return "issuer_trust.updated"
         case .magicAuthCreated: return "magic_auth.created"
         case .organizationCreated: return "organization.created"
         case .organizationDeleted: return "organization.deleted"
@@ -423,10 +441,13 @@ public enum UpdateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         .apiKeyCreated,
         .apiKeyRevoked,
         .apiKeyUpdated,
+        .applicationTokenExchangeFailed,
+        .applicationTokenExchangeSucceeded,
         .connectionActivated,
         .connectionDeactivated,
         .connectionSAMLCertificateRenewalRequired,
         .connectionSAMLCertificateRenewed,
+        .connectionSAMLCertificateReplaced,
         .connectionDeleted,
         .dsyncActivated,
         .dsyncDeleted,
@@ -460,6 +481,9 @@ public enum UpdateWebhookEndpointEvents: RawRepresentable, Codable, Sendable, Ha
         .invitationCreated,
         .invitationResent,
         .invitationRevoked,
+        .issuerTrustCreated,
+        .issuerTrustDeleted,
+        .issuerTrustUpdated,
         .magicAuthCreated,
         .organizationCreated,
         .organizationDeleted,

@@ -47,6 +47,19 @@ import Testing
         #expect(result.id == "we_0123456789")
     }
 
+    @Test func getEndpointSendsExpectedRequest() async throws {
+        let (client, recorder) = makeTestClient(
+            responding:
+                #"{"object":"webhook_endpoint","id":"we_0123456789","endpoint_url":"https://example.com/webhooks","secret":"whsec_0FWAiVGkEfGBqqsJH4aNAGBJ4","status":"enabled","events":["user.created","dsync.user.created"],"created_at":"2026-01-15T12:00:00.000Z","updated_at":"2026-01-15T12:00:00.000Z"}"#
+        )
+        let result = try await client.webhooks.getEndpoint(id: "sample-id")
+
+        let request = try #require(recorder.lastRequest)
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.path == "/webhook_endpoints/sample-id")
+        #expect(result.id == "we_0123456789")
+    }
+
     @Test func updateEndpointSendsExpectedRequest() async throws {
         let (client, recorder) = makeTestClient(
             responding:
