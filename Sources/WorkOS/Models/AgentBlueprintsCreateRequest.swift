@@ -8,8 +8,8 @@ public struct AgentBlueprintsCreateRequest: Codable, Sendable, Equatable {
     public let name: String
     /// Human-readable description of the agent blueprint.
     public let description: String?
-    /// Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
-    public let permissions: [String]?
+    /// Permissions forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment and may appear once.
+    public let permissions: [AnyCodable]?
     /// Who may mint sessions from this blueprint.
     public let invocableBy: AgentBlueprintsCreateRequestInvocableBy?
     /// How sessions may be minted from this blueprint.
@@ -20,7 +20,7 @@ public struct AgentBlueprintsCreateRequest: Codable, Sendable, Equatable {
     public init(
         name: String,
         description: String? = nil,
-        permissions: [String]? = nil,
+        permissions: [AnyCodable]? = nil,
         invocableBy: AgentBlueprintsCreateRequestInvocableBy? = nil,
         invocableAs: AgentBlueprintsCreateRequestInvocableAs? = nil,
         sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = nil

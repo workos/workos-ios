@@ -7,7 +7,7 @@ public struct AuthenticationRadarRiskDetectedData: Codable, Sendable, Equatable 
     /// The authentication method used.
     public let authMethod: String
     public let action: AuthenticationRadarRiskDetectedDataAction
-    /// The control action taken for the detected risk.
+    /// The Radar control that detected the risk.
     public let control: String?
     /// The type of blocklist that triggered the risk detection.
     public let blocklistType: String?
@@ -19,7 +19,7 @@ public struct AuthenticationRadarRiskDetectedData: Codable, Sendable, Equatable 
     public let userId: String
     /// The email address of the user.
     public let email: String
-    /// The ID of the Radar detection that challenged the authentication.
+    /// The ID of the Radar detection that challenged the authentication. Retrieve the detection with `GET /radar/detections/:id` to see why Radar acted.
     public let radarDetectionId: String?
 
     public init(

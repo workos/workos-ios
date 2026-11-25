@@ -71,6 +71,27 @@ public struct Radar: Sendable {
         )
     }
 
+    /// Get a Radar detection
+    ///
+    /// Get a Radar detection from the last 30 days, including the evidence for why Radar fired.
+    ///
+    /// - Parameter id: The unique ID of the Radar detection.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func getDetection(
+        id: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> RadarDetection {
+        let path = "radar/detections/\(PathEncoding.segment(id))"
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: RadarDetection.self
+        )
+    }
+
     /// Add an entry to a Radar list
     ///
     /// Add an entry to a Radar list.

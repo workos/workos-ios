@@ -19,6 +19,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
     case cannotDeactivatePendingOrganizationMembership
     case cannotDeleteLastCertificate
     case cannotReactivatePendingOrganizationMembership
+    case cannotRemoveGroupSourcedRole
     case certificateExpired
     case chainDepthExceeded
     case claimDenied
@@ -42,6 +43,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
     case directorySyncRateLimited
     case directorySyncUnsupported
     case discoveryEndpointMustUseHttps
+    case discoveryEndpointTenantNotAllowed
     case domainAlreadyExists
     case domainAlreadyVerified
     case duplicateEndpoint
@@ -66,6 +68,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
     case emailVerificationCodeIncorrect
     case emailVerificationCodePreviouslyUsed
     case emailVerificationRequired
+    case entitiesNotFound
     case entityNotFound
     case expiresInDaysTooLong
     case expiresInDaysTooShort
@@ -85,6 +88,8 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
     case invalidEmail
     case invalidIdpSSOUrl
     case invalidInvite
+    case invalidIssuerMetadata
+    case invalidIssuerUrl
     case invalidLocale
     case invalidMetadata
     case invalidOneTimeCode
@@ -106,6 +111,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
     case inviteNotPending
     case inviteRevoked
     case ipAddressRequired
+    case issuerAlreadyTrusted
     case itContactAlreadyExists
     case itContactInvitationAlreadyActive
     case keyPairNotAccepted
@@ -118,16 +124,20 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
     case multipleRolesNotEnabled
     case nameAlreadyInUse
     case noPendingEmailChange
+    case notClaudeIssuer
     case oidcOptionsRequired
     case oneTimeCodeExpired
     case oneTimeCodePreviouslyUsed
     case oneTimeCodeTooManyAttempts
+    case organizationAlreadyHasTrust
     case organizationBlockedFromSendingInvites
+    case organizationHasIdpManagedEma
     case organizationMembershipDirectoryManaged
     case organizationNotFound
     case organizationNotInvocable
     case organizationRoleSlugConflict
     case organizationSelectionRequired
+    case organizationWithoutVerifiedDomain
     case passkeyProgressiveEnrollment
     case passwordAndPasswordHashProvided
     case passwordAndPasswordHashTypeProvided
@@ -141,11 +151,13 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
     case productionFeatureRequiresBilling
     case radarChallenge
     case radarSignUpChallenge
+    case radarSmsChallenge
     case radarSmsSignInChallenge
     case rateLimitExceeded
     case resourceHasDependents
     case resourceLimitExceeded
     case resourceTypeUpdateInProgress
+    case roleAssignmentUpdateOverlap
     case roleHasAssignments
     case roleHasGroupRoleMappings
     case roleNotFound
@@ -198,6 +210,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case "cannot_delete_last_certificate": self = .cannotDeleteLastCertificate
         case "cannot_reactivate_pending_organization_membership":
             self = .cannotReactivatePendingOrganizationMembership
+        case "cannot_remove_group_sourced_role": self = .cannotRemoveGroupSourcedRole
         case "certificate_expired": self = .certificateExpired
         case "chain_depth_exceeded": self = .chainDepthExceeded
         case "claim_denied": self = .claimDenied
@@ -221,6 +234,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case "directory_sync_rate_limited": self = .directorySyncRateLimited
         case "directory_sync_unsupported": self = .directorySyncUnsupported
         case "discovery_endpoint_must_use_https": self = .discoveryEndpointMustUseHttps
+        case "discovery_endpoint_tenant_not_allowed": self = .discoveryEndpointTenantNotAllowed
         case "domain_already_exists": self = .domainAlreadyExists
         case "domain_already_verified": self = .domainAlreadyVerified
         case "duplicate_endpoint": self = .duplicateEndpoint
@@ -245,6 +259,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case "email_verification_code_incorrect": self = .emailVerificationCodeIncorrect
         case "email_verification_code_previously_used": self = .emailVerificationCodePreviouslyUsed
         case "email_verification_required": self = .emailVerificationRequired
+        case "entities_not_found": self = .entitiesNotFound
         case "entity_not_found": self = .entityNotFound
         case "expires_in_days_too_long": self = .expiresInDaysTooLong
         case "expires_in_days_too_short": self = .expiresInDaysTooShort
@@ -265,6 +280,8 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case "invalid_email": self = .invalidEmail
         case "invalid_idp_sso_url": self = .invalidIdpSSOUrl
         case "invalid_invite": self = .invalidInvite
+        case "invalid_issuer_metadata": self = .invalidIssuerMetadata
+        case "invalid_issuer_url": self = .invalidIssuerUrl
         case "invalid_locale": self = .invalidLocale
         case "invalid_metadata": self = .invalidMetadata
         case "invalid_one_time_code": self = .invalidOneTimeCode
@@ -286,6 +303,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case "invite_not_pending": self = .inviteNotPending
         case "invite_revoked": self = .inviteRevoked
         case "ip_address_required": self = .ipAddressRequired
+        case "issuer_already_trusted": self = .issuerAlreadyTrusted
         case "it_contact_already_exists": self = .itContactAlreadyExists
         case "it_contact_invitation_already_active": self = .itContactInvitationAlreadyActive
         case "key_pair_not_accepted": self = .keyPairNotAccepted
@@ -299,18 +317,22 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case "multiple_roles_not_enabled": self = .multipleRolesNotEnabled
         case "name_already_in_use": self = .nameAlreadyInUse
         case "no_pending_email_change": self = .noPendingEmailChange
+        case "not_claude_issuer": self = .notClaudeIssuer
         case "oidc_options_required": self = .oidcOptionsRequired
         case "one_time_code_expired": self = .oneTimeCodeExpired
         case "one_time_code_previously_used": self = .oneTimeCodePreviouslyUsed
         case "one_time_code_too_many_attempts": self = .oneTimeCodeTooManyAttempts
+        case "organization_already_has_trust": self = .organizationAlreadyHasTrust
         case "organization_blocked_from_sending_invites":
             self = .organizationBlockedFromSendingInvites
+        case "organization_has_idp_managed_ema": self = .organizationHasIdpManagedEma
         case "organization_membership_directory_managed":
             self = .organizationMembershipDirectoryManaged
         case "organization_not_found": self = .organizationNotFound
         case "organization_not_invocable": self = .organizationNotInvocable
         case "organization_role_slug_conflict": self = .organizationRoleSlugConflict
         case "organization_selection_required": self = .organizationSelectionRequired
+        case "organization_without_verified_domain": self = .organizationWithoutVerifiedDomain
         case "passkey_progressive_enrollment": self = .passkeyProgressiveEnrollment
         case "password_and_password_hash_provided": self = .passwordAndPasswordHashProvided
         case "password_and_password_hash_type_provided": self = .passwordAndPasswordHashTypeProvided
@@ -325,11 +347,13 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case "production_feature_requires_billing": self = .productionFeatureRequiresBilling
         case "radar_challenge": self = .radarChallenge
         case "radar_sign_up_challenge": self = .radarSignUpChallenge
+        case "radar_sms_challenge": self = .radarSmsChallenge
         case "radar_sms_sign_in_challenge": self = .radarSmsSignInChallenge
         case "rate_limit_exceeded": self = .rateLimitExceeded
         case "resource_has_dependents": self = .resourceHasDependents
         case "resource_limit_exceeded": self = .resourceLimitExceeded
         case "resource_type_update_in_progress": self = .resourceTypeUpdateInProgress
+        case "role_assignment_update_overlap": self = .roleAssignmentUpdateOverlap
         case "role_has_assignments": self = .roleHasAssignments
         case "role_has_group_role_mappings": self = .roleHasGroupRoleMappings
         case "role_not_found": self = .roleNotFound
@@ -384,6 +408,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case .cannotDeleteLastCertificate: return "cannot_delete_last_certificate"
         case .cannotReactivatePendingOrganizationMembership:
             return "cannot_reactivate_pending_organization_membership"
+        case .cannotRemoveGroupSourcedRole: return "cannot_remove_group_sourced_role"
         case .certificateExpired: return "certificate_expired"
         case .chainDepthExceeded: return "chain_depth_exceeded"
         case .claimDenied: return "claim_denied"
@@ -407,6 +432,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case .directorySyncRateLimited: return "directory_sync_rate_limited"
         case .directorySyncUnsupported: return "directory_sync_unsupported"
         case .discoveryEndpointMustUseHttps: return "discovery_endpoint_must_use_https"
+        case .discoveryEndpointTenantNotAllowed: return "discovery_endpoint_tenant_not_allowed"
         case .domainAlreadyExists: return "domain_already_exists"
         case .domainAlreadyVerified: return "domain_already_verified"
         case .duplicateEndpoint: return "duplicate_endpoint"
@@ -431,6 +457,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case .emailVerificationCodeIncorrect: return "email_verification_code_incorrect"
         case .emailVerificationCodePreviouslyUsed: return "email_verification_code_previously_used"
         case .emailVerificationRequired: return "email_verification_required"
+        case .entitiesNotFound: return "entities_not_found"
         case .entityNotFound: return "entity_not_found"
         case .expiresInDaysTooLong: return "expires_in_days_too_long"
         case .expiresInDaysTooShort: return "expires_in_days_too_short"
@@ -451,6 +478,8 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case .invalidEmail: return "invalid_email"
         case .invalidIdpSSOUrl: return "invalid_idp_sso_url"
         case .invalidInvite: return "invalid_invite"
+        case .invalidIssuerMetadata: return "invalid_issuer_metadata"
+        case .invalidIssuerUrl: return "invalid_issuer_url"
         case .invalidLocale: return "invalid_locale"
         case .invalidMetadata: return "invalid_metadata"
         case .invalidOneTimeCode: return "invalid_one_time_code"
@@ -472,6 +501,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case .inviteNotPending: return "invite_not_pending"
         case .inviteRevoked: return "invite_revoked"
         case .ipAddressRequired: return "ip_address_required"
+        case .issuerAlreadyTrusted: return "issuer_already_trusted"
         case .itContactAlreadyExists: return "it_contact_already_exists"
         case .itContactInvitationAlreadyActive: return "it_contact_invitation_already_active"
         case .keyPairNotAccepted: return "key_pair_not_accepted"
@@ -485,18 +515,22 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case .multipleRolesNotEnabled: return "multiple_roles_not_enabled"
         case .nameAlreadyInUse: return "name_already_in_use"
         case .noPendingEmailChange: return "no_pending_email_change"
+        case .notClaudeIssuer: return "not_claude_issuer"
         case .oidcOptionsRequired: return "oidc_options_required"
         case .oneTimeCodeExpired: return "one_time_code_expired"
         case .oneTimeCodePreviouslyUsed: return "one_time_code_previously_used"
         case .oneTimeCodeTooManyAttempts: return "one_time_code_too_many_attempts"
+        case .organizationAlreadyHasTrust: return "organization_already_has_trust"
         case .organizationBlockedFromSendingInvites:
             return "organization_blocked_from_sending_invites"
+        case .organizationHasIdpManagedEma: return "organization_has_idp_managed_ema"
         case .organizationMembershipDirectoryManaged:
             return "organization_membership_directory_managed"
         case .organizationNotFound: return "organization_not_found"
         case .organizationNotInvocable: return "organization_not_invocable"
         case .organizationRoleSlugConflict: return "organization_role_slug_conflict"
         case .organizationSelectionRequired: return "organization_selection_required"
+        case .organizationWithoutVerifiedDomain: return "organization_without_verified_domain"
         case .passkeyProgressiveEnrollment: return "passkey_progressive_enrollment"
         case .passwordAndPasswordHashProvided: return "password_and_password_hash_provided"
         case .passwordAndPasswordHashTypeProvided: return "password_and_password_hash_type_provided"
@@ -511,11 +545,13 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         case .productionFeatureRequiresBilling: return "production_feature_requires_billing"
         case .radarChallenge: return "radar_challenge"
         case .radarSignUpChallenge: return "radar_sign_up_challenge"
+        case .radarSmsChallenge: return "radar_sms_challenge"
         case .radarSmsSignInChallenge: return "radar_sms_sign_in_challenge"
         case .rateLimitExceeded: return "rate_limit_exceeded"
         case .resourceHasDependents: return "resource_has_dependents"
         case .resourceLimitExceeded: return "resource_limit_exceeded"
         case .resourceTypeUpdateInProgress: return "resource_type_update_in_progress"
+        case .roleAssignmentUpdateOverlap: return "role_assignment_update_overlap"
         case .roleHasAssignments: return "role_has_assignments"
         case .roleHasGroupRoleMappings: return "role_has_group_role_mappings"
         case .roleNotFound: return "role_not_found"
@@ -576,6 +612,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         .cannotDeactivatePendingOrganizationMembership,
         .cannotDeleteLastCertificate,
         .cannotReactivatePendingOrganizationMembership,
+        .cannotRemoveGroupSourcedRole,
         .certificateExpired,
         .chainDepthExceeded,
         .claimDenied,
@@ -599,6 +636,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         .directorySyncRateLimited,
         .directorySyncUnsupported,
         .discoveryEndpointMustUseHttps,
+        .discoveryEndpointTenantNotAllowed,
         .domainAlreadyExists,
         .domainAlreadyVerified,
         .duplicateEndpoint,
@@ -623,6 +661,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         .emailVerificationCodeIncorrect,
         .emailVerificationCodePreviouslyUsed,
         .emailVerificationRequired,
+        .entitiesNotFound,
         .entityNotFound,
         .expiresInDaysTooLong,
         .expiresInDaysTooShort,
@@ -642,6 +681,8 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         .invalidEmail,
         .invalidIdpSSOUrl,
         .invalidInvite,
+        .invalidIssuerMetadata,
+        .invalidIssuerUrl,
         .invalidLocale,
         .invalidMetadata,
         .invalidOneTimeCode,
@@ -663,6 +704,7 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         .inviteNotPending,
         .inviteRevoked,
         .ipAddressRequired,
+        .issuerAlreadyTrusted,
         .itContactAlreadyExists,
         .itContactInvitationAlreadyActive,
         .keyPairNotAccepted,
@@ -675,16 +717,20 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         .multipleRolesNotEnabled,
         .nameAlreadyInUse,
         .noPendingEmailChange,
+        .notClaudeIssuer,
         .oidcOptionsRequired,
         .oneTimeCodeExpired,
         .oneTimeCodePreviouslyUsed,
         .oneTimeCodeTooManyAttempts,
+        .organizationAlreadyHasTrust,
         .organizationBlockedFromSendingInvites,
+        .organizationHasIdpManagedEma,
         .organizationMembershipDirectoryManaged,
         .organizationNotFound,
         .organizationNotInvocable,
         .organizationRoleSlugConflict,
         .organizationSelectionRequired,
+        .organizationWithoutVerifiedDomain,
         .passkeyProgressiveEnrollment,
         .passwordAndPasswordHashProvided,
         .passwordAndPasswordHashTypeProvided,
@@ -698,11 +744,13 @@ public enum ErrorBodyCode: RawRepresentable, Codable, Sendable, Hashable {
         .productionFeatureRequiresBilling,
         .radarChallenge,
         .radarSignUpChallenge,
+        .radarSmsChallenge,
         .radarSmsSignInChallenge,
         .rateLimitExceeded,
         .resourceHasDependents,
         .resourceLimitExceeded,
         .resourceTypeUpdateInProgress,
+        .roleAssignmentUpdateOverlap,
         .roleHasAssignments,
         .roleHasGroupRoleMappings,
         .roleNotFound,

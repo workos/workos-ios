@@ -824,6 +824,26 @@ public struct UserManagement: Sendable {
         )
     }
 
+    /// Delete a CORS origin
+    ///
+    /// Deletes a CORS origin from the API key's application.
+    ///
+    /// - Parameter id: The ID of the CORS origin to delete.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func deleteCorsOrigin(
+        id: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        let path = "user_management/cors_origins/\(PathEncoding.segment(id))"
+        try await transport.requestVoid(
+            method: "DELETE",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions
+        )
+    }
+
     /// Get an email verification code
     ///
     /// Get the details of an existing email verification code that can be used to send an email to a user for verification.

@@ -8,8 +8,8 @@ public struct AgentBlueprintsUpdateRequest: Codable, Sendable, Equatable {
     public let name: String?
     /// Human-readable description of the agent blueprint. Pass `null` to clear it.
     public let description: String?
-    /// Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
-    public let permissions: [String]?
+    /// Permissions forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment and may appear once.
+    public let permissions: [AnyCodable]?
     /// Who may mint sessions from this blueprint. Omitted lists are left unchanged.
     public let invocableBy: AgentBlueprintsUpdateRequestInvocableBy?
     /// How sessions may be minted from this blueprint. Omitted lists are left unchanged.
@@ -20,7 +20,7 @@ public struct AgentBlueprintsUpdateRequest: Codable, Sendable, Equatable {
     public init(
         name: String? = nil,
         description: String? = nil,
-        permissions: [String]? = nil,
+        permissions: [AnyCodable]? = nil,
         invocableBy: AgentBlueprintsUpdateRequestInvocableBy? = nil,
         invocableAs: AgentBlueprintsUpdateRequestInvocableAs? = nil,
         sessionSettings: AgentBlueprintsUpdateRequestSessionSetting? = nil

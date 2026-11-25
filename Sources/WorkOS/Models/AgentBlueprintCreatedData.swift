@@ -12,8 +12,11 @@ public struct AgentBlueprintCreatedData: Codable, Sendable, Equatable {
     public let name: String
     /// Human-readable description of the agent blueprint.
     public let description: String?
-    /// Permission slugs forming the ceiling on what sessions minted from this blueprint may do.
+    /// Deprecated: use `scoped_permissions`. Slugs of every permission in the ceiling, across all instance types.
+    @available(*, deprecated)
     public let permissions: [String]
+    /// Permissions forming the ceiling on what sessions minted from this blueprint may do, with the instance types that receive each one. Absent from events emitted before this field was added.
+    public let scopedPermissions: [AgentBlueprintCreatedDataScopedPermission]?
     /// Who may mint sessions from this blueprint.
     public let invocableBy: AgentBlueprintCreatedDataInvocableBy
     /// How sessions may be minted from this blueprint.
@@ -35,13 +38,15 @@ public struct AgentBlueprintCreatedData: Codable, Sendable, Equatable {
         sessionSettings: AgentBlueprintCreatedDataSessionSetting,
         createdAt: String,
         updatedAt: String,
-        description: String? = nil
+        description: String? = nil,
+        scopedPermissions: [AgentBlueprintCreatedDataScopedPermission]? = nil
     ) {
         self.object = object
         self.id = id
         self.name = name
         self.description = description
         self.permissions = permissions
+        self.scopedPermissions = scopedPermissions
         self.invocableBy = invocableBy
         self.invocableAs = invocableAs
         self.sessionSettings = sessionSettings
@@ -55,6 +60,7 @@ public struct AgentBlueprintCreatedData: Codable, Sendable, Equatable {
         case name
         case description
         case permissions
+        case scopedPermissions = "scoped_permissions"
         case invocableBy = "invocable_by"
         case invocableAs = "invocable_as"
         case sessionSettings = "session_settings"

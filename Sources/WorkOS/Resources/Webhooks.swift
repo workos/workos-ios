@@ -96,6 +96,27 @@ public struct Webhooks: Sendable {
         )
     }
 
+    /// Get a Webhook Endpoint
+    ///
+    /// Get the details of an existing webhook endpoint.
+    ///
+    /// - Parameter id: Unique identifier of the Webhook Endpoint.
+    /// - Parameter requestOptions: Per-request overrides (idempotency key, API key, headers, timeout).
+    public func getEndpoint(
+        id: String,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> WebhookEndpoint {
+        let path = "webhook_endpoints/\(PathEncoding.segment(id))"
+        return try await transport.request(
+            method: "GET",
+            path: path,
+            query: [],
+            body: nil,
+            options: requestOptions,
+            as: WebhookEndpoint.self
+        )
+    }
+
     /// Update a Webhook Endpoint
     ///
     /// Update the properties of an existing webhook endpoint.

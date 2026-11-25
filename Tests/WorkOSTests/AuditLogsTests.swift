@@ -66,8 +66,7 @@ import Testing
         let result = try await client.auditLogs.createEvent(
             organizationId: "test_organization_id",
             event: AuditLogEvent(
-                action: "test_action", occurredAt: Date(timeIntervalSince1970: 1_672_531_200),
-                actor: AuditLogEventActor(id: "test_id", type: "test_type"),
+                action: "test_action", actor: AuditLogEventActor(id: "test_id", type: "test_type"),
                 targets: [AuditLogEventTarget(id: "test_id", type: "test_type")],
                 context: AuditLogEventContext(location: "test_location")))
 
