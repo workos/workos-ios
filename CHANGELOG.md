@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.11.0](https://github.com/workos/workos-ios/compare/v0.10.0...v0.11.0) (2026-11-25)
+
+
+### Features
+
+* **agents:** Change agents API surface ([#55](https://github.com/workos/workos-ios/issues/55)) ([d28a42e](https://github.com/workos/workos-ios/commit/d28a42eaf8067453e537cdc3ecc5576c2e9361ce))
+* **directory_sync:** Change directory sync API surface ([#55](https://github.com/workos/workos-ios/issues/55)) ([d28a42e](https://github.com/workos/workos-ios/commit/d28a42eaf8067453e537cdc3ecc5576c2e9361ce))
+* **sso:** Add SSO API surface ([#55](https://github.com/workos/workos-ios/issues/55)) ([d28a42e](https://github.com/workos/workos-ios/commit/d28a42eaf8067453e537cdc3ecc5576c2e9361ce))
+* **webhooks:** Add webhook API surface ([#55](https://github.com/workos/workos-ios/issues/55)) ([d28a42e](https://github.com/workos/workos-ios/commit/d28a42eaf8067453e537cdc3ecc5576c2e9361ce))
+
+
+### Bug Fixes
+
+* **events:** Updated model `EventSchema` ([#55](https://github.com/workos/workos-ios/issues/55)) ([d28a42e](https://github.com/workos/workos-ios/commit/d28a42eaf8067453e537cdc3ecc5576c2e9361ce))
+
 ## [0.10.0](https://github.com/workos/workos-ios/compare/v0.9.0...v0.10.0) (2026-11-13)
 
 
